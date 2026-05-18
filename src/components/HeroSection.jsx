@@ -123,7 +123,7 @@ export default function HeroSection() {
         <a href="#coleccion" className="btn btn--primary">
           EXPLORAR COLECCIÓN
         </a>
-        <a href="/nosotros" className="btn btn--secondary">
+        <a href="#/nosotros" className="btn btn--secondary">
           NUESTRA HISTORIA
         </a>
       </motion.div>

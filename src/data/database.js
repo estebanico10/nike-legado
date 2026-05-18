@@ -13,9 +13,9 @@ export const productos = [
     tipo: "buzo",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/arcade-hoodie-001-front.webp",
-      "/assets/products/arcade-hoodie-001-back.webp",
-      "/assets/products/arcade-hoodie-001-detail.webp",
+      "./assets/products/arcade-hoodie-001-front.webp",
+      "./assets/products/arcade-hoodie-001-back.webp",
+      "./assets/products/arcade-hoodie-001-detail.webp",
     ],
     descripcion:
       "Sudadera oversize con gráfico pixelado del skyline de Quito renderizado en 16-bit. Algodón heavyweight 380gsm. Costuras reforzadas. Capucha doble capa.",
@@ -32,10 +32,10 @@ export const productos = [
     tipo: "chaqueta",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/arcade-jacket-001-front.webp",
-      "/assets/products/arcade-jacket-001-back.webp",
-      "/assets/products/arcade-jacket-001-side.webp",
-      "/assets/products/arcade-jacket-001-olive.webp",
+      "./assets/products/arcade-jacket-001-front.webp",
+      "./assets/products/arcade-jacket-001-back.webp",
+      "./assets/products/arcade-jacket-001-side.webp",
+      "./assets/products/arcade-jacket-001-olive.webp",
     ],
     descripcion:
       "Cortaviento técnico con gráfico pixelado del skyline de Quito en la espalda. Tejido ripstop resistente al viento. Empaque en bolsillo. Capucha ajustable y cremallera YKK.",
@@ -52,8 +52,8 @@ export const productos = [
     tipo: "camiseta",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/arcade-hoodie-001-front.webp",   // placeholder — imagen propia pendiente
-      "/assets/products/arcade-hoodie-001-back.webp",
+      "./assets/products/arcade-hoodie-001-front.webp",   // placeholder — imagen propia pendiente
+      "./assets/products/arcade-hoodie-001-back.webp",
     ],
     descripcion:
       "Camiseta de corte recto con ilustración pixelada del Volcán Cotopaxi en erupción. Paleta de 8 colores. Serigrafía en base de agua. Algodón ring-spun 200gsm.",
@@ -73,8 +73,8 @@ export const productos = [
     tipo: "camiseta",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/carto-tee-001-front.webp",
-      "/assets/products/carto-tee-001-back.webp",
+      "./assets/products/carto-tee-001-front.webp",
+      "./assets/products/carto-tee-001-back.webp",
     ],
     descripcion:
       "Camiseta de corte recto con cartografía vectorial del archipiélago de Galápagos bordada al pecho. Algodón orgánico 240gsm. Cuello reforzado sin costuras visibles.",
@@ -92,9 +92,9 @@ export const productos = [
     tipo: "camiseta",
     tallas: ["XS", "S", "M", "L", "XL"],
     imagenes: [
-      "/assets/products/carto-longsleeve-001-front.webp",
-      "/assets/products/carto-longsleeve-001-back.webp",
-      "/assets/products/carto-longsleeve-001-black.webp",
+      "./assets/products/carto-longsleeve-001-front.webp",
+      "./assets/products/carto-longsleeve-001-back.webp",
+      "./assets/products/carto-longsleeve-001-black.webp",
     ],
     descripcion:
       "Camiseta manga larga con mapa cartográfico de la cuenca amazónica impreso en tinta de alta definición. Algodón Pima ecuatoriano 220gsm. Costuras flatlock. Puntos reflectivos en mangas.",
@@ -111,8 +111,8 @@ export const productos = [
     tipo: "buzo",
     tallas: ["S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/carto-longsleeve-001-front.webp",   // placeholder — imagen propia pendiente
-      "/assets/products/carto-longsleeve-001-back.webp",
+      "./assets/products/carto-longsleeve-001-front.webp",   // placeholder — imagen propia pendiente
+      "./assets/products/carto-longsleeve-001-back.webp",
     ],
     descripcion:
       "Crewneck heavyweight con ruta cartográfica del río Amazonas bordada en relieve. Algodón fleece 350gsm. Sin capucha. Ribetes a la vista en cuello y mangas.",
@@ -131,7 +131,7 @@ export const productos = [
     tipo: "gorra",
     tallas: ["Talla única"],
     imagenes: [
-      "/assets/products/timeless-cap-001-front.webp",
+      "./assets/products/timeless-cap-001-front.webp",
     ],
     descripcion:
       "Gorra desestructurada con bordado 'EC' en tipografía condensada. Panel frontal bajo. Cierre ajustable de tela. Algodón canvas lavado.",
@@ -148,9 +148,9 @@ export const productos = [
     tipo: "pantalón",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/timeless-jogger-001-front.webp",
-      "/assets/products/timeless-jogger-001-back.webp",
-      "/assets/products/timeless-jogger-001-olive.webp",
+      "./assets/products/timeless-jogger-001-front.webp",
+      "./assets/products/timeless-jogger-001-back.webp",
+      "./assets/products/timeless-jogger-001-olive.webp",
     ],
     descripcion:
       "Jogger técnico de corte cónico con logo EC bordado en muslo izquierdo. Tela tech-fleece 320gsm. Cinturilla ancha con cordón interior. Tobilleras con ribete a la vista.",
@@ -167,7 +167,7 @@ export const productos = [
     tipo: "gorro",
     tallas: ["Talla única"],
     imagenes: [
-      "/assets/products/timeless-cap-001-front.webp",   // placeholder — imagen propia pendiente
+      "./assets/products/timeless-cap-001-front.webp",   // placeholder — imagen propia pendiente
     ],
     descripcion:
       "Gorro de punto ribeteado con parche bordado 'EC LEGADO' en frontis. Lana merino Andina 80% / acrílico 20%. Doble capa interior para abrigo. Doblez estructurado.",
@@ -186,7 +186,7 @@ export const productos = [
     tipo: "pantaloneta",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/equip-short-001-front.webp",
+      "./assets/products/equip-short-001-front.webp",
     ],
     descripcion:
       "Pantaloneta de entrenamiento con panel lateral reflectivo. Tela Dri-FIT 4-way stretch. Cintura elástica con cordón interno. Bolsillos laterales sellados.",
@@ -203,8 +203,8 @@ export const productos = [
     tipo: "camiseta",
     tallas: ["XS", "S", "M", "L", "XL", "XXL"],
     imagenes: [
-      "/assets/products/equip-short-001-front.webp",   // placeholder — imagen propia pendiente
-      "/assets/products/arcade-hoodie-001-front.webp",
+      "./assets/products/equip-short-001-front.webp",   // placeholder — imagen propia pendiente
+      "./assets/products/arcade-hoodie-001-front.webp",
     ],
     descripcion:
       "Tank top de alto rendimiento con paneles de malla ventilados en costados. Tecnología Dri-FIT que aleja la humedad. Logo EC en volt fosforescente. Corte racerback ergonómico.",
@@ -221,7 +221,7 @@ export const productos = [
     tipo: "gorra",
     tallas: ["Talla única"],
     imagenes: [
-      "/assets/products/timeless-cap-001-front.webp",   // placeholder — imagen propia pendiente
+      "./assets/products/timeless-cap-001-front.webp",   // placeholder — imagen propia pendiente
     ],
     descripcion:
       "Gorra de entrenamiento en nylon ripstop volt. Visera curvada con estructura interna. Paneles de malla en coronilla para ventilación. Logo EC perforado en frontal. Cierre Velcro posterior.",

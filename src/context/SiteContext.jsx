@@ -1,18 +1,18 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-const SITE_VERSION = "v3"; // bump this when initialHomeSections or initialTeam changes
+const SITE_VERSION = "v4"; // bump this when initialHomeSections or initialTeam changes
 
 const SiteContext = createContext();
 
 const initialTeam = {
-  groupPhoto: "/assets/team/group.webp",
+  groupPhoto: "./assets/team/group.webp",
   groupPhotoPosition: "center 18%",
   members: [
-    { id: "1", name: "Esteban David Nicola Miranda", email: "enicolam@unemi.edu.ec", initials: "EN", photo: "/assets/team/esteban.webp", objectPosition: "center 10%" },
-    { id: "2", name: "Jostin Enrique Ríos Contreras", email: "jostinrios2007@gmail.com", initials: "JR", photo: "/assets/team/jostin.webp", objectPosition: "center center" },
-    { id: "3", name: "Felix Andrés Espinoza Nieves", email: "fespinozan2@unemi.edu.ec", initials: "FE", photo: "/assets/team/felix.webp", objectPosition: "center 8%" },
-    { id: "4", name: "Mayerli Scarleth Mora Miranda", email: "Mmoram35@unemi.edu.ec", initials: "MM", photo: "/assets/team/mayerli.webp", objectPosition: "center 15%" },
-    { id: "5", name: "Jacob Steven Franco Murillo", email: "jfrancom9@unemi.edu.ec", initials: "JF", photo: "/assets/team/jacob.webp", objectPosition: "center 5%" },
+    { id: "1", name: "Esteban David Nicola Miranda", email: "enicolam@unemi.edu.ec", initials: "EN", photo: "./assets/team/esteban.webp", objectPosition: "center 10%" },
+    { id: "2", name: "Jostin Enrique Ríos Contreras", email: "jostinrios2007@gmail.com", initials: "JR", photo: "./assets/team/jostin.webp", objectPosition: "center center" },
+    { id: "3", name: "Felix Andrés Espinoza Nieves", email: "fespinozan2@unemi.edu.ec", initials: "FE", photo: "./assets/team/felix.webp", objectPosition: "center 8%" },
+    { id: "4", name: "Mayerli Scarleth Mora Miranda", email: "Mmoram35@unemi.edu.ec", initials: "MM", photo: "./assets/team/mayerli.webp", objectPosition: "center 15%" },
+    { id: "5", name: "Jacob Steven Franco Murillo", email: "jfrancom9@unemi.edu.ec", initials: "JF", photo: "./assets/team/jacob.webp", objectPosition: "center 5%" },
   ]
 };
 
@@ -21,9 +21,9 @@ const initialHomeSections = [
   { id: "destacados", type: "destacados", title: "Destacados", visible: true, order: 2 },
   { id: "lookbook", type: "lookbook", title: "LOOKBOOK — VOL. 1", description: "Explora la intersección entre el minimalismo radical y la herencia ecuatoriana a través de nuestra última editorial visual.", visible: true, order: 3, 
     images: [
-      { id: "img1", src: "/assets/home/lookbook-1.png", title: "URBAN ANDINO", subtitle: "Colección Cero" },
-      { id: "img2", src: "/assets/home/lookbook-2.png", title: "HERENCIA", subtitle: "Archivo 01" },
-      { id: "img3", src: "/assets/home/lookbook-3.png", title: "FUTURO", subtitle: "Concepto Experimental" }
+      { id: "img1", src: "./assets/home/lookbook-1.png", title: "URBAN ANDINO", subtitle: "Colección Cero" },
+      { id: "img2", src: "./assets/home/lookbook-2.png", title: "HERENCIA", subtitle: "Archivo 01" },
+      { id: "img3", src: "./assets/home/lookbook-3.png", title: "FUTURO", subtitle: "Concepto Experimental" }
     ]
   }
 ];
