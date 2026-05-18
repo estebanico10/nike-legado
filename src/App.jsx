@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
@@ -294,13 +294,13 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ProductProvider>
         <SiteProvider>
           <CustomCursor />
           <AppRoutes />
         </SiteProvider>
       </ProductProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
