@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
+import { resolveAsset } from "../utils/resolveAsset";
 
 const backdrop = {
   hidden: { opacity: 0 },
@@ -122,7 +123,7 @@ export default function ProductQuickView({ producto, onClose }) {
               }}
             >
               <img
-                src={producto.imagenes[activeImg]}
+                src={resolveAsset(producto.imagenes[activeImg])}
                 alt={`${producto.nombre} — vista ${activeImg + 1}`}
                 style={{
                   width: "100%",
@@ -166,7 +167,7 @@ export default function ProductQuickView({ producto, onClose }) {
                     }}
                   >
                     <img
-                      src={img}
+                      src={resolveAsset(img)}
                       alt={`Miniatura ${i + 1}`}
                       style={{
                         width: "100%",

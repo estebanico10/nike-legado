@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { useSite } from "../context/SiteContext";
+import { resolveAsset } from "../utils/resolveAsset";
 import HeroSection from "../components/HeroSection";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
@@ -59,7 +60,7 @@ export default function HomePage() {
               }}
             >
               <motion.img
-                src={img.src}
+                src={resolveAsset(img.src)}
                 alt={img.title}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 variants={{

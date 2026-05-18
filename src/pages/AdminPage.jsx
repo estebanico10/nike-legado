@@ -4,6 +4,7 @@ import { useProducts } from "../context/ProductContext";
 import TeamAdmin from "../components/admin/TeamAdmin";
 import HomeAdmin from "../components/admin/HomeAdmin";
 import SalesDashboard from "../components/admin/SalesDashboard";
+import { resolveAsset } from "../utils/resolveAsset";
 
 const emptyProduct = {
   nombre: "",
@@ -656,7 +657,7 @@ export default function AdminPage() {
                 }}
               >
                 <img
-                  src={p.imagenes[0]}
+                  src={resolveAsset(p.imagenes[0])}
                   alt=""
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   onError={(e) => (e.currentTarget.style.display = "none")}

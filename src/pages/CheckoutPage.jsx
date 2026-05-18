@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { resolveAsset } from "../utils/resolveAsset";
 
 const ease = [0, 0, 0.2, 1];
 
@@ -340,7 +341,7 @@ export default function CheckoutPage() {
                     }}>
                       <div style={{ width: "80px", height: "80px", backgroundColor: "var(--color-canvas-alt)", flexShrink: 0 }}>
                         <img 
-                          src={item.imagenes[0]} 
+                          src={resolveAsset(item.imagenes[0])} 
                           alt={item.nombre} 
                           style={{ width: "100%", height: "100%", objectFit: "cover" }}
                           onError={(e) => e.currentTarget.style.display = 'none'}

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
+import { resolveAsset } from "../utils/resolveAsset";
 
 export default function ProductCard({ producto, index, onQuickView }) {
-  const portada = producto.imagenes[0];
-  const segundaImagen = producto.imagenes[1] || producto.imagenes[0];
+  const portada = resolveAsset(producto.imagenes[0]);
+  const segundaImagen = resolveAsset(producto.imagenes[1] || producto.imagenes[0]);
   const [imgError, setImgError] = useState(false);
   const [img2Error, setImg2Error] = useState(false);
   const [hovered, setHovered] = useState(false);

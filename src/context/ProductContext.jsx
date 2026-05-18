@@ -4,7 +4,7 @@ import { productos as seedData, categorias } from "../data/database";
 const STORAGE_KEY = "nike-legado-productos";
 // Increment this version string whenever database.js seed data changes
 // to force localStorage to reset and load fresh data.
-const SEED_VERSION = "v5-12products";
+const SEED_VERSION = "v6-12products-fixed";
 const VERSION_KEY = "nike-legado-seed-version";
 
 function loadProductos() {

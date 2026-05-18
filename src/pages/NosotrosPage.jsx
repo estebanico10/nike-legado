@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import AnimatedBackground from "../components/AnimatedBackground";
+import { resolveAsset } from "../utils/resolveAsset";
 
 import { useSite } from "../context/SiteContext";
 
@@ -43,7 +44,7 @@ function PhotoPlaceholder({ src, width, height, label, style }) {
   if (!error && src) {
     return (
       <img
-        src={src}
+        src={resolveAsset(src)}
         alt={label || "Photo"}
         style={{ width, height, objectFit: "cover", display: "block", ...style }}
         onError={() => setError(true)}
@@ -77,7 +78,7 @@ function TeamMemberPhoto({ member }) {
     return (
       <div style={{ overflow: "hidden", width: "160px", height: "160px", backgroundColor: "var(--color-canvas-alt)" }}>
         <motion.img
-          src={member.photo}
+          src={resolveAsset(member.photo)}
           alt={member.name}
           style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: member.objectPosition || "center center", display: "block", filter: "grayscale(100%)" }}
           whileHover={{ scale: 1.05, filter: "grayscale(0%)" }}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSite } from "../../context/SiteContext";
+import { resolveAsset } from "../../utils/resolveAsset";
 
 export default function TeamAdmin() {
   const { team, updateTeamMember, addTeamMember, removeTeamMember, updateGroupPhoto } = useSite();
@@ -62,7 +63,7 @@ export default function TeamAdmin() {
           <button className="btn btn--secondary btn--sm" onClick={handleGroupPhotoSave} style={{ color: "#F5F5F5", borderColor: "#555" }}>Actualizar Foto</button>
         </div>
         {team.groupPhoto && (
-          <img src={team.groupPhoto} alt="Group" style={{ marginTop: "var(--space-md)", width: "100%", maxWidth: "300px", borderRadius: "var(--radius-sm)", border: "1px solid #333" }} />
+          <img src={resolveAsset(team.groupPhoto)} alt="Group" style={{ marginTop: "var(--space-md)", width: "100%", maxWidth: "300px", borderRadius: "var(--radius-sm)", border: "1px solid #333" }} />
         )}
       </div>
 
@@ -125,7 +126,7 @@ export default function TeamAdmin() {
           <div key={m.id} style={{ backgroundColor: "#111111", padding: "var(--space-md)", borderRadius: "var(--radius-md)", border: "1px solid #222", display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
               {m.photo ? (
-                <img src={m.photo} alt={m.name} style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover", objectPosition: m.objectPosition || "center center", backgroundColor: "#333" }} />
+                <img src={resolveAsset(m.photo)} alt={m.name} style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover", objectPosition: m.objectPosition || "center center", backgroundColor: "#333" }} />
               ) : (
                 <div style={{ width: "48px", height: "48px", borderRadius: "50%", backgroundColor: "var(--color-volt)", color: "#111", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}>{m.initials}</div>
               )}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProducts } from "../../context/ProductContext";
+import { resolveAsset } from "../../utils/resolveAsset";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 
 const MOCK_DATA = {
@@ -121,7 +122,7 @@ export default function SalesDashboard() {
                 {index + 1}
               </div>
               <div style={{ width: "40px", height: "40px", backgroundColor: "#1A1A1A", borderRadius: "4px", overflow: "hidden" }}>
-                {product.imagenes?.[0] && <img src={product.imagenes[0]} alt={product.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                {product.imagenes?.[0] && <img src={resolveAsset(product.imagenes[0])} alt={product.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ color: "#F5F5F5", fontWeight: 500, fontSize: "var(--type-body-sm)" }}>{product.nombre}</div>
