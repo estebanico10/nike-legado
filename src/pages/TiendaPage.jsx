@@ -1,0 +1,252 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useProducts } from "../context/ProductContext";
+import ProductCard from "../components/ProductCard";
+import ProductQuickView from "../components/ProductQuickView";
+import AnimatedBackground from "../components/AnimatedBackground";
+
+export default function TiendaPage() {
+  const { productos, categorias, tiposProducto } = useProducts();
+  const [filtroActivo, setFiltroActivo] = useState(null);
+  const [filtroTipo, setFiltroTipo] = useState(null);
+  const [orden, setOrden] = useState("default"); // default, precio_asc, precio_desc, ventas
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
+
+  const productosFiltrados = productos
+    .filter((p) => (filtroActivo ? p.categoria === filtroActivo : true))
+    .filter((p) => (filtroTipo ? p.tipo === filtroTipo : true))
+    .map(p => ({ ...p, ventas: p.ventas || Math.floor(Math.random() * 50) })) // mock ventas for sorting
+    .sort((a, b) => {
+      const pA = a.precioOferta || a.precio;
+      const pB = b.precioOferta || b.precio;
+      if (orden === "precio_asc") return pA - pB;
+      if (orden === "precio_desc") return pB - pA;
+      if (orden === "ventas") return b.ventas - a.ventas;
+      return 0; // default
+    });
+
+  return (
+    <>
+      <AnimatedBackground />
+      <main style={{ paddingTop: "var(--space-3xl)", paddingBottom: "var(--space-5xl)", position: "relative", zIndex: 1 }}>
+        <div className="container">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              marginBottom: "var(--space-2xl)",
+              flexWrap: "wrap",
+              gap: "var(--space-md)",
+            }}
+          >
+            <motion.h1
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: { transition: { staggerChildren: 0.05 } },
+                hidden: {}
+              }}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "var(--type-h2)",
+                lineHeight: "var(--lh-h2)",
+                fontWeight: 700,
+                letterSpacing: "var(--tracking-tight)",
+                textTransform: "uppercase",
+                color: "var(--color-ink)",
+                display: "flex",
+                overflow: "hidden"
+              }}
+            >
+              {Array.from("COLECCIÓN").map((char, i) => (
+                <motion.span
+                  key={i}
+                  variants={{
+                    hidden: { y: "100%", opacity: 0 },
+                    visible: { y: "0%", opacity: 1, transition: { duration: 0.5, ease: [0, 0, 0.2, 1] } }
+                  }}
+                  whileHover={{ color: "var(--color-volt)", y: -5 }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h1>
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "var(--type-body-sm)",
+                color: "var(--color-ink-soft)",
+              }}
+            >
+              {productosFiltrados.length}{" "}
+              {productosFiltrados.length === 1 ? "producto" : "productos"}
+            </p>
+          </motion.div>
+
+          {/* Filters and Sorting */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", marginBottom: "var(--space-2xl)" }}>
+            
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "var(--space-md)", alignItems: "center" }}>
+              {/* Categorías */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "var(--space-xs)",
+                  overflowX: "auto",
+                  paddingBottom: "var(--space-2xs)",
+                  scrollbarWidth: "none"
+                }}
+              >
+                <button
+                  onClick={() => setFiltroActivo(null)}
+                  className={`btn ${filtroActivo === null ? "btn--primary" : "btn--secondary"}`}
+                  style={{ whiteSpace: "nowrap", fontSize: "var(--type-caption)", padding: "8px 16px", borderRadius: "999px", transition: "all 0.3s ease" }}
+                >
+                  Todas las categorías
+                </button>
+                {categorias.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setFiltroActivo(cat)}
+                    className={`btn ${filtroActivo === cat ? "btn--primary" : "btn--secondary"}`}
+                    style={{ whiteSpace: "nowrap", fontSize: "var(--type-caption)", padding: "8px 16px", borderRadius: "999px", transition: "all 0.3s ease" }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Ordenamiento */}
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+                <label style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500, textTransform: "uppercase" }}>Ordenar:</label>
+                <select
+                  value={orden}
+                  onChange={(e) => setOrden(e.target.value)}
+                  style={{
+                    backgroundColor: "var(--color-canvas)",
+                    border: "1px solid #E5E5E5",
+                    color: "var(--color-ink)",
+                    padding: "6px 12px",
+                    borderRadius: "999px",
+                    fontSize: "var(--type-caption)",
+                    fontFamily: "var(--font-body)",
+                    cursor: "pointer",
+                    outline: "none",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+                  }}
+                >
+                  <option value="default">Relevancia</option>
+                  <option value="precio_asc">Precio: Menor a Mayor</option>
+                  <option value="precio_desc">Precio: Mayor a Menor</option>
+                  <option value="ventas">Más Vendidos</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Tipos de Producto */}
+            <div style={{ display: "flex", gap: "var(--space-xs)", overflowX: "auto", paddingBottom: "var(--space-2xs)", scrollbarWidth: "none" }}>
+                <button
+                  onClick={() => setFiltroTipo(null)}
+                  className="btn btn--secondary"
+                  style={{ 
+                    whiteSpace: "nowrap", 
+                    fontSize: "var(--type-caption)", 
+                    padding: "6px 16px", 
+                    borderRadius: "999px",
+                    border: filtroTipo === null ? "1px solid var(--color-ink)" : "1px solid #E5E5E5",
+                    backgroundColor: filtroTipo === null ? "var(--color-ink)" : "transparent",
+                    color: filtroTipo === null ? "var(--color-canvas)" : "var(--color-ink)",
+                    transition: "all 0.3s ease"
+                  }}
+                >
+                  Cualquier Tipo
+                </button>
+                {tiposProducto.map((tipo) => (
+                  <button
+                    key={tipo}
+                    onClick={() => setFiltroTipo(tipo)}
+                    className="btn btn--secondary"
+                    style={{ 
+                      whiteSpace: "nowrap", 
+                      fontSize: "var(--type-caption)", 
+                      padding: "6px 16px", 
+                      borderRadius: "999px",
+                      border: filtroTipo === tipo ? "1px solid var(--color-ink)" : "1px solid #E5E5E5",
+                      backgroundColor: filtroTipo === tipo ? "var(--color-ink)" : "transparent",
+                      color: filtroTipo === tipo ? "var(--color-canvas)" : "var(--color-ink)",
+                      transition: "all 0.3s ease"
+                    }}
+                  >
+                    {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                  </button>
+                ))}
+            </div>
+
+          </div>
+
+          {/* Grid Animado */}
+          <motion.div 
+            className="product-grid"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 }
+              }
+            }}
+          >
+            {productosFiltrados.map((producto, i) => (
+              <motion.div 
+                key={producto.id}
+                variants={{
+                  hidden: { opacity: 0, y: 30, scale: 0.95 },
+                  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } }
+                }}
+                whileHover={{ y: -8 }}
+              >
+                <ProductCard
+                  producto={producto}
+                  index={i}
+                  onQuickView={setQuickViewProduct}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {productosFiltrados.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{
+                textAlign: "center",
+                padding: "var(--space-4xl) 0",
+                color: "var(--color-ink-soft)",
+              }}
+            >
+              <p style={{ fontSize: "var(--type-body-lg)" }}>
+                No hay productos en esta categoría aún.
+              </p>
+            </motion.div>
+          )}
+        </div>
+      </main>
+
+      {/* QuickView Modal */}
+      <AnimatePresence>
+        {quickViewProduct && (
+          <ProductQuickView
+            producto={quickViewProduct}
+            onClose={() => setQuickViewProduct(null)}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

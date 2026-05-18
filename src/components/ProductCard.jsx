@@ -1,0 +1,304 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useProducts } from "../context/ProductContext";
+
+export default function ProductCard({ producto, index, onQuickView }) {
+  const portada = producto.imagenes[0];
+  const segundaImagen = producto.imagenes[1] || producto.imagenes[0];
+  const [imgError, setImgError] = useState(false);
+  const [img2Error, setImg2Error] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addToCart } = useProducts();
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Don't open QuickView
+    const defaultSize = producto.tallas?.[0] || "M";
+    const defaultColor = producto.colores?.[0] || "#000000";
+    addToCart(producto, defaultSize, defaultColor);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 1800);
+  };
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-48px" }}
+      transition={{
+        duration: 0.5,
+        ease: [0, 0, 0.2, 1],
+        delay: index * 0.08,
+      }}
+      onClick={() => onQuickView?.(producto)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-sm)",
+        cursor: "pointer",
+      }}
+    >
+      {/* Image Container */}
+      <div
+        style={{
+          position: "relative",
+          aspectRatio: "1 / 1",
+          overflow: "hidden",
+          backgroundColor: "var(--color-canvas-alt)",
+        }}
+      >
+        {imgError ? (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: "8px",
+              color: "var(--color-ink-soft)",
+              fontFamily: "var(--font-body)",
+              fontSize: "var(--type-caption)",
+            }}
+          >
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            <span>{producto.id}</span>
+          </div>
+        ) : (
+          <>
+            {/* Primary Image */}
+            <motion.img
+              src={portada}
+              alt={producto.nombre}
+              loading="lazy"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              animate={{ opacity: hovered && !img2Error ? 0 : 1, scale: hovered ? 1.04 : 1 }}
+              transition={{ duration: 0.45, ease: [0, 0, 0.2, 1] }}
+              onError={() => setImgError(true)}
+            />
+
+            {/* Secondary Image (hover reveal) */}
+            {!img2Error && (
+              <motion.img
+                src={segundaImagen}
+                alt={`${producto.nombre} — vista alternativa`}
+                loading="lazy"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+                animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 1.04 }}
+                transition={{ duration: 0.45, ease: [0, 0, 0.2, 1] }}
+                onError={() => setImg2Error(true)}
+              />
+            )}
+          </>
+        )}
+
+        {/* Badges */}
+        {producto.esNuevo && (
+          <span
+            style={{
+              position: "absolute",
+              top: "var(--space-sm)",
+              left: "var(--space-sm)",
+              fontFamily: "var(--font-body)",
+              fontSize: "var(--type-micro)",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              padding: "var(--space-2xs) var(--space-xs)",
+              backgroundColor: "var(--color-ink)",
+              color: "var(--color-canvas)",
+              zIndex: 2,
+            }}
+          >
+            Nuevo
+          </span>
+        )}
+
+        {producto.enOferta && (
+          <span
+            style={{
+              position: "absolute",
+              top: producto.esNuevo ? "var(--space-xl)" : "var(--space-sm)",
+              left: "var(--space-sm)",
+              fontFamily: "var(--font-body)",
+              fontSize: "var(--type-micro)",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              padding: "var(--space-2xs) var(--space-xs)",
+              backgroundColor: "var(--color-sale)",
+              color: "#FFFFFF",
+              zIndex: 2,
+            }}
+          >
+            Oferta
+          </span>
+        )}
+
+        {/* Hover CTA */}
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              key="cta"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.22, ease: [0, 0, 0.2, 1] }}
+              style={{
+                position: "absolute",
+                bottom: "var(--space-sm)",
+                left: "var(--space-sm)",
+                right: "var(--space-sm)",
+                zIndex: 3,
+                display: "flex",
+                gap: "var(--space-xs)",
+              }}
+            >
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={handleAddToCart}
+                style={{
+                  flex: 1,
+                  padding: "var(--space-sm) var(--space-md)",
+                  backgroundColor: addedToCart ? "var(--color-success)" : "var(--color-volt)",
+                  color: "#111111",
+                  fontFamily: "var(--font-body)",
+                  fontSize: "var(--type-caption)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "background-color 0.2s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "var(--space-xs)",
+                }}
+              >
+                {addedToCart ? (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    ¡Agregado!
+                  </>
+                ) : (
+                  "Agregar al carrito"
+                )}
+              </motion.button>
+
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={(e) => { e.stopPropagation(); onQuickView?.(producto); }}
+                style={{
+                  padding: "var(--space-sm)",
+                  backgroundColor: "rgba(255,255,255,0.92)",
+                  color: "var(--color-ink)",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backdropFilter: "blur(8px)",
+                }}
+                title="Vista rápida"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Product Info */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2xs)" }}>
+        <h3
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "var(--type-body)",
+            fontWeight: 500,
+            color: "var(--color-ink)",
+            textTransform: "uppercase",
+            letterSpacing: "0.02em",
+          }}
+        >
+          {producto.nombre}
+        </h3>
+
+        <p
+          style={{
+            fontSize: "var(--type-body-sm)",
+            color: "var(--color-ink-soft)",
+            lineHeight: 1.5,
+          }}
+        >
+          {producto.categoria}
+          {producto.tipo ? ` — ${producto.tipo}` : ""}
+        </p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+          <span
+            style={{
+              fontSize: "var(--type-body)",
+              fontWeight: 500,
+              color: producto.enOferta ? "var(--color-sale)" : "var(--color-ink)",
+            }}
+          >
+            ${(producto.precioOferta || producto.precio).toFixed(2)}
+          </span>
+
+          {producto.enOferta && producto.precioOferta && (
+            <span
+              style={{
+                fontSize: "var(--type-caption)",
+                color: "var(--color-ink-soft)",
+                textDecoration: "line-through",
+              }}
+            >
+              ${producto.precio.toFixed(2)}
+            </span>
+          )}
+
+          <div style={{ display: "flex", gap: "var(--space-2xs)", marginLeft: "auto" }}>
+            {producto.colores.map((color) => (
+              <span
+                key={color}
+                aria-label={`Color ${color}`}
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: color,
+                  border: "1px solid var(--color-ink-muted)",
+                  borderRadius: "var(--radius-sm)",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
