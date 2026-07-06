@@ -1,13 +1,15 @@
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { resolveAsset } from "../utils/resolveAsset";
+import OptimizedImage from "./OptimizedImage";
 
 export default function ProductCard({ producto, index, onQuickView }) {
   const portada = resolveAsset(producto.imagenes[0]);
   const segundaImagen = resolveAsset(producto.imagenes[1] || producto.imagenes[0]);
-  const [imgError, setImgError] = useState(false);
-  const [img2Error, setImg2Error] = useState(false);
+  const [imgError] = useState(false);
+  const [img2Error] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useProducts();
@@ -47,7 +49,8 @@ export default function ProductCard({ producto, index, onQuickView }) {
   };
 
   const handleAddToCart = (e) => {
-    e.stopPropagation(); // Don't open QuickView
+    e.preventDefault(); // Prevent link click
+    e.stopPropagation();
     const defaultSize = producto.tallas?.[0] || "M";
     const defaultColor = producto.colores?.[0] || "#000000";
     addToCart(producto, defaultSize, defaultColor);
@@ -56,8 +59,9 @@ export default function ProductCard({ producto, index, onQuickView }) {
   };
 
   return (
-    <motion.article
-      ref={cardRef}
+    <Link to={`/producto/${producto.id}`} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+      <motion.article
+        ref={cardRef}
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-48px" }}
@@ -130,39 +134,42 @@ export default function ProductCard({ producto, index, onQuickView }) {
         ) : (
           <>
             {/* Primary Image */}
-            <motion.img
-              src={portada}
-              alt={producto.nombre}
-              loading="lazy"
+            <motion.div
               style={{
                 position: "absolute",
                 inset: 0,
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
               }}
               animate={{ opacity: hovered && !img2Error ? 0 : 1, scale: hovered ? 1.04 : 1 }}
               transition={{ duration: 0.45, ease: [0, 0, 0.2, 1] }}
-              onError={() => setImgError(true)}
-            />
+            >
+              <OptimizedImage
+                src={portada}
+                alt={producto.nombre}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </motion.div>
 
             {/* Secondary Image (hover reveal) */}
             {!img2Error && (
-              <motion.img
-                src={segundaImagen}
-                alt={`${producto.nombre} — vista alternativa`}
-                loading="lazy"
+              <motion.div
                 style={{
                   position: "absolute",
                   inset: 0,
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
                 }}
-                animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 1.04 }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.96 }}
                 transition={{ duration: 0.45, ease: [0, 0, 0.2, 1] }}
-                onError={() => setImg2Error(true)}
-              />
+              >
+                <OptimizedImage
+                  src={segundaImagen}
+                  alt={`${producto.nombre} — vista alternativa`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </motion.div>
             )}
           </>
         )}
@@ -355,6 +362,7 @@ export default function ProductCard({ producto, index, onQuickView }) {
           </div>
         </div>
       </div>
-    </motion.article>
+      </motion.article>
+    </Link>
   );
 }

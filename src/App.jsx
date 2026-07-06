@@ -3,15 +3,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
 import Navbar from "./components/Navbar";
-import HomePage from "./pages/HomePage";
-import PortalPage from "./pages/PortalPage";
-import TiendaPage from "./pages/TiendaPage";
-import NosotrosPage from "./pages/NosotrosPage";
-import ContactoPage from "./pages/ContactoPage";
-import AdminPage from "./pages/AdminPage";
-import CheckoutPage from "./pages/CheckoutPage";
+import { lazy, Suspense } from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import PageTransition from "./components/PageTransition";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const PortalPage = lazy(() => import("./pages/PortalPage"));
+const TiendaPage = lazy(() => import("./pages/TiendaPage"));
+const ProductoPage = lazy(() => import("./pages/ProductoPage"));
+const NosotrosPage = lazy(() => import("./pages/NosotrosPage"));
+const ContactoPage = lazy(() => import("./pages/ContactoPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
@@ -25,10 +28,12 @@ function AppRoutes() {
   if (location.pathname === "/admin" || location.pathname === "/") {
     return (
       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PageTransition transitionKey="portal"><PortalPage /></PageTransition>} />
-          <Route path="/admin" element={<PageTransition transitionKey="admin"><AdminPage /></PageTransition>} />
-        </Routes>
+        <Suspense fallback={<LoadingScreen key="lazy-loading-admin" />}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition transitionKey="portal"><PortalPage /></PageTransition>} />
+            <Route path="/admin" element={<PageTransition transitionKey="admin"><AdminPage /></PageTransition>} />
+          </Routes>
+        </Suspense>
       </AnimatePresence>
     );
   }
@@ -37,13 +42,16 @@ function AppRoutes() {
     <>
       <Navbar />
       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/inicio" element={<PageTransition transitionKey="inicio"><HomePage /></PageTransition>} />
-          <Route path="/tienda" element={<PageTransition transitionKey="tienda"><TiendaPage /></PageTransition>} />
-          <Route path="/nosotros" element={<PageTransition transitionKey="nosotros"><NosotrosPage /></PageTransition>} />
-          <Route path="/contacto" element={<PageTransition transitionKey="contacto"><ContactoPage /></PageTransition>} />
-          <Route path="/checkout" element={<PageTransition transitionKey="checkout"><CheckoutPage /></PageTransition>} />
-        </Routes>
+        <Suspense fallback={<LoadingScreen key="lazy-loading" />}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/inicio" element={<PageTransition transitionKey="inicio"><HomePage /></PageTransition>} />
+            <Route path="/tienda" element={<PageTransition transitionKey="tienda"><TiendaPage /></PageTransition>} />
+            <Route path="/producto/:id" element={<PageTransition transitionKey="producto"><ProductoPage /></PageTransition>} />
+            <Route path="/nosotros" element={<PageTransition transitionKey="nosotros"><NosotrosPage /></PageTransition>} />
+            <Route path="/contacto" element={<PageTransition transitionKey="contacto"><ContactoPage /></PageTransition>} />
+            <Route path="/checkout" element={<PageTransition transitionKey="checkout"><CheckoutPage /></PageTransition>} />
+          </Routes>
+        </Suspense>
       </AnimatePresence>
       <hr className="section-divider" />
       <Footer />

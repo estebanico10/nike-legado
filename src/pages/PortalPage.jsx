@@ -13,16 +13,53 @@ export default function PortalPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Generate random particles (lazy initial state)
+  const [particles] = useState(() => [...Array(40)].map(() => ({
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 4 + 1,
+    duration: Math.random() * 20 + 10,
+    delay: Math.random() * 5,
+  })));
+
   return (
     <main style={{
       minHeight: "100vh",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "var(--color-canvas)",
+      backgroundColor: "var(--color-ink)", // Dark mode for portal
+      color: "var(--color-canvas)",
       position: "relative",
       overflow: "hidden"
     }}>
+      {/* Particles Background */}
+      {particles.map((p, i) => (
+        <motion.div
+          key={i}
+          animate={{
+            y: ["0vh", "-100vh"],
+            opacity: [0, 0.5, 0],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: "linear"
+          }}
+          style={{
+            position: "absolute",
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            backgroundColor: "var(--color-volt)",
+            borderRadius: "50%",
+            zIndex: 0,
+            opacity: 0,
+          }}
+        />
+      ))}
       {/* Background Decor & Texture */}
       <div style={{
         position: "absolute",
@@ -63,14 +100,14 @@ export default function PortalPage() {
           <div style={{ marginBottom: "var(--space-2xl)" }}>
             <motion.svg
               fill="none"
-              stroke="var(--color-ink)"
+              stroke="var(--color-canvas)"
               strokeWidth="1"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
               style={{ width: "100px", height: "auto", margin: "0 auto var(--space-xl)", display: "block" }}
               aria-label="Nike"
               initial={{ pathLength: 0, fill: "rgba(0,0,0,0)" }}
-              animate={{ pathLength: 1, fill: "var(--color-ink)" }}
+              animate={{ pathLength: 1, fill: "var(--color-canvas)" }}
               transition={{ duration: 1.5, ease: "easeInOut", fill: { delay: 1, duration: 0.5 } }}
             >
               <path stroke="none" d="M24 7.8L6.442 15.276c-1.456.616-2.679.925-3.668.925-1.12 0-1.933-.392-2.437-1.177-.317-.504-.41-1.143-.28-1.918.13-.775.476-1.6 1.036-2.478.467-.71 1.232-1.643 2.297-2.8a6.122 6.122 0 00-.784 1.848c-.28 1.195-.028 2.072.756 2.632.373.261.886.392 1.54.392.522 0 1.11-.084 1.764-.252L24 7.8z" />
@@ -82,13 +119,13 @@ export default function PortalPage() {
             
             <h1 style={{
               fontFamily: "var(--font-display)", fontSize: "clamp(3rem, 8vw, 6rem)", fontWeight: 700,
-              textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", color: "var(--color-ink)",
+              textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", color: "var(--color-canvas)",
               margin: 0, position: "relative",
               transform: glitch ? "skewX(-5deg)" : "none",
               textShadow: glitch ? "2px 0 var(--color-volt), -2px 0 red" : "none",
               transition: "transform 0.05s, text-shadow 0.05s"
             }}>
-              NIKE <span style={{ color: "var(--color-volt)", textShadow: "0px 0px 2px rgba(0,0,0,0.5)" }}>LEGADO</span>
+              NIKE <span style={{ color: "transparent", WebkitTextStroke: "2px var(--color-volt)", textShadow: "0px 0px 10px rgba(206,255,0,0.5)" }}>LEGADO</span>
             </h1>
             
             <motion.p 

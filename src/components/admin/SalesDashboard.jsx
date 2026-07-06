@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useProducts } from "../../context/ProductContext";
 import { resolveAsset } from "../../utils/resolveAsset";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const MOCK_DATA = {
   diaria: [
@@ -27,9 +27,16 @@ export default function SalesDashboard() {
   const [period, setPeriod] = useState("semanal");
 
   // Fake sales for products to show top sellers
+  // Provide a stable pseudo-random value based on product ID to avoid hydration/render mismatch
+  const getStableRandom = (id) => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    return Math.abs(hash % 200) + 10;
+  };
+
   const topSellers = [...productos].map(p => ({
     ...p,
-    ventas: p.ventas || Math.floor(Math.random() * 200) + 10
+    ventas: p.ventas || getStableRandom(p.id)
   })).sort((a, b) => b.ventas - a.ventas).slice(0, 5);
 
   const totalSales = MOCK_DATA[period].reduce((sum, item) => sum + item.ventas, 0);
