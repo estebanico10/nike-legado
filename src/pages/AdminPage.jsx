@@ -6,6 +6,7 @@ import StoreSettings from "../components/admin/StoreSettings";
 import SalesDashboard from "../components/admin/SalesDashboard";
 import HomeAdmin from "../components/admin/HomeAdmin";
 import TeamAdmin from "../components/admin/TeamAdmin";
+import SocialAdmin from "../components/admin/SocialAdmin";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("inventario");
@@ -16,6 +17,8 @@ export default function AdminPage() {
         return <InventoryTable />;
       case "ventas":
         return <SalesDashboard />;
+      case "social":
+        return <SocialAdmin />;
       case "configuracion":
         return <StoreSettings />;
       case "inicio":

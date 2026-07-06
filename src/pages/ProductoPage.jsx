@@ -3,8 +3,10 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { useToast } from "../context/ToastContext";
+import { useCartStore } from "../store/useStore";
 import OptimizedImage from "../components/OptimizedImage";
 import AnimatedBackground from "../components/AnimatedBackground";
+import CustomerReviews from "../components/CustomerReviews";
 import { resolveAsset } from "../utils/resolveAsset";
 import ProductCard from "../components/ProductCard";
 import SizeGuideModal from "../components/SizeGuideModal";
@@ -13,7 +15,8 @@ import InteractiveShoe3D from "../components/InteractiveShoe3D";
 export default function ProductoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { productos, addToCart, wishlist, toggleWishlist } = useProducts();
+  const { productos, wishlist, toggleWishlist } = useProducts();
+  const { addToCart } = useCartStore();
   const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
   const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
@@ -284,6 +287,9 @@ export default function ProductoPage() {
             </div>
             <InteractiveShoe3D />
           </div>
+
+          {/* Customer Reviews Section */}
+          <CustomerReviews />
 
           {/* Related Products */}
           {relacionados.length > 0 && (

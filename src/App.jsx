@@ -15,28 +15,31 @@ const ProductoPage = lazy(() => import("./pages/ProductoPage"));
 const NosotrosPage = lazy(() => import("./pages/NosotrosPage"));
 const ContactoPage = lazy(() => import("./pages/ContactoPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
 import { useState } from "react";
-import CustomCursor from "./components/CustomCursor";
-import ExitIntentPopup from "./components/ExitIntentPopup";
 import WhatsAppFAB from "./components/WhatsAppFAB";
 import LuckyWheel from "./components/LuckyWheel";
+import CartDrawer from "./components/CartDrawer";
 import { useUIStore } from "./store/useStore";
 
 function AppRoutes() {
   const location = useLocation();
 
   /* Admin and Portal page have their own layouts — no navbar/footer */
-  if (location.pathname === "/admin" || location.pathname === "/") {
+  if (location.pathname === "/admin" || location.pathname === "/" || location.pathname === "/login" || location.pathname === "/perfil") {
     return (
       <AnimatePresence mode="wait">
         <Suspense fallback={<LoadingScreen key="lazy-loading-admin" />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition transitionKey="portal"><PortalPage /></PageTransition>} />
-            <Route path="/admin" element={<PageTransition transitionKey="admin"><AdminPage /></PageTransition>} />
+            <Route path="/admin/*" element={<AdminPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/perfil" element={<ProfilePage />} />
           </Routes>
         </Suspense>
       </AnimatePresence>
@@ -84,6 +87,7 @@ export default function App() {
                   <BackToTop />
                   <WhatsAppFAB />
                   <ExitIntentPopup />
+                  <CartDrawer />
                   {isLuckyWheelOpen && <LuckyWheel onClose={closeLuckyWheel} />}
                 </motion.div>
               )}

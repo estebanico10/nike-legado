@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
-import { useProducts } from "../context/ProductContext";
+import { useCartStore, useUIStore } from "../store/useStore";
 import SearchOverlay from "./SearchOverlay";
 import CartDrawer from "./CartDrawer";
 
@@ -16,15 +16,13 @@ const navLinks = [
 export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const { cart, wishlist } = useProducts();
+  
   const { scrollY } = useScroll();
-
-  const cartItemsCount = cart.reduce((total, item) => total + item.qty, 0);
-  const wishlistItemsCount = wishlist.length;
+  const cartCount = useCartStore((state) => state.getCartCount());
+  const { openCart, openSearch } = useUIStore();
+  const wishlistItemsCount = 0; // Keeping legacy placeholder if needed
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
@@ -150,7 +148,7 @@ export default function Navbar() {
 
           {/* Search Icon */}
           <button 
-            onClick={() => setSearchOpen(true)}
+            onClick={openSearch}
             style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} 
             aria-label="Buscar"
           >
@@ -194,8 +192,15 @@ export default function Navbar() {
             </AnimatePresence>
           </Link>
 
+          {/* User Icon */}
+          <Link to="/perfil" style={{ display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Mi Cuenta">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </Link>
+
           {/* Cart Icon */}
-          <button onClick={() => setCartOpen(true)} style={{ position: "relative", display: "flex", alignItems: "center", background: "transparent", border: "none", cursor: "pointer", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Carrito">
+          <button onClick={openCart} style={{ position: "relative", display: "flex", alignItems: "center", background: "transparent", border: "none", cursor: "pointer", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Carrito">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -356,8 +361,8 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      {/* Menú y Overlays ya manejados por Zustand desde App.jsx, pero dejamos Search si se prefiere aquí */}
+      <SearchOverlay isOpen={useUIStore((state) => state.isSearchOpen)} onClose={useUIStore((state) => state.closeSearch)} />
 
       {/* Responsive CSS */}
       <style>{`
