@@ -10,7 +10,9 @@ import NosotrosPage from "./pages/NosotrosPage";
 import ContactoPage from "./pages/ContactoPage";
 import AdminPage from "./pages/AdminPage";
 import CheckoutPage from "./pages/CheckoutPage";
-
+import LoadingScreen from "./components/LoadingScreen";
+import PageTransition from "./components/PageTransition";
+import { useState } from "react";
 function Footer() {
   const navLinks = [
     { label: "Inicio", href: "/inicio" },
@@ -267,8 +269,8 @@ function AppRoutes() {
     return (
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PortalPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/" element={<PageTransition transitionKey="portal"><PortalPage /></PageTransition>} />
+          <Route path="/admin" element={<PageTransition transitionKey="admin"><AdminPage /></PageTransition>} />
         </Routes>
       </AnimatePresence>
     );
@@ -279,11 +281,11 @@ function AppRoutes() {
       <Navbar />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/inicio" element={<HomePage />} />
-          <Route path="/tienda" element={<TiendaPage />} />
-          <Route path="/nosotros" element={<NosotrosPage />} />
-          <Route path="/contacto" element={<ContactoPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/inicio" element={<PageTransition transitionKey="inicio"><HomePage /></PageTransition>} />
+          <Route path="/tienda" element={<PageTransition transitionKey="tienda"><TiendaPage /></PageTransition>} />
+          <Route path="/nosotros" element={<PageTransition transitionKey="nosotros"><NosotrosPage /></PageTransition>} />
+          <Route path="/contacto" element={<PageTransition transitionKey="contacto"><ContactoPage /></PageTransition>} />
+          <Route path="/checkout" element={<PageTransition transitionKey="checkout"><CheckoutPage /></PageTransition>} />
         </Routes>
       </AnimatePresence>
       <hr className="section-divider" />
@@ -293,12 +295,22 @@ function AppRoutes() {
 }
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
   return (
     <HashRouter>
       <ProductProvider>
         <SiteProvider>
           <CustomCursor />
-          <AppRoutes />
+          <AnimatePresence mode="wait">
+            {loading ? (
+              <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
+            ) : (
+              <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+                <AppRoutes />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </SiteProvider>
       </ProductProvider>
     </HashRouter>

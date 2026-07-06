@@ -127,6 +127,15 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
           <ThemeToggle />
 
+          {/* Admin Link */}
+          <Link to="/admin" style={{ display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Admin Panel">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+          </Link>
+
           {/* Cart Icon */}
           <Link to="/checkout" style={{ position: "relative", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Carrito">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -253,6 +262,21 @@ export default function Navbar() {
                   {label}
                 </Link>
               ))}
+              <Link
+                  to="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "var(--type-h3)",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                    color: "var(--color-volt)",
+                    marginTop: "var(--space-md)"
+                  }}
+                >
+                  ADMIN PANEL
+              </Link>
             </div>
           </motion.div>
         )}
