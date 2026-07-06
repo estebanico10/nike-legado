@@ -6,13 +6,14 @@ import { resolveAsset } from "../utils/resolveAsset";
 import { useSite } from "../context/SiteContext";
 
 const colorData = [
-  { name: "Primary Space", hex: "#FFFFFF", pct: 62, desc: "Espacio negativo dominante — el silencio visual que da peso al contenido" },
+  { name: "Primary Space", hex: "#FFFFFF", pct: 55, desc: "Espacio negativo dominante — el silencio visual que da peso al contenido" },
   { name: "Primary Dark / Text", hex: "#111111", pct: 18, desc: "Tipografía, iconografía y elementos de interfaz de alta jerarquía" },
-  { name: "Background / UI", hex: "#F5F5F5", pct: 10, desc: "Superficies secundarias, contenedores de producto y canvas alternativo" },
-  { name: "Action / Energy Volt", hex: "#CEFF00", pct: 5, desc: "Acentos de interacción: CTAs primarios, indicadores activos, hover states" },
-  { name: "Heritage Orange", hex: "#FF6600", pct: 3, desc: "Elementos de herencia ecuatoriana — badges, links culturales y microcopy" },
+  { name: "Indoor Navy Blue", hex: "#043174", pct: 12, desc: "El color del fútbol indoor, remates en mangas y cuellos deportivos" },
+  { name: "Background / UI", hex: "#F5F5F5", pct: 8, desc: "Superficies secundarias, contenedores de producto y canvas alternativo" },
+  { name: "Energy Volt", hex: "#CEFF00", pct: 5, desc: "Acentos de interacción: CTAs primarios, indicadores activos, graffitis" },
   { name: "Secondary Text", hex: "#757575", pct: 2, desc: "Metadata, captions, descripciones secundarias y labels de formulario" },
 ];
+
 
 const ease = [0, 0, 0.2, 1];
 
@@ -340,42 +341,41 @@ export default function NosotrosPage() {
           viewport={{ once: true }} transition={{ duration: 0.6, ease }}
           style={{ marginBottom: "var(--space-4xl)" }}>
 
-          <SectionLabel>Sobre el Proyecto 🎯</SectionLabel>
-          <SectionTitle>NIKE LEGADO</SectionTitle>
+          <SectionLabel>Sobre el Proyecto 🎯 — El Manifiesto</SectionLabel>
+          <SectionTitle>EL ALMA DEL BARRIO</SectionTitle>
 
           <div style={{
             display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-3xl)",
             alignItems: "start",
           }} className="about-grid">
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
+              <div className="glass" style={{
+                padding: "var(--space-xl)", borderRadius: "var(--radius-md)",
+                borderLeft: "4px solid var(--color-volt)", backgroundColor: "rgba(4, 49, 116, 0.05)"
+              }}>
+                <p style={{
+                  fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)",
+                  lineHeight: 1.3, fontWeight: 700, color: "var(--color-ink)", textTransform: "uppercase",
+                  marginBottom: "var(--space-md)"
+                }}>
+                  “EL VERDADERO GOL NO FUE EN LA CANCHA DE CEMENTO SINO EN LA DE TIERRA, DONDE LAS MOCHINAS FUERON ARCO Y TU MAMÁ EL ARBITRO MÁS DURO, Y AÚN, SIEMPRE VOLVIAMOS.”
+                </p>
+                <span className="font-street" style={{ color: "var(--color-indoor-blue)", fontSize: "var(--type-h4)" }}>
+                  — FÚTBOL AMIGOS BARRIO SUEÑOS
+                </span>
+              </div>
+
               <p style={{
                 fontFamily: "var(--font-body)", fontSize: "var(--type-body)",
                 lineHeight: 1.8, color: "var(--color-ink-soft)",
               }}>
-                <strong style={{ color: "var(--color-ink)" }}>Nike Legado</strong> es un proyecto académico
-                de branding y desarrollo web que reimagina la estética streetwear global a través del
-                lente de la <strong style={{ color: "var(--color-ink)" }}>identidad ecuatoriana</strong> 🇪🇨.
-                La propuesta fusiona el minimalismo radical del diseño contemporáneo con elementos
-                visuales representativos de nuestra cultura: cartografía de Galápagos, pixel art
-                de 16-bits inspirado en paisajes andinos y la paleta cromática de nuestras ciudades.
+                <strong style={{ color: "var(--color-ink)" }}>Nike Legado</strong> nace como una respuesta universitaria a la estética del deporte rey en las calles ecuatorianas ⚽🇪🇨. No hablamos del fútbol de los estadios gigantes, sino de la pasión que se vive en la calle, en la cancha techada del barrio, donde se forja el carácter.
               </p>
               <p style={{
                 fontFamily: "var(--font-body)", fontSize: "var(--type-body)",
                 lineHeight: 1.8, color: "var(--color-ink-soft)",
               }}>
-                El concepto nace de una pregunta: <em style={{ color: "var(--color-ink)" }}>¿Qué pasaría
-                si una marca global como Nike creara una línea exclusiva para Ecuador?</em> 🌋
-                La respuesta es <strong style={{ color: "var(--color-ink)" }}>Legado</strong> — una colección
-                ficticia que rinde homenaje a la herencia visual del país, desde los volcanes de la Sierra
-                hasta las islas encantadas, traducido al lenguaje del streetwear contemporáneo.
-              </p>
-              <p style={{
-                fontFamily: "var(--font-body)", fontSize: "var(--type-body)",
-                lineHeight: 1.8, color: "var(--color-ink-soft)",
-              }}>
-                Dirigido a la <strong style={{ color: "var(--color-ink)" }}>Generación Z ecuatoriana</strong> 🎮,
-                el proyecto aplica técnicas de scrollytelling, espacio negativo masivo y motion design
-                orgánico para crear una experiencia inmersiva que va más allá del e-commerce convencional.
+                Nuestra prenda estrella, la <strong style={{ color: "var(--color-indoor-blue)" }}>Camisa Nike Indoor Gen Z</strong>, captura esta energía con gráficos estilo graffiti, remates en Azul Indoor y destellos en Volt fosforescente que representan la electricidad de jugar entre amigos hasta que se esconde el sol.
               </p>
             </div>
 
@@ -383,28 +383,31 @@ export default function NosotrosPage() {
               display: "flex", flexDirection: "column", gap: "var(--space-md)",
             }}>
               {[
-                { icon: "🎨", title: "Minimalismo Ecuatoriano", text: "Estética despojada con acentos culturales. El espacio negativo domina el 62% de la interfaz." },
-                { icon: "🗺️", title: "Cartografía & Pixel Art", text: "Galápagos en vectores, Quito en 16-bits. La geografía ecuatoriana traducida al lenguaje digital." },
-                { icon: "⚡", title: "Chrome Invisible", text: "La UI se aparta del camino. El producto y la narrativa visual son los únicos protagonistas." },
-                { icon: "🏔️", title: "Herencia Andina", text: "Volcanes, biodiversidad y urbanismo tropical codificados en una paleta de alta energía." },
+                { icon: "⚡", title: "ENERGÍA", text: "El ritmo incesante del partido callejero. La intensidad de no dar ningún balón por perdido en la cancha de cemento o tierra." },
+                { icon: "☺", title: "CREATIVIDAD", text: "La gambeta, el túnel y la improvisación en espacios reducidos. El arte urbano aplicado a la indumentaria deportiva." },
+                { icon: "👥", title: "AMISTAD", text: "El código no escrito de la calle. Los compañeros de equipo que se convierten en familia y los partidos que duran para siempre." },
+                { icon: "👑", title: "ACTITUD", text: "Jugar con orgullo, llevar el nombre de nuestro barrio en el pecho y no achicarse ante ningún rival." },
               ].map((item, i) => (
                 <motion.div key={item.title}
                   initial={{ opacity: 0, x: 16 }} whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.5, ease }}
+                  whileHover={{ scale: 1.02, x: 8 }}
                   style={{
                     padding: "var(--space-lg)", backgroundColor: "var(--color-canvas-alt)",
                     display: "flex", gap: "var(--space-md)", alignItems: "flex-start",
+                    borderLeft: i === 0 ? "3px solid var(--color-volt)" : "3px solid var(--color-indoor-blue)",
+                    borderRadius: "var(--radius-sm)"
                   }}>
-                  <span style={{ fontSize: "24px", lineHeight: 1, flexShrink: 0 }}>{item.icon}</span>
+                  <span style={{ fontSize: "28px", lineHeight: 1, flexShrink: 0 }}>{item.icon}</span>
                   <div>
                     <p style={{
-                      fontFamily: "var(--font-display)", fontSize: "var(--type-body-sm)",
-                      fontWeight: 600, textTransform: "uppercase", color: "var(--color-ink)",
+                      fontFamily: "var(--font-display)", fontSize: "var(--type-h4)",
+                      fontWeight: 700, textTransform: "uppercase", color: "var(--color-ink)",
                       marginBottom: "var(--space-2xs)",
                     }}>{item.title}</p>
                     <p style={{
-                      fontFamily: "var(--font-body)", fontSize: "var(--type-caption)",
+                      fontFamily: "var(--font-body)", fontSize: "var(--type-body-sm)",
                       lineHeight: 1.5, color: "var(--color-ink-soft)",
                     }}>{item.text}</p>
                   </div>

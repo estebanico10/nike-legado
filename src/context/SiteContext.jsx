@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-const SITE_VERSION = "v4"; // bump this when initialHomeSections or initialTeam changes
+const SITE_VERSION = "v5-barrio"; // bump this when initialHomeSections or initialTeam changes
+
 
 const SiteContext = createContext();
 
@@ -19,11 +20,11 @@ const initialTeam = {
 const initialHomeSections = [
   { id: "hero", type: "hero", title: "Portada Nike Legado", visible: true, order: 1 },
   { id: "destacados", type: "destacados", title: "Destacados", visible: true, order: 2 },
-  { id: "lookbook", type: "lookbook", title: "LOOKBOOK — VOL. 1", description: "Explora la intersección entre el minimalismo radical y la herencia ecuatoriana a través de nuestra última editorial visual.", visible: true, order: 3, 
+  { id: "lookbook", type: "lookbook", title: "LOOKBOOK — VOL. 2: FÚTBOL BARRIO", description: "Explora la pasión de la cancha de tierra y la energía callejera de la Generación Z en nuestra editorial visual.", visible: true, order: 3, 
     images: [
-      { id: "img1", src: "./assets/home/lookbook-1.png", title: "URBAN ANDINO", subtitle: "Colección Cero" },
-      { id: "img2", src: "./assets/home/lookbook-2.png", title: "HERENCIA", subtitle: "Archivo 01" },
-      { id: "img3", src: "./assets/home/lookbook-3.png", title: "FUTURO", subtitle: "Concepto Experimental" }
+      { id: "img1", src: "./assets/products/indoor-genz-front.png", title: "INDOOR GEN Z", subtitle: "Fútbol Amigos Barrio Sueños" },
+      { id: "img2", src: "./assets/products/indoor-genz-court.jpg", title: "CANCHA DE TIERRA", subtitle: "Donde las mochinas son arco" },
+      { id: "img3", src: "./assets/products/indoor-genz-back.png", title: "HECHO PARA JUGAR", subtitle: "Actitud & Energía" }
     ]
   }
 ];

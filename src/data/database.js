@@ -1,4 +1,5 @@
 export const categorias = [
+  "Indoor Gen Z",
   "Arcade",
   "Cartografía",
   "Timeless",
@@ -6,6 +7,62 @@ export const categorias = [
 ];
 
 export const productos = [
+  // ─── INDOOR GEN Z (FÚTBOL DE BARRIO) ───────────────────────────────────────
+  {
+    id: "indoor-jersey-genz-001",
+    nombre: "CAMISA NIKE INDOOR GEN Z",
+    tipo: "camisa",
+    tallas: ["S", "M", "L", "XL"],
+    imagenes: [
+      "./assets/products/indoor-genz-front.png",
+      "./assets/products/indoor-genz-back.png",
+      "./assets/products/indoor-genz-specs.png",
+      "./assets/products/indoor-genz-court.jpg",
+    ],
+    descripcion:
+      "Diseñada con el alma del fútbol de barrio: 'El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro'. Tejido técnico transpirable, gráficos estilo graffiti 'Fútbol Amigos Barrio Sueños' y sellos de autenticidad en Volt y Azul Indoor.",
+    precio: 30.00,
+    enOferta: false,
+    esNuevo: true,
+    stock: 50,
+    colores: ["#F5F5F5", "#043174", "#CEFF00", "#111111"],
+    categoria: "Indoor Gen Z",
+  },
+  {
+    id: "indoor-short-genz-001",
+    nombre: "PANTALONETA INDOOR VOLT",
+    tipo: "pantaloneta",
+    tallas: ["S", "M", "L", "XL"],
+    imagenes: [
+      "./assets/products/equip-short-001-front.webp",
+    ],
+    descripcion:
+      "Pantaloneta de juego para fútbol callejero y cancha techada. Tejido Dri-FIT resistente a la fricción con paneles laterales en color Volt fosforescente.",
+    precio: 25.00,
+    enOferta: false,
+    esNuevo: true,
+    stock: 35,
+    colores: ["#111111", "#CEFF00"],
+    categoria: "Indoor Gen Z",
+  },
+  {
+    id: "indoor-cap-genz-001",
+    nombre: "GORRA STREET FÚTBOL BARRIO",
+    tipo: "gorra",
+    tallas: ["Talla única"],
+    imagenes: [
+      "./assets/products/timeless-cap-001-front.webp",
+    ],
+    descripcion:
+      "Gorra desestructurada con bordado estilo graffiti 'HECHO PARA JUGAR'. Algodón canvas lavado resistente al sol y sudor.",
+    precio: 20.00,
+    enOferta: false,
+    esNuevo: true,
+    stock: 40,
+    colores: ["#043174", "#CEFF00", "#111111"],
+    categoria: "Indoor Gen Z",
+  },
+
   // ─── ARCADE ────────────────────────────────────────────────────────────────
   {
     id: "arcade-hoodie-001",

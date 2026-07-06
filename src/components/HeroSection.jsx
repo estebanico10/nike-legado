@@ -53,19 +53,11 @@ export default function HeroSection() {
             animation: "shimmer 2s infinite linear",
             zIndex: -1
           }}></div>
-          <div style={{
+          <div className="badge-indoor" style={{
             padding: "var(--space-xs) var(--space-md)",
-            backgroundColor: "var(--color-canvas)",
             borderRadius: "100px",
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--type-caption)",
-            fontWeight: 600,
-            color: "var(--color-volt)",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            border: "1px solid var(--color-ink-muted)",
           }}>
-            Colección Cápsula 2026
+            ⚽ COLECCIÓN INDOOR GEN Z — FÚTBOL BARRIO
           </div>
         </motion.div>
 
@@ -88,6 +80,28 @@ export default function HeroSection() {
           >
             NIKE <span style={{ color: "transparent", WebkitTextStroke: "2px var(--color-ink)", display: "block" }}>LEGADO</span>
           </motion.h1>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: -3 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            style={{
+              marginTop: "-10px",
+              marginBottom: "10px",
+            }}
+          >
+            <span className="font-street" style={{
+              fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
+              color: "var(--color-indoor-blue)",
+              backgroundColor: "var(--color-volt)",
+              padding: "2px 16px",
+              borderRadius: "4px",
+              boxShadow: "4px 4px 0px var(--color-ink)",
+              display: "inline-block"
+            }}>
+              👑 HECHO PARA JUGAR
+            </span>
+          </motion.div>
         </div>
 
         <motion.p
@@ -99,13 +113,12 @@ export default function HeroSection() {
             fontSize: "clamp(1rem, 2vw, 1.25rem)",
             lineHeight: 1.6,
             color: "var(--color-ink-soft)",
-            maxWidth: "600px",
-            margin: "var(--space-xl) auto var(--space-2xl)",
+            maxWidth: "640px",
+            margin: "var(--space-md) auto var(--space-2xl)",
           }}
         >
-          Pixel art de 16-bits. Cartografía ancestral. Prendas que narran
-          territorio. Colección diseñada desde los Andes para las calles
-          del mundo.
+          “El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro.” 
+          <strong style={{ color: "var(--color-ink)", display: "block", marginTop: "8px" }}>FÚTBOL AMIGOS BARRIO SUEÑOS.</strong>
         </motion.p>
 
         <motion.div
@@ -114,15 +127,16 @@ export default function HeroSection() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
           style={{ display: "flex", gap: "var(--space-md)", justifyContent: "center", flexWrap: "wrap" }}
         >
-          <a href="#coleccion" className="btn btn--primary" style={{
-            position: "relative", overflow: "hidden", display: "inline-flex", alignItems: "center", gap: "var(--space-sm)"
+          <Link to="/tienda" className="btn btn--primary" style={{
+            position: "relative", overflow: "hidden", display: "inline-flex", alignItems: "center", gap: "var(--space-sm)",
+            backgroundColor: "var(--color-indoor-blue)", color: "#FFFFFF", borderColor: "var(--color-indoor-blue)"
           }}>
-            EXPLORAR COLECCIÓN
+            👑 VER CAMISA GEN Z ($30)
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <Link to="/nosotros" className="btn btn--secondary">
-            NUESTRA HISTORIA
           </Link>
+          <a href="#coleccion" className="btn btn--secondary">
+            EXPLORAR BARRIO
+          </a>
         </motion.div>
       </div>
 

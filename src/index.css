@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Permanent+Marker&family=Sedgwick+Ave+Display&display=swap');
+
 
 :root {
   --color-ink: #111111;
@@ -12,9 +13,11 @@
   --color-focus: #0066CC;
   --color-volt: #CEFF00;
   --color-orange: #FF6600;
+  --color-indoor-blue: #043174;
 
   --font-display: "Oswald", "Barlow Condensed", sans-serif;
   --font-body: "Helvetica Neue", "Inter", -apple-system, sans-serif;
+  --font-street: "Sedgwick Ave Display", "Permanent Marker", cursive;
 
   --type-hero: 72px;
   --type-h1: 48px;
@@ -368,4 +371,34 @@ img {
 }
 .interactive:hover {
   transform: translateY(-4px);
+}
+
+.font-street {
+  font-family: var(--font-street);
+  letter-spacing: 0.05em;
+}
+
+.text-stroke-volt {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-volt);
+}
+
+.text-stroke-ink {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink);
+}
+
+.badge-indoor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background-color: var(--color-indoor-blue);
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-size: var(--type-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-volt);
 }
