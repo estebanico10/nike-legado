@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { useProducts } from "../context/ProductContext";
 
@@ -15,21 +15,28 @@ export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const { cart } = useProducts();
+  const { scrollY } = useScroll();
 
   const cartItemsCount = cart.reduce((total, item) => total + item.qty, 0);
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (latest > 50 && latest > previous) {
+      setHidden(true);
+      setMenuOpen(false); // Close menu on scroll down
+    } else {
+      setHidden(false);
+    }
+    setScrolled(latest > 20);
+  });
 
   return (
     <motion.nav
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       style={{
         position: "sticky",
         top: 0,
@@ -238,45 +245,61 @@ export default function Navbar() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                padding: "var(--space-lg) var(--space-md)",
-                gap: "var(--space-lg)",
+                padding: "var(--space-xl) var(--space-md) var(--space-4xl) var(--space-md)",
+                gap: "var(--space-xl)",
+                minHeight: "100vh"
               }}
             >
-              {navLinks.map(({ to, label }) => (
-                <Link
+              {navLinks.map(({ to, label }, i) => (
+                <motion.div
                   key={to}
-                  to={to}
-                  onClick={() => setMenuOpen(false)}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "var(--type-h3)",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.04em",
-                    color:
-                      location.pathname === to
-                        ? "var(--color-ink)"
-                        : "var(--color-ink-soft)",
-                  }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
                 >
-                  {label}
-                </Link>
+                  <Link
+                    to={to}
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "clamp(2.5rem, 8vw, 4rem)",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      color:
+                        location.pathname === to
+                          ? "var(--color-ink)"
+                          : "var(--color-ink-soft)",
+                      textDecoration: "none"
+                    }}
+                  >
+                    {label}
+                  </Link>
+                </motion.div>
               ))}
-              <Link
-                  to="/admin"
-                  onClick={() => setMenuOpen(false)}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "var(--type-h3)",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.04em",
-                    color: "var(--color-volt)",
-                    marginTop: "var(--space-md)"
-                  }}
-                >
-                  ADMIN PANEL
-              </Link>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navLinks.length * 0.1, duration: 0.4 }}
+              >
+                <Link
+                    to="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "clamp(2rem, 6vw, 3rem)",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      color: "var(--color-volt)",
+                      marginTop: "var(--space-2xl)",
+                      display: "block",
+                      textDecoration: "none"
+                    }}
+                  >
+                    ADMIN PANEL
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         )}
