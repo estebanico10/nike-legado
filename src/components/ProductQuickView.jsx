@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { resolveAsset } from "../utils/resolveAsset";
 
@@ -25,6 +25,23 @@ export default function ProductQuickView({ producto, onClose }) {
   );
   const [added, setAdded] = useState(false);
   const { addToCart } = useProducts();
+  const imgContainerRef = useRef(null);
+
+  // Zoom effect states
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
+  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
+  const zoomX = useTransform(springX, [0, 1], ["0%", "100%"]);
+  const zoomY = useTransform(springY, [0, 1], ["0%", "100%"]);
+  const [isZooming, setIsZooming] = useState(false);
+
+  const handleMouseMove = (e) => {
+    if (!imgContainerRef.current) return;
+    const rect = imgContainerRef.current.getBoundingClientRect();
+    mouseX.set((e.clientX - rect.left) / rect.width);
+    mouseY.set((e.clientY - rect.top) / rect.height);
+  };
 
   useEffect(() => {
     if (added) {
@@ -114,21 +131,29 @@ export default function ProductQuickView({ producto, onClose }) {
             }}
           >
             <div
+              ref={imgContainerRef}
+              onMouseEnter={() => setIsZooming(true)}
+              onMouseLeave={() => { setIsZooming(false); mouseX.set(0.5); mouseY.set(0.5); }}
+              onMouseMove={handleMouseMove}
               style={{
                 flex: 1,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
+                position: "relative",
+                cursor: isZooming ? "zoom-in" : "default"
               }}
             >
-              <img
+              <motion.img
                 src={resolveAsset(producto.imagenes[activeImg])}
                 alt={`${producto.nombre} — vista ${activeImg + 1}`}
+                animate={{ scale: isZooming ? 1.5 : 1 }}
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                  transformOrigin: `${zoomX.get()} ${zoomY.get()}`,
                   transition: "opacity var(--duration-std) var(--ease-out)",
                 }}
                 onError={(e) => {
@@ -313,22 +338,34 @@ export default function ProductQuickView({ producto, onClose }) {
                 </p>
                 <div style={{ display: "flex", gap: "var(--space-xs)" }}>
                   {producto.colores.map((color) => (
-                    <button
+                    <motion.button
                       key={color}
                       onClick={() => setSelectedColor(color)}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
                       aria-label={`Seleccionar color ${color}`}
                       style={{
+                        position: "relative",
                         width: "32px",
                         height: "32px",
                         backgroundColor: color,
-                        border:
-                          selectedColor === color
-                            ? "2px solid var(--color-ink)"
-                            : "1px solid var(--color-ink-muted)",
+                        border: "1px solid var(--color-ink-muted)",
+                        borderRadius: "50%",
                         cursor: "pointer",
-                        transition: "border var(--duration-micro) var(--ease-out)",
                       }}
-                    />
+                    >
+                      {selectedColor === color && (
+                        <motion.div
+                          layoutId="colorRing"
+                          style={{
+                            position: "absolute",
+                            inset: "-4px",
+                            border: "2px solid var(--color-ink)",
+                            borderRadius: "50%"
+                          }}
+                        />
+                      )}
+                    </motion.button>
                   ))}
                 </div>
               </div>
@@ -350,10 +387,13 @@ export default function ProductQuickView({ producto, onClose }) {
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-sm)" }}>
                 {(producto.tallas || ["S", "M", "L", "XL"]).map((size) => (
-                  <button
+                  <motion.button
                     key={size}
                     onClick={() => setSelectedSize(size)}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     style={{
+                      position: "relative",
                       width: "40px",
                       height: "40px",
                       display: "flex",
@@ -362,51 +402,86 @@ export default function ProductQuickView({ producto, onClose }) {
                       fontFamily: "var(--font-display)",
                       fontSize: "var(--type-body-sm)",
                       fontWeight: 600,
-                      backgroundColor: selectedSize === size ? "var(--color-ink)" : "transparent",
+                      backgroundColor: "transparent",
                       color: selectedSize === size ? "var(--color-canvas)" : "var(--color-ink)",
-                      border: "1px solid var(--color-ink)",
+                      border: "none",
                       cursor: "pointer",
-                      transition: "all var(--duration-micro) var(--ease-out)",
                     }}
                   >
+                    {selectedSize === size && (
+                      <motion.div
+                        layoutId="sizeBackground"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          backgroundColor: "var(--color-ink)",
+                          zIndex: -1
+                        }}
+                      />
+                    )}
+                    {!selectedSize || selectedSize !== size ? (
+                       <div style={{ position: "absolute", inset: 0, border: "1px solid var(--color-ink)", zIndex: -2 }} />
+                    ) : null}
                     {size}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </div>
 
-            {/* Stock */}
+            {/* Urgency Bar / Stock */}
             {producto.stock !== undefined && (
-              <p
-                style={{
-                  fontSize: "var(--type-caption)",
-                  color:
-                    producto.stock > 0
-                      ? "var(--color-success)"
-                      : "var(--color-sale)",
-                  fontWeight: 500,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                {producto.stock > 0
-                  ? `${producto.stock} unidades disponibles`
-                  : "Agotado"}
-              </p>
+              <div style={{ marginTop: "var(--space-md)" }}>
+                <p
+                  style={{
+                    fontSize: "var(--type-caption)",
+                    color:
+                      producto.stock > 0
+                        ? "var(--color-ink)"
+                        : "var(--color-sale)",
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    marginBottom: "var(--space-xs)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--space-xs)"
+                  }}
+                >
+                  {producto.stock > 0
+                    ? (producto.stock < 5 ? `⚡ ¡Rápido! Solo quedan ${producto.stock}` : `${producto.stock} unidades disponibles`)
+                    : "Agotado"}
+                </p>
+                {producto.stock > 0 && (
+                  <div style={{ width: "100%", height: "4px", backgroundColor: "var(--color-ink-muted)", overflow: "hidden" }}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min((producto.stock / 20) * 100, 100)}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      style={{
+                        height: "100%",
+                        backgroundColor: producto.stock < 5 ? "var(--color-sale)" : "var(--color-volt)"
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Spacer */}
             <div style={{ flex: 1 }} />
 
             {/* CTA */}
-            <button 
+            <motion.button 
               className="btn btn--primary" 
+              whileTap={{ scale: 0.95 }}
               style={{ 
                 width: "100%", 
                 backgroundColor: added ? "var(--color-success)" : undefined,
                 color: added ? "#FFFFFF" : undefined,
                 borderColor: added ? "var(--color-success)" : undefined,
-                pointerEvents: added ? "none" : "auto"
+                pointerEvents: added ? "none" : "auto",
+                position: "relative",
+                overflow: "hidden"
               }}
               onClick={() => {
                 addToCart(producto, selectedSize, selectedColor);
@@ -414,8 +489,21 @@ export default function ProductQuickView({ producto, onClose }) {
               }}
               disabled={producto.stock <= 0}
             >
-              {added ? "✓ Añadido" : "Añadir al Carrito"}
-            </button>
+              <motion.span
+                initial={false}
+                animate={{ y: added ? -40 : 0, opacity: added ? 0 : 1 }}
+                style={{ display: "block" }}
+              >
+                Añadir al Carrito
+              </motion.span>
+              <motion.span
+                initial={false}
+                animate={{ y: added ? 0 : 40, opacity: added ? 1 : 0 }}
+                style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+              >
+                ✓ Añadido
+              </motion.span>
+            </motion.button>
           </div>
 
           {/* Responsive: stack on mobile */}

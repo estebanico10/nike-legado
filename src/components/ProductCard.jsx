@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { resolveAsset } from "../utils/resolveAsset";
 
@@ -11,6 +11,40 @@ export default function ProductCard({ producto, index, onQuickView }) {
   const [hovered, setHovered] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useProducts();
+  const cardRef = useRef(null);
+
+  // 3D Tilt Effect State
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 40 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 40 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+  
+  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const glareOpacity = useTransform(mouseXSpring, [-0.5, 0.5], [0.3, 0.5]);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    x.set(0);
+    y.set(0);
+  };
 
   const handleAddToCart = (e) => {
     e.stopPropagation(); // Don't open QuickView
@@ -23,33 +57,54 @@ export default function ProductCard({ producto, index, onQuickView }) {
 
   return (
     <motion.article
+      ref={cardRef}
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-48px" }}
       transition={{
         duration: 0.5,
-        ease: [0, 0, 0.2, 1],
+        ease: [0.16, 1, 0.3, 1],
         delay: index * 0.08,
       }}
       onClick={() => onQuickView?.(producto)}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{
         display: "flex",
         flexDirection: "column",
         gap: "var(--space-sm)",
         cursor: "pointer",
+        perspective: "1000px" // For 3D tilt
       }}
     >
-      {/* Image Container */}
-      <div
+      {/* Image Container with Tilt */}
+      <motion.div
         style={{
           position: "relative",
           aspectRatio: "1 / 1",
           overflow: "hidden",
           backgroundColor: "var(--color-canvas-alt)",
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
         }}
       >
+        {/* Glare Effect */}
+        <motion.div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 10,
+            background: "radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 60%)",
+            opacity: hovered ? glareOpacity : 0,
+            left: glareX,
+            top: glareY,
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none",
+            mixBlendMode: "overlay",
+          }}
+        />
         {imgError ? (
           <div
             style={{
@@ -232,7 +287,7 @@ export default function ProductCard({ producto, index, onQuickView }) {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Product Info */}
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2xs)" }}>
