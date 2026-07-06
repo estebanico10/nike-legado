@@ -66,6 +66,14 @@ export function ProductProvider({ children }) {
     return [];
   });
 
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem("nike-legado-wishlist");
+      if (saved) return JSON.parse(saved);
+    } catch (e) { console.warn("Cache info:", e); }
+    return [];
+  });
+
   useEffect(() => {
     saveProductos(productos);
   }, [productos]);
@@ -81,6 +89,10 @@ export function ProductProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("nike-legado-cart", JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem("nike-legado-wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
 
   const addProducto = useCallback((producto) => {
     setProductos((prev) => [...prev, { ...producto, id: producto.id || crypto.randomUUID() }]);
@@ -134,6 +146,16 @@ export function ProductProvider({ children }) {
 
   const clearCart = useCallback(() => setCart([]), []);
 
+  const toggleWishlist = useCallback((producto) => {
+    setWishlist((prev) => {
+      const exists = prev.some((item) => item.id === producto.id);
+      if (exists) {
+        return prev.filter((item) => item.id !== producto.id);
+      }
+      return [...prev, producto];
+    });
+  }, []);
+
   const addCategoria = useCallback((cat) => {
     setCategoriasState((prev) => prev.includes(cat) ? prev : [...prev, cat]);
   }, []);
@@ -153,23 +175,12 @@ export function ProductProvider({ children }) {
   return (
     <ProductContext.Provider
       value={{
-        productos,
-        categorias: categoriasState,
-        tiposProducto: tiposProductoState,
-        cart,
-        addProducto,
-        updateProducto,
-        removeProducto,
-        getProducto,
-        resetToSeed,
-        addToCart,
-        updateCartQty,
-        removeFromCart,
-        clearCart,
-        addCategoria,
-        removeCategoria,
-        addTipoProducto,
-        removeTipoProducto
+        productos, categorias: categoriasState, tiposProducto: tiposProductoState,
+        cart, wishlist,
+        addProducto, updateProducto, removeProducto, getProducto, resetToSeed,
+        addToCart, updateCartQty, removeFromCart, clearCart,
+        toggleWishlist,
+        addCategoria, removeCategoria, addTipoProducto, removeTipoProducto
       }}
     >
       {children}
