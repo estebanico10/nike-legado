@@ -1,1 +1,0 @@
-function e(e){if(!e)return``;if(e.startsWith(`http://`)||e.startsWith(`https://`)||e.startsWith(`data:`)||e.startsWith(`/`))return e;let t=e.replace(/^\.?\/+/,``),n=`/nike-legado/`;return`${n.endsWith(`/`)?n:`${n}/`}${t}`}export{e as t};
