@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+export default function AdminAuth({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem("adminAuth") === "true";
   });
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (password === "JesusesVida.10") {
       sessionStorage.setItem("adminAuth", "true");
