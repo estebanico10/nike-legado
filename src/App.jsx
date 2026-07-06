@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
 import Navbar from "./components/Navbar";
