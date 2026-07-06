@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
-import { useCartStore, useUIStore } from "../store/useStore";
+import { useCartStore, useUIStore, useWishlistStore } from "../store/useStore";
 import SearchOverlay from "./SearchOverlay";
 import CartDrawer from "./CartDrawer";
 
@@ -22,7 +22,6 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const cartCount = useCartStore((state) => state.getCartCount());
   const { openCart, openSearch } = useUIStore();
-  const wishlistItemsCount = 0; // Keeping legacy placeholder if needed
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
@@ -159,34 +158,14 @@ export default function Navbar() {
           </button>
 
           {/* Wishlist Icon */}
-          <Link to="/tienda?filter=wishlist" style={{ position: "relative", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Favoritos">
+          <Link to="/favoritos" style={{ position: "relative", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Favoritos">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
             <AnimatePresence>
-              {wishlistItemsCount > 0 && (
-                <motion.span 
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    backgroundColor: "var(--color-error, #ff3333)",
-                    color: "#fff",
-                    fontSize: "10px",
-                    fontWeight: "bold",
-                    width: "16px",
-                    height: "16px",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    transform: "translate(25%, -25%)"
-                  }}
-                >
-                  {wishlistItemsCount}
+              {useWishlistStore((state) => state.items.length) > 0 && (
+                <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} style={{ position: "absolute", top: 0, right: 0, backgroundColor: "var(--color-ink)", color: "var(--color-canvas)", fontSize: "10px", fontWeight: "bold", width: "16px", height: "16px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", transform: "translate(25%, -25%)" }}>
+                  {useWishlistStore((state) => state.items.length)}
                 </motion.span>
               )}
             </AnimatePresence>

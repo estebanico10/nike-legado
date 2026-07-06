@@ -119,7 +119,14 @@ export default function Footer() {
         
         {/* Bottom Bar */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "var(--space-lg)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "var(--space-md)", fontSize: "var(--type-caption)", opacity: 0.5 }}>
-          <p>&copy; {new Date().getFullYear()} Nike Legado. Todos los derechos reservados.</p>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
+            <p>&copy; {new Date().getFullYear()} Nike Legado. Todos los derechos reservados.</p>
+            <div style={{ display: "flex", gap: "var(--space-xs)", alignItems: "center", marginLeft: "var(--space-md)" }}>
+              <button style={{ background: "none", border: "none", color: "var(--color-canvas)", fontSize: "var(--type-micro)", fontWeight: 700, cursor: "pointer", textDecoration: "underline" }}>ES</button>
+              <span style={{ color: "var(--color-canvas)", fontSize: "var(--type-micro)" }}>|</span>
+              <button style={{ background: "none", border: "none", color: "var(--color-canvas)", opacity: 0.6, fontSize: "var(--type-micro)", cursor: "pointer" }}>EN</button>
+            </div>
+          </div>
           <p style={{ display: "flex", gap: "var(--space-sm)", alignItems: "center" }}>
             Quito, Ecuador 
             <svg width="16" height="12" viewBox="0 0 3 2">

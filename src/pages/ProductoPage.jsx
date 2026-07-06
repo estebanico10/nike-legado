@@ -11,6 +11,7 @@ import { resolveAsset } from "../utils/resolveAsset";
 import ProductCard from "../components/ProductCard";
 import SizeGuideModal from "../components/SizeGuideModal";
 import InteractiveShoe3D from "../components/InteractiveShoe3D";
+import SizeRecommender from "../components/SizeRecommender";
 
 export default function ProductoPage() {
   const { id } = useParams();
@@ -192,13 +193,22 @@ export default function ProductoPage() {
                 {/* Sizes */}
                 {producto.tallas && producto.tallas.length > 0 && (
                   <div style={{ marginBottom: "var(--space-2xl)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)" }}>
-                      <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Talla</span>
-                      <button onClick={() => setShowSizeGuide(true)} style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", textDecoration: "underline", border: "none", background: "none", cursor: "pointer", padding: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-sm)" }}>
+                      <h3 style={{ fontSize: "var(--type-body-sm)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        Selecciona tu talla
+                      </h3>
+                      <button 
+                        onClick={() => setShowSizeGuide(true)}
+                        style={{ background: "none", border: "none", color: "var(--color-ink-soft)", textDecoration: "underline", fontSize: "var(--type-caption)", cursor: "pointer" }}
+                      >
                         Guía de tallas
                       </button>
                     </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(60px, 1fr))", gap: "var(--space-xs)" }}>
+
+                    {/* Recomendador Inteligente */}
+                    <SizeRecommender />
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--space-sm)" }}>
                       {producto.tallas.map(t => (
                         <button
                           key={t}

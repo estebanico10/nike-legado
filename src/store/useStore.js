@@ -90,3 +90,40 @@ export const useSocialStore = create(
     }
   )
 );
+
+export const useWishlistStore = create(
+  persist(
+    (set, get) => ({
+      items: [],
+      toggleWishlist: (product) => {
+        const items = get().items;
+        const exists = items.some(item => item.id === product.id);
+        if (exists) {
+          set({ items: items.filter(item => item.id !== product.id) });
+        } else {
+          set({ items: [...items, product] });
+        }
+      },
+      isInWishlist: (id) => get().items.some(item => item.id === id),
+      clearWishlist: () => set({ items: [] }),
+    }),
+    {
+      name: 'nike-wishlist-storage',
+    }
+  )
+);
+
+export const useThemeStore = create(
+  persist(
+    (set) => ({
+      accentColor: "#D4FF00",
+      setAccentColor: (color) => {
+        set({ accentColor: color });
+        document.documentElement.style.setProperty('--color-volt', color);
+      }
+    }),
+    {
+      name: 'nike-theme-storage',
+    }
+  )
+);

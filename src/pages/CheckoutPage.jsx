@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useProducts } from "../context/ProductContext";
+import { useCartStore } from "../store/useStore";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { resolveAsset } from "../utils/resolveAsset";
@@ -26,7 +26,7 @@ const InputField = ({ label, name, type = "text", placeholder, maxLength, formDa
 const ease = [0, 0, 0.2, 1];
 
 export default function CheckoutPage() {
-  const { cart, clearCart } = useProducts();
+  const { items: cart, clearCart } = useCartStore();
   const [isSuccess, setIsSuccess] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -118,6 +118,29 @@ export default function CheckoutPage() {
               </svg>
             </div>
             
+            {/* Confetti simulation using Framer Motion */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "100%", pointerEvents: "none", overflow: "hidden" }}>
+              {[...Array(30)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 1, y: -50, x: "50vw", scale: 0 }}
+                  animate={{ 
+                    y: "100vh", 
+                    x: `${Math.random() * 100}vw`,
+                    scale: Math.random() * 1.5 + 0.5,
+                    rotate: Math.random() * 360
+                  }}
+                  transition={{ duration: Math.random() * 2 + 2, ease: "easeOut", repeat: Infinity, repeatDelay: Math.random() * 2 }}
+                  style={{
+                    position: "absolute",
+                    width: "10px", height: "10px",
+                    backgroundColor: ["#D4FF00", "#FF4500", "#00E5FF", "#FFF"][Math.floor(Math.random() * 4)],
+                    borderRadius: Math.random() > 0.5 ? "50%" : "0%"
+                  }}
+                />
+              ))}
+            </div>
+
             <h1 style={{
               fontFamily: "var(--font-display)", fontSize: "var(--type-h2)",
               fontWeight: 700, letterSpacing: "var(--tracking-tight)", textTransform: "uppercase",
@@ -416,8 +439,8 @@ export default function CheckoutPage() {
                           </p>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500 }}>CANT: {item.qty}</span>
-                          <span style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}>${((item.precioOferta || item.precio) * item.qty).toFixed(2)}</span>
+                          <span style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500 }}>CANT: {item.quantity}</span>
+                          <span style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}>${((item.precioOferta || item.precio) * item.quantity).toFixed(2)}</span>
                         </div>
                       </div>
                     </div>

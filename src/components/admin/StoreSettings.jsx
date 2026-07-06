@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useProducts } from "../../context/ProductContext";
+import { useThemeStore } from "../../store/useStore";
 
 export default function StoreSettings() {
   const { categorias, addCategoria, removeCategoria, tiposProducto, addTipoProducto, removeTipoProducto } = useProducts();
+  const { accentColor, setAccentColor } = useThemeStore();
   const [newCat, setNewCat] = useState("");
   const [newTipo, setNewTipo] = useState("");
 
@@ -71,6 +73,40 @@ export default function StoreSettings() {
             />
             <button type="submit" className="btn btn--secondary btn--sm" style={{ borderColor: "#333", color: "#F5F5F5" }}>Agregar</button>
           </form>
+        </div>
+
+        {/* Theme Switcher */}
+        <div style={{ backgroundColor: "#111111", border: "1px solid #222", borderRadius: "var(--radius-md)", padding: "var(--space-md)" }}>
+          <h3 style={{ fontSize: "var(--type-body)", color: "var(--color-volt)", marginBottom: "var(--space-sm)" }}>Tema Global (Color de Acento)</h3>
+          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", marginBottom: "var(--space-md)" }}>
+            Selecciona el color principal que se reflejará en toda la tienda para botones y destaques.
+          </p>
+          <div style={{ display: "flex", gap: "var(--space-md)", flexWrap: "wrap" }}>
+            {[
+              { label: "Volt", hex: "#D4FF00" },
+              { label: "Nike Red", hex: "#D30005" },
+              { label: "Ocean", hex: "#00E5FF" },
+              { label: "Orange", hex: "#FF4500" },
+              { label: "Purple", hex: "#9D00FF" },
+              { label: "White", hex: "#FFFFFF" }
+            ].map(color => (
+              <button
+                key={color.hex}
+                onClick={() => setAccentColor(color.hex)}
+                style={{
+                  width: "40px", height: "40px", borderRadius: "50%",
+                  backgroundColor: color.hex,
+                  border: accentColor === color.hex ? "3px solid #FFF" : "1px solid #333",
+                  outline: accentColor === color.hex ? `2px solid ${color.hex}` : "none",
+                  cursor: "pointer",
+                  transition: "transform 0.2s"
+                }}
+                title={color.label}
+                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"}
+                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Gamificación (Lucky Wheel) */}

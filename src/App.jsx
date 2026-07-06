@@ -18,6 +18,7 @@ const AdminPage = lazy(() => import("./pages/AdminPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+const WishlistPage = lazy(() => import("./pages/WishlistPage"));
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
@@ -25,13 +26,18 @@ import { useState } from "react";
 import WhatsAppFAB from "./components/WhatsAppFAB";
 import LuckyWheel from "./components/LuckyWheel";
 import CartDrawer from "./components/CartDrawer";
-import { useUIStore } from "./store/useStore";
+import { useUIStore, useThemeStore } from "./store/useStore";
 
 function AppRoutes() {
   const location = useLocation();
+  const { accentColor } = useThemeStore();
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--color-volt', accentColor);
+  }, [accentColor]);
 
   /* Admin and Portal page have their own layouts — no navbar/footer */
-  if (location.pathname === "/admin" || location.pathname === "/" || location.pathname === "/login" || location.pathname === "/perfil") {
+  if (location.pathname === "/admin" || location.pathname === "/" || location.pathname === "/login" || location.pathname === "/perfil" || location.pathname === "/favoritos") {
     return (
       <AnimatePresence mode="wait">
         <Suspense fallback={<LoadingScreen key="lazy-loading-admin" />}>
@@ -40,6 +46,7 @@ function AppRoutes() {
             <Route path="/admin/*" element={<AdminPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/perfil" element={<ProfilePage />} />
+            <Route path="/favoritos" element={<WishlistPage />} />
           </Routes>
         </Suspense>
       </AnimatePresence>

@@ -5,6 +5,7 @@ import { useProducts } from "../context/ProductContext";
 import { useToast } from "../context/ToastContext";
 import { resolveAsset } from "../utils/resolveAsset";
 import OptimizedImage from "./OptimizedImage";
+import { useWishlistStore } from "../store/useStore";
 
 export default function ProductCard({ producto, index, onQuickView }) {
   const portada = resolveAsset(producto.imagenes[0]);
@@ -13,10 +14,11 @@ export default function ProductCard({ producto, index, onQuickView }) {
   const [img2Error] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-  const { addToCart, wishlist, toggleWishlist } = useProducts();
+  const { addToCart } = useProducts();
   const { addToast } = useToast();
+  const { toggleWishlist, wishlist } = useWishlistStore();
+  const isWished = wishlist.some((item) => item.id === producto.id);
   const cardRef = useRef(null);
-  const isWishlisted = wishlist.some(w => w.id === producto.id);
 
   // 3D Tilt Effect State
   const x = useMotionValue(0);
@@ -60,18 +62,6 @@ export default function ProductCard({ producto, index, onQuickView }) {
     addToast(`${producto.nombre} añadido al carrito`, "success");
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 1800);
-  };
-
-  const handleToggleWishlist = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(producto);
-    const exists = wishlist.some((item) => item.id === producto.id);
-    if (!exists) {
-      addToast(`${producto.nombre} añadido a favoritos`, "success");
-    } else {
-      addToast(`${producto.nombre} eliminado de favoritos`, "default");
-    }
   };
 
   return (
@@ -190,35 +180,25 @@ export default function ProductCard({ producto, index, onQuickView }) {
           </>
         )}
 
-        {/* Wishlist Button */}
-        <button
-          onClick={handleToggleWishlist}
-          style={{
-            position: "absolute",
-            top: "var(--space-sm)",
-            right: "var(--space-sm)",
-            zIndex: 10,
-            background: "var(--color-canvas)",
-            border: "none",
-            borderRadius: "50%",
-            width: "32px",
-            height: "32px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-            color: isWishlisted ? "var(--color-error, #ff3333)" : "var(--color-ink)",
-            transition: "transform 0.2s, color 0.2s"
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={isWishlisted ? "Quitar de favoritos" : "Añadir a favoritos"}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </button>
+          {/* Wishlist Heart Overlay */}
+          <button
+            onClick={(e) => { e.preventDefault(); toggleWishlist(producto); }}
+            style={{
+              position: "absolute", top: "12px", right: "12px",
+              background: "white", border: "none", borderRadius: "50%",
+              width: "36px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", boxShadow: "0 2px 10px rgba(0,0,0,0.1)", zIndex: 10,
+              color: isWished ? "#D30005" : "var(--color-ink)",
+              transition: "transform 0.2s ease"
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+            aria-label={isWished ? "Quitar de favoritos" : "Añadir a favoritos"}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill={isWished ? "#D30005" : "none"} stroke="currentColor" strokeWidth="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
 
         {/* Badges */}
         {producto.esNuevo && (
