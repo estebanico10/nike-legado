@@ -65,6 +65,93 @@ function MarqueeText() {
 }
 
 export default function ContactoPage() {
+  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
+  const [focused, setFocused] = useState({ name: false, email: false, message: false });
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formState.name || !formState.email || !formState.message) return;
+    setIsSending(true);
+    setTimeout(() => {
+      setIsSending(false);
+      setIsSent(true);
+      setFormState({ name: "", email: "", message: "" });
+      setTimeout(() => setIsSent(false), 3000);
+    }, 1500);
+  };
+
+  const InputField = ({ name, label, type = "text", isTextArea = false }) => {
+    const isFocused = focused[name];
+    const hasValue = formState[name].length > 0;
+    const isFloating = isFocused || hasValue;
+
+    return (
+      <div style={{ position: "relative", paddingTop: "var(--space-md)" }}>
+        <label
+          htmlFor={name}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: isFloating ? 0 : "var(--space-md)",
+            fontSize: isFloating ? "var(--type-micro)" : "var(--type-body)",
+            fontWeight: isFloating ? 600 : 400,
+            textTransform: isFloating ? "uppercase" : "none",
+            letterSpacing: isFloating ? "0.06em" : "normal",
+            color: isFocused ? "var(--color-volt)" : "var(--color-ink-soft)",
+            transition: "all 0.2s ease-out",
+            pointerEvents: "none",
+          }}
+        >
+          {label}
+        </label>
+        {isTextArea ? (
+          <textarea
+            id={name}
+            value={formState[name]}
+            onChange={(e) => setFormState({ ...formState, [name]: e.target.value })}
+            onFocus={() => setFocused({ ...focused, [name]: true })}
+            onBlur={() => setFocused({ ...focused, [name]: false })}
+            rows={4}
+            style={{
+              width: "100%",
+              padding: "var(--space-sm) 0",
+              border: "none",
+              borderBottom: `1px solid ${isFocused ? "var(--color-volt)" : "var(--color-ink-muted)"}`,
+              fontSize: "var(--type-body)",
+              color: "var(--color-ink)",
+              backgroundColor: "transparent",
+              resize: "vertical",
+              transition: "border-color var(--duration-micro) var(--ease-out)",
+              outline: "none",
+            }}
+          />
+        ) : (
+          <input
+            id={name}
+            type={type}
+            value={formState[name]}
+            onChange={(e) => setFormState({ ...formState, [name]: e.target.value })}
+            onFocus={() => setFocused({ ...focused, [name]: true })}
+            onBlur={() => setFocused({ ...focused, [name]: false })}
+            style={{
+              width: "100%",
+              padding: "var(--space-sm) 0",
+              border: "none",
+              borderBottom: `1px solid ${isFocused ? "var(--color-volt)" : "var(--color-ink-muted)"}`,
+              fontSize: "var(--type-body)",
+              color: "var(--color-ink)",
+              backgroundColor: "transparent",
+              transition: "border-color var(--duration-micro) var(--ease-out)",
+              outline: "none",
+            }}
+          />
+        )}
+      </div>
+    );
+  };
+
   return (
     <>
       <AnimatedBackground />
@@ -124,112 +211,50 @@ export default function ContactoPage() {
               </p>
 
               <form
-                onSubmit={(e) => e.preventDefault()}
-                style={{ display: "flex", flexDirection: "column", gap: "var(--space-xl)", marginBottom: "var(--space-3xl)" }}
+                onSubmit={handleSubmit}
+                style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)", marginBottom: "var(--space-3xl)" }}
               >
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: "var(--type-caption)",
-                      fontWeight: 500,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      color: "var(--color-ink-soft)",
-                      marginBottom: "var(--space-xs)",
-                    }}
-                  >
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Tu nombre completo"
-                    style={{
-                      width: "100%",
-                      padding: "var(--space-sm) 0",
-                      border: "none",
-                      borderBottom: "1px solid var(--color-ink-muted)",
-                      fontSize: "var(--type-body)",
-                      color: "var(--color-ink)",
-                      backgroundColor: "transparent",
-                      transition: "border-color var(--duration-micro) var(--ease-out)",
-                      outline: "none",
-                    }}
-                    onFocus={(e) => (e.target.style.borderBottomColor = "var(--color-volt)")}
-                    onBlur={(e) => (e.target.style.borderBottomColor = "var(--color-ink-muted)")}
-                  />
-                </div>
+                <InputField name="name" label="Nombre Completo" />
+                <InputField name="email" label="Correo Electrónico" type="email" />
+                <InputField name="message" label="Mensaje" isTextArea={true} />
 
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: "var(--type-caption)",
-                      fontWeight: 500,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      color: "var(--color-ink-soft)",
-                      marginBottom: "var(--space-xs)",
-                    }}
+                <motion.button 
+                  className="btn btn--primary" 
+                  whileTap={{ scale: 0.95 }}
+                  style={{ 
+                    alignSelf: "flex-start", 
+                    marginTop: "var(--space-md)",
+                    position: "relative",
+                    overflow: "hidden",
+                    backgroundColor: isSent ? "var(--color-success)" : (isSending ? "var(--color-ink-muted)" : undefined),
+                    borderColor: isSent ? "var(--color-success)" : (isSending ? "var(--color-ink-muted)" : undefined),
+                    color: (isSent || isSending) ? "var(--color-canvas)" : undefined,
+                    pointerEvents: (isSending || isSent) ? "none" : "auto",
+                    width: "200px"
+                  }}
+                >
+                  <motion.span
+                    initial={false}
+                    animate={{ y: (isSending || isSent) ? -40 : 0, opacity: (isSending || isSent) ? 0 : 1 }}
+                    style={{ display: "block" }}
                   >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="tu@email.com"
-                    style={{
-                      width: "100%",
-                      padding: "var(--space-sm) 0",
-                      border: "none",
-                      borderBottom: "1px solid var(--color-ink-muted)",
-                      fontSize: "var(--type-body)",
-                      color: "var(--color-ink)",
-                      backgroundColor: "transparent",
-                      transition: "border-color var(--duration-micro) var(--ease-out)",
-                      outline: "none",
-                    }}
-                    onFocus={(e) => (e.target.style.borderBottomColor = "var(--color-volt)")}
-                    onBlur={(e) => (e.target.style.borderBottomColor = "var(--color-ink-muted)")}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: "var(--type-caption)",
-                      fontWeight: 500,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      color: "var(--color-ink-soft)",
-                      marginBottom: "var(--space-xs)",
-                    }}
+                    Enviar Mensaje
+                  </motion.span>
+                  <motion.span
+                    initial={false}
+                    animate={{ y: isSending ? 0 : 40, opacity: isSending ? 1 : 0 }}
+                    style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
                   >
-                    Mensaje
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="¿En qué podemos ayudarte?"
-                    style={{
-                      width: "100%",
-                      padding: "var(--space-sm) 0",
-                      border: "none",
-                      borderBottom: "1px solid var(--color-ink-muted)",
-                      fontSize: "var(--type-body)",
-                      color: "var(--color-ink)",
-                      backgroundColor: "transparent",
-                      resize: "vertical",
-                      transition: "border-color var(--duration-micro) var(--ease-out)",
-                      outline: "none",
-                    }}
-                    onFocus={(e) => (e.target.style.borderBottomColor = "var(--color-volt)")}
-                    onBlur={(e) => (e.target.style.borderBottomColor = "var(--color-ink-muted)")}
-                  />
-                </div>
-
-                <button className="btn btn--primary" style={{ alignSelf: "flex-start", marginTop: "var(--space-md)" }}>
-                  Enviar Mensaje
-                </button>
+                    Enviando...
+                  </motion.span>
+                  <motion.span
+                    initial={false}
+                    animate={{ y: isSent ? 0 : 40, opacity: isSent ? 1 : 0 }}
+                    style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+                  >
+                    ✓ Enviado
+                  </motion.span>
+                </motion.button>
               </form>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", borderTop: "1px solid var(--color-ink-muted)", paddingTop: "var(--space-2xl)" }}>
