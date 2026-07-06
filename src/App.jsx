@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
+import { ToastProvider } from "./context/ToastContext";
 import Navbar from "./components/Navbar";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "./components/LoadingScreen";
@@ -66,18 +67,20 @@ export default function App() {
     <HashRouter>
       <ProductProvider>
         <SiteProvider>
-          <ScrollProgress />
-          <CustomCursor />
-          <AnimatePresence mode="wait">
-            {loading ? (
-              <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
-            ) : (
-              <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                <AppRoutes />
-                <BackToTop />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <ToastProvider>
+            <ScrollProgress />
+            <CustomCursor />
+            <AnimatePresence mode="wait">
+              {loading ? (
+                <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
+              ) : (
+                <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+                  <AppRoutes />
+                  <BackToTop />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </ToastProvider>
         </SiteProvider>
       </ProductProvider>
     </HashRouter>

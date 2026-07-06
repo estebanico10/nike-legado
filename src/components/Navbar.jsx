@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { useProducts } from "../context/ProductContext";
+import SearchOverlay from "./SearchOverlay";
 
 const navLinks = [
   { to: "/inicio", label: "Inicio" },
@@ -14,12 +15,14 @@ const navLinks = [
 export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const { cart } = useProducts();
+  const { cart, wishlist } = useProducts();
   const { scrollY } = useScroll();
 
   const cartItemsCount = cart.reduce((total, item) => total + item.qty, 0);
+  const wishlistItemsCount = wishlist.length;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
@@ -141,6 +144,52 @@ export default function Navbar() {
               <line x1="3" y1="9" x2="21" y2="9"></line>
               <line x1="9" y1="21" x2="9" y2="9"></line>
             </svg>
+          </Link>
+
+          {/* Search Icon */}
+          <button 
+            onClick={() => setSearchOpen(true)}
+            style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} 
+            aria-label="Buscar"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+
+          {/* Wishlist Icon */}
+          <Link to="/tienda?filter=wishlist" style={{ position: "relative", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Favoritos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <AnimatePresence>
+              {wishlistItemsCount > 0 && (
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    backgroundColor: "var(--color-error, #ff3333)",
+                    color: "#fff",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                    width: "16px",
+                    height: "16px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: "translate(25%, -25%)"
+                  }}
+                >
+                  {wishlistItemsCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </Link>
 
           {/* Cart Icon */}
@@ -304,6 +353,8 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Responsive CSS */}
       <style>{`

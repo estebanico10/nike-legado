@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
@@ -21,24 +22,35 @@ function CountUp({ value }) {
 }
 
 export default function TiendaPage() {
-  const { productos, categorias, tiposProducto } = useProducts();
+  const { productos, categorias, tiposProducto, wishlist } = useProducts();
+  const [searchParams] = useSearchParams();
   const [filtroActivo, setFiltroActivo] = useState(null);
   const [filtroTipo, setFiltroTipo] = useState(null);
   const [orden, setOrden] = useState("default"); // default, precio_asc, precio_desc, ventas
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  const productosFiltrados = productos
-    .filter((p) => (filtroActivo ? p.categoria === filtroActivo : true))
-    .filter((p) => (filtroTipo ? p.tipo === filtroTipo : true))
-    .map(p => ({ ...p, ventas: p.ventas || ((p.id.charCodeAt(0) * 17) % 50) })) // mock ventas for sorting
-    .sort((a, b) => {
-      const pA = a.precioOferta || a.precio;
-      const pB = b.precioOferta || b.precio;
-      if (orden === "precio_asc") return pA - pB;
-      if (orden === "precio_desc") return pB - pA;
-      if (orden === "ventas") return b.ventas - a.ventas;
-      return 0; // default
-    });
+  const query = searchParams.get("q") || "";
+  const isWishlistMode = searchParams.get("filter") === "wishlist";
+
+  const productosFiltrados = useMemo(() => {
+    return productos
+      .filter((p) => {
+        if (isWishlistMode) return wishlist.some((w) => w.id === p.id);
+        if (query) return p.nombre.toLowerCase().includes(query.toLowerCase()) || p.categoria.toLowerCase().includes(query.toLowerCase());
+        return true;
+      })
+      .filter((p) => (filtroActivo ? p.categoria === filtroActivo : true))
+      .filter((p) => (filtroTipo ? p.tipo === filtroTipo : true))
+      .map(p => ({ ...p, ventas: p.ventas || ((p.id.charCodeAt(0) * 17) % 50) })) // mock ventas for sorting
+      .sort((a, b) => {
+        const pA = a.precioOferta || a.precio;
+        const pB = b.precioOferta || b.precio;
+        if (orden === "precio_asc") return pA - pB;
+        if (orden === "precio_desc") return pB - pA;
+        if (orden === "ventas") return b.ventas - a.ventas;
+        return 0; // default
+      });
+  }, [productos, wishlist, isWishlistMode, query, filtroActivo, filtroTipo, orden]);
 
   return (
     <>
@@ -78,7 +90,7 @@ export default function TiendaPage() {
                 overflow: "hidden"
               }}
             >
-              {Array.from("COLECCIÓN").map((char, i) => (
+              {Array.from(isWishlistMode ? "FAVORITOS" : (query ? `RESULTADOS` : "COLECCIÓN")).map((char, i) => (
                 <motion.span
                   key={i}
                   variants={{
@@ -87,7 +99,7 @@ export default function TiendaPage() {
                   }}
                   whileHover={{ color: "var(--color-volt)", y: -5 }}
                 >
-                  {char}
+                  {char === " " ? "\u00A0" : char}
                 </motion.span>
               ))}
             </motion.h1>
@@ -98,6 +110,7 @@ export default function TiendaPage() {
                 color: "var(--color-ink-soft)",
               }}
             >
+              {query && <span style={{display:"block", marginBottom:"4px"}}>Resultados para "{query}"</span>}
               <CountUp value={productosFiltrados.length} />{" "}
               {productosFiltrados.length === 1 ? "producto" : "productos"}
             </p>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
+import { useToast } from "../context/ToastContext";
 import OptimizedImage from "../components/OptimizedImage";
 import AnimatedBackground from "../components/AnimatedBackground";
 import { resolveAsset } from "../utils/resolveAsset";
@@ -10,8 +11,10 @@ import ProductCard from "../components/ProductCard";
 export default function ProductoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { productos, addToCart } = useProducts();
+  const { productos, addToCart, wishlist, toggleWishlist } = useProducts();
+  const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
+  const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
   
   const [activeImage, setActiveImage] = useState(0);
   const [selectedTalla, setSelectedTalla] = useState(null);
@@ -46,8 +49,19 @@ export default function ProductoPage() {
 
   const handleAddToCart = () => {
     addToCart(producto, currentTalla, currentColor);
+    addToast(`${producto.nombre} añadido al carrito`, "success");
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
+  };
+
+  const handleToggleWishlist = () => {
+    toggleWishlist(producto);
+    const exists = wishlist.some((item) => item.id === producto.id);
+    if (!exists) {
+      addToast(`${producto.nombre} añadido a favoritos`, "success");
+    } else {
+      addToast(`${producto.nombre} eliminado de favoritos`, "default");
+    }
   };
 
   const images = producto.imagenes.map(resolveAsset);
@@ -202,35 +216,59 @@ export default function ProductoPage() {
                   </div>
                 )}
 
-                {/* Add to Cart */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleAddToCart}
-                  className="btn btn--primary"
-                  style={{
-                    width: "100%",
-                    padding: "18px 0",
-                    fontSize: "var(--type-body)",
-                    fontWeight: 600,
-                    borderRadius: "100px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "8px",
-                    backgroundColor: added ? "var(--color-success)" : "var(--color-ink)"
-                  }}
-                  disabled={added}
-                >
-                  {added ? (
-                    <>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      Añadido al Carrito
-                    </>
-                  ) : (
-                    "Añadir al Carrito"
-                  )}
-                </motion.button>
+                {/* Actions */}
+                <div style={{ display: "flex", gap: "var(--space-md)" }}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAddToCart}
+                    className="btn btn--primary"
+                    style={{
+                      flex: 1,
+                      padding: "18px 0",
+                      fontSize: "var(--type-body)",
+                      fontWeight: 600,
+                      borderRadius: "100px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "8px",
+                      backgroundColor: added ? "var(--color-success)" : "var(--color-ink)"
+                    }}
+                    disabled={added}
+                  >
+                    {added ? (
+                      <>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Añadido al Carrito
+                      </>
+                    ) : (
+                      "Añadir al Carrito"
+                    )}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleToggleWishlist}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "50%",
+                      border: "1px solid var(--color-ink-muted)",
+                      backgroundColor: "transparent",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      cursor: "pointer",
+                      color: isWishlisted ? "var(--color-error, #ff3333)" : "var(--color-ink)"
+                    }}
+                    aria-label={isWishlisted ? "Quitar de favoritos" : "Añadir a favoritos"}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </motion.button>
+                </div>
               </div>
             </div>
           </div>
