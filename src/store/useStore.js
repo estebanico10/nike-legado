@@ -88,10 +88,20 @@ export const useCartStore = create(
   )
 );
 
+const defaultSocialPosts = [
+  { id: '1', src: '/instagram/post 1.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() },
+  { id: '2', src: '/instagram/post 2.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() },
+  { id: '3', src: '/instagram/post 3.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() },
+  { id: '4', src: '/instagram/post 4.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() },
+  { id: '5', src: '/instagram/post 5.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() },
+  { id: '6', src: '/instagram/post 6.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() },
+  { id: '7', src: '/instagram/post 7.jpeg', type: 'image', link: 'https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm', date: new Date().toLocaleDateString() }
+];
+
 export const useSocialStore = create(
   persist(
     (set) => ({
-      posts: [],
+      posts: defaultSocialPosts,
       addPost: (post) => set((state) => ({ 
         posts: [{ ...post, id: Date.now().toString() }, ...state.posts] 
       })),
@@ -100,7 +110,7 @@ export const useSocialStore = create(
       })),
     }),
     {
-      name: 'nike-social-storage',
+      name: 'nike-social-storage-v2',
     }
   )
 );
