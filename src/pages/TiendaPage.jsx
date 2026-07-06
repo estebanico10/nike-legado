@@ -28,6 +28,9 @@ export default function TiendaPage() {
   const [filtroTipo, setFiltroTipo] = useState(null);
   const [orden, setOrden] = useState("default"); // default, precio_asc, precio_desc, ventas
   const [quickViewProduct, setQuickViewProduct] = useState(null);
+  const [filtroColor, setFiltroColor] = useState(null);
+  const [maxPrecio, setMaxPrecio] = useState(200);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const query = searchParams.get("q") || "";
   const isWishlistMode = searchParams.get("filter") === "wishlist";
@@ -41,6 +44,8 @@ export default function TiendaPage() {
       })
       .filter((p) => (filtroActivo ? p.categoria === filtroActivo : true))
       .filter((p) => (filtroTipo ? p.tipo === filtroTipo : true))
+      .filter((p) => (filtroColor ? p.colores?.includes(filtroColor) : true))
+      .filter((p) => (p.precioOferta || p.precio) <= maxPrecio)
       .map(p => ({ ...p, ventas: p.ventas || ((p.id.charCodeAt(0) * 17) % 50) })) // mock ventas for sorting
       .sort((a, b) => {
         const pA = a.precioOferta || a.precio;
@@ -50,7 +55,16 @@ export default function TiendaPage() {
         if (orden === "ventas") return b.ventas - a.ventas;
         return 0; // default
       });
-  }, [productos, wishlist, isWishlistMode, query, filtroActivo, filtroTipo, orden]);
+  }, [productos, wishlist, isWishlistMode, query, filtroActivo, filtroTipo, filtroColor, maxPrecio, orden]);
+
+  // Extract all unique colors
+  const coloresDisponibles = useMemo(() => {
+    const colors = new Set();
+    productos.forEach(p => {
+      if (p.colores) p.colores.forEach(c => colors.add(c));
+    });
+    return Array.from(colors);
+  }, [productos]);
 
   return (
     <>
@@ -224,6 +238,63 @@ export default function TiendaPage() {
                 ))}
             </div>
 
+            {/* Advanced Filters: Price & Color */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2xl)", marginTop: "var(--space-sm)", paddingTop: "var(--space-md)", borderTop: "1px solid var(--color-ink-muted)" }}>
+              {/* Price Slider */}
+              <div style={{ flex: 1, minWidth: "200px", maxWidth: "300px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-xs)" }}>
+                  <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Precio Máximo</span>
+                  <span style={{ fontSize: "var(--type-caption)", fontWeight: 600 }}>${maxPrecio}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="10" 
+                  max="200" 
+                  step="5" 
+                  value={maxPrecio}
+                  onChange={(e) => setMaxPrecio(Number(e.target.value))}
+                  style={{ width: "100%", cursor: "pointer", accentColor: "var(--color-ink)" }}
+                />
+              </div>
+
+              {/* Color Filter */}
+              <div style={{ flex: 1, minWidth: "200px" }}>
+                <span style={{ display: "block", fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase", marginBottom: "var(--space-sm)" }}>Color</span>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  <button
+                    onClick={() => setFiltroColor(null)}
+                    style={{
+                      width: "32px", height: "32px", borderRadius: "50%",
+                      backgroundColor: "transparent",
+                      border: "1px solid #E5E5E5",
+                      cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: filtroColor === null ? "var(--color-ink)" : "var(--color-ink-soft)",
+                      fontWeight: filtroColor === null ? 700 : 400
+                    }}
+                    title="Todos los colores"
+                  >
+                    ALL
+                  </button>
+                  {coloresDisponibles.map(c => (
+                    <button
+                      key={c}
+                      onClick={() => setFiltroColor(c)}
+                      style={{
+                        width: "32px", height: "32px", borderRadius: "50%",
+                        backgroundColor: c,
+                        border: "1px solid rgba(0,0,0,0.1)",
+                        outline: filtroColor === c ? "2px solid var(--color-ink)" : "none",
+                        outlineOffset: "2px",
+                        cursor: "pointer"
+                      }}
+                      title={c}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
 
           {/* Grid Animado */}
@@ -240,7 +311,7 @@ export default function TiendaPage() {
               }
             }}
           >
-            {productosFiltrados.map((producto, i) => (
+            {productosFiltrados.slice(0, visibleCount).map((producto, i) => (
               <motion.div 
                 key={producto.id}
                 layout
@@ -260,6 +331,18 @@ export default function TiendaPage() {
             ))}
           </motion.div>
           </AnimatePresence>
+
+          {/* Load More Button */}
+          {visibleCount < productosFiltrados.length && (
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "var(--space-4xl)" }}>
+              <button 
+                onClick={() => setVisibleCount(prev => prev + 12)}
+                className="btn btn--secondary"
+              >
+                Cargar Más
+              </button>
+            </div>
+          )}
 
           {productosFiltrados.length === 0 && (
             <motion.div

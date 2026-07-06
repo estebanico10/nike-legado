@@ -21,6 +21,7 @@ import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
 import { useState } from "react";
 import CustomCursor from "./components/CustomCursor";
+import ExitIntentPopup from "./components/ExitIntentPopup";
 
 function AppRoutes() {
   const location = useLocation();
@@ -77,6 +78,7 @@ export default function App() {
                 <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
                   <AppRoutes />
                   <BackToTop />
+                  <ExitIntentPopup />
                 </motion.div>
               )}
             </AnimatePresence>

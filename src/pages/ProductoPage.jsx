@@ -7,6 +7,8 @@ import OptimizedImage from "../components/OptimizedImage";
 import AnimatedBackground from "../components/AnimatedBackground";
 import { resolveAsset } from "../utils/resolveAsset";
 import ProductCard from "../components/ProductCard";
+import SizeGuideModal from "../components/SizeGuideModal";
+import InteractiveShoe3D from "../components/InteractiveShoe3D";
 
 export default function ProductoPage() {
   const { id } = useParams();
@@ -20,6 +22,7 @@ export default function ProductoPage() {
   const [selectedTalla, setSelectedTalla] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [added, setAdded] = useState(false);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   // Set initial selected values when product loads
   useEffect(() => {
@@ -188,7 +191,7 @@ export default function ProductoPage() {
                   <div style={{ marginBottom: "var(--space-2xl)" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)" }}>
                       <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Talla</span>
-                      <button style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", textDecoration: "underline", border: "none", background: "none", cursor: "pointer", padding: 0 }}>
+                      <button onClick={() => setShowSizeGuide(true)} style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", textDecoration: "underline", border: "none", background: "none", cursor: "pointer", padding: 0 }}>
                         Guía de tallas
                       </button>
                     </div>
@@ -273,6 +276,15 @@ export default function ProductoPage() {
             </div>
           </div>
 
+          {/* 3D Experience Section */}
+          <div style={{ marginTop: "var(--space-4xl)", marginBottom: "var(--space-4xl)" }}>
+            <div style={{ textAlign: "center", marginBottom: "var(--space-2xl)" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", textTransform: "uppercase" }}>Vista 360°</h2>
+              <p style={{ color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>Interactúa con el modelo 3D</p>
+            </div>
+            <InteractiveShoe3D />
+          </div>
+
           {/* Related Products */}
           {relacionados.length > 0 && (
             <section style={{ paddingTop: "var(--space-3xl)", borderTop: "1px solid var(--color-ink-muted)" }}>
@@ -289,6 +301,7 @@ export default function ProductoPage() {
 
         </div>
       </main>
+      <SizeGuideModal isOpen={showSizeGuide} onClose={() => setShowSizeGuide(false)} />
     </>
   );
 }

@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-
 import ThemeToggle from "./ThemeToggle";
 import { useProducts } from "../context/ProductContext";
 import SearchOverlay from "./SearchOverlay";
+import CartDrawer from "./CartDrawer";
 
 const navLinks = [
   { to: "/inicio", label: "Inicio" },
@@ -16,6 +17,7 @@ export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const { cart, wishlist } = useProducts();
@@ -193,7 +195,7 @@ export default function Navbar() {
           </Link>
 
           {/* Cart Icon */}
-          <Link to="/checkout" style={{ position: "relative", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Carrito">
+          <button onClick={() => setCartOpen(true)} style={{ position: "relative", display: "flex", alignItems: "center", background: "transparent", border: "none", cursor: "pointer", color: "var(--color-ink)", padding: "var(--space-xs)" }} aria-label="Carrito">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -226,7 +228,7 @@ export default function Navbar() {
                 </motion.span>
               )}
             </AnimatePresence>
-          </Link>
+          </button>
 
           {/* Mobile hamburger */}
           <button
@@ -355,6 +357,7 @@ export default function Navbar() {
       </AnimatePresence>
 
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Responsive CSS */}
       <style>{`

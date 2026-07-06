@@ -9,6 +9,7 @@ import ProductQuickView from "../components/ProductQuickView";
 import NewsTicker from "../components/NewsTicker";
 import StatsCounter from "../components/StatsCounter";
 import TestimonialsSection from "../components/TestimonialsSection";
+import ShopTheLook from "../components/ShopTheLook";
 import CTASection from "../components/CTASection";
 
 export default function HomePage() {
@@ -230,6 +231,7 @@ const LookbookSection = ({ section, resolveAsset }) => {
         );
       })}
 
+      <ShopTheLook />
       <CTASection />
 
       {/* QuickView Modal */}
