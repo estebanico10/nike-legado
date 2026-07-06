@@ -20,7 +20,7 @@ export const productos = [
       "./assets/products/indoor-genz-court.jpg",
     ],
     descripcion:
-      "Diseñada con el alma del fútbol de barrio: 'El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro'. Tejido técnico transpirable, gráficos estilo graffiti 'Fútbol Amigos Barrio Sueños' y sellos de autenticidad en Volt y Azul Indoor.",
+      "Diseñada con el alma del fútbol de barrio: 'El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro, y aún, siempre volvíamos.'. Tejido técnico transpirable, gráficos estilo graffiti 'Fútbol Amigos Barrio Sueños' y sellos de autenticidad en Volt y Azul Indoor.",
     precio: 30.00,
     enOferta: false,
     esNuevo: true,

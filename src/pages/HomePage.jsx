@@ -7,6 +7,9 @@ import HeroSection from "../components/HeroSection";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import NewsTicker from "../components/NewsTicker";
+import StatsCounter from "../components/StatsCounter";
+import TestimonialsSection from "../components/TestimonialsSection";
+import CTASection from "../components/CTASection";
 
 export default function HomePage() {
   const { productos } = useProducts();
@@ -206,16 +209,28 @@ const LookbookSection = ({ section, resolveAsset }) => {
         return (
         <div key={section.id}>
             {/* Ticker between Hero → Destacados */}
-            {section.type === "destacados" && section.visible && <NewsTicker variant="dark" />}
+            {section.type === "destacados" && section.visible && (
+              <>
+                <NewsTicker variant="dark" />
+                <StatsCounter />
+              </>
+            )}
             {/* Volt ticker before Lookbook */}
             {section.type === "lookbook" && section.visible && <NewsTicker variant="volt" />}
 
             {section.type === "hero" && <HeroSection key={`hero-${section.id}`} />}
-            {section.type === "lookbook" && <LookbookSection key={section.id} section={section} resolveAsset={resolveAsset} />}
+            {section.type === "lookbook" && (
+              <>
+                <LookbookSection key={section.id} section={section} resolveAsset={resolveAsset} />
+                <TestimonialsSection />
+              </>
+            )}
             {section.type === "destacados" && renderDestacados(section)}
           </div>
         );
       })}
+
+      <CTASection />
 
       {/* QuickView Modal */}
       <AnimatePresence>

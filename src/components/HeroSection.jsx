@@ -117,7 +117,7 @@ export default function HeroSection() {
             margin: "var(--space-md) auto var(--space-2xl)",
           }}
         >
-          “El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro.” 
+          “El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro, y aún, siempre volvíamos.” 
           <strong style={{ color: "var(--color-ink)", display: "block", marginTop: "8px" }}>FÚTBOL AMIGOS BARRIO SUEÑOS.</strong>
         </motion.p>
 
