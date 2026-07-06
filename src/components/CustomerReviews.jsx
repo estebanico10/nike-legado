@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const reviewsData = [
-  { id: 1, name: 'Carlos M.', date: 'hace 2 semanas', rating: 5, text: 'Excelente calidad, llegaron mucho antes de lo esperado. Super cómodas para correr.' },
-  { id: 2, name: 'Ana P.', date: 'hace 1 mes', rating: 4, text: 'Muy bonitas, el material se siente premium. Recomiendo pedir media talla más.' },
-  { id: 3, name: 'Jorge R.', date: 'hace 2 meses', rating: 5, text: 'El diseño es increíble y combinan con todo. 100% originales.' },
+  { id: 1, name: 'Martín G.', date: 'Hace 2 días', rating: 5, text: 'Increíbles, súper cómodas y el diseño es aún mejor en persona.', photos: ['https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=300&q=80'] },
+  { id: 2, name: 'Sofía R.', date: 'Hace 1 semana', rating: 4, text: 'Muy buenas zapatillas. La talla es exacta, recomiendo pedir su talla habitual.', photos: [] },
+  { id: 3, name: 'Carlos M.', date: 'Hace 1 mes', rating: 5, text: 'La amortiguación es espectacular para correr, 10/10.', photos: ['https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&q=80', 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&q=80'] },
 ];
 
 export default function CustomerReviews() {
@@ -63,6 +63,15 @@ export default function CustomerReviews() {
               </div>
               <p style={{ fontWeight: 600, fontSize: 'var(--type-body-sm)', margin: '0 0 4px 0' }}>{review.name}</p>
               <p style={{ margin: 0, fontSize: 'var(--type-body-sm)', color: 'var(--color-ink-soft)', lineHeight: 1.5 }}>"{review.text}"</p>
+              {review.photos && review.photos.length > 0 && (
+                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                  {review.photos.map((photo, j) => (
+                    <div key={j} style={{ width: '64px', height: '64px', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--color-ink-muted)' }}>
+                      <img src={photo} alt={`User photo ${j}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           ))}
           <button style={{ background: 'none', border: 'none', color: 'var(--color-ink)', textDecoration: 'underline', cursor: 'pointer', textAlign: 'left', padding: '16px 0' }}>

@@ -94,6 +94,23 @@ export default function SearchOverlay({ isOpen, onClose }) {
           </div>
 
           <div className="container" style={{ flex: 1, overflowY: "auto", padding: "var(--space-xl) 0" }}>
+            {query.length === 0 && (
+              <div>
+                <h4 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-body-sm)", textTransform: "uppercase", color: "var(--color-ink-soft)", marginBottom: "var(--space-md)" }}>Búsquedas Populares</h4>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-sm)" }}>
+                  {["Air Max", "Jordan 1", "Running", "Ropa de Entrenamiento", "Dunk Low"].map(term => (
+                    <button 
+                      key={term}
+                      onClick={() => setQuery(term)}
+                      style={{ background: "var(--color-surface)", border: "1px solid var(--color-ink-muted)", padding: "8px 16px", borderRadius: "100px", color: "var(--color-ink)", fontSize: "var(--type-caption)", cursor: "pointer", transition: "all 0.2s" }}
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {query.length > 2 && results.length === 0 && (
               <div style={{ textAlign: "center", color: "var(--color-ink-soft)", paddingTop: "var(--space-3xl)" }}>
                 No se encontraron resultados para "{query}"

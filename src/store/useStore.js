@@ -23,6 +23,20 @@ export const useCartStore = create(
   persist(
     (set, get) => ({
       items: [],
+      couponCode: null,
+      discountPercent: 0,
+      applyCoupon: (code) => {
+        if (code.toUpperCase() === "NIKE10") {
+          set({ couponCode: "NIKE10", discountPercent: 10 });
+          return { success: true, message: "Cupón aplicado: 10% OFF" };
+        }
+        if (code.toUpperCase() === "LEGADO20") {
+          set({ couponCode: "LEGADO20", discountPercent: 20 });
+          return { success: true, message: "Cupón aplicado: 20% OFF" };
+        }
+        return { success: false, message: "Cupón inválido o expirado" };
+      },
+      removeCoupon: () => set({ couponCode: null, discountPercent: 0 }),
       addToCart: (product, size, quantity = 1, color = null) => {
         set((state) => {
           const existingItemIndex = state.items.findIndex(
@@ -124,6 +138,42 @@ export const useThemeStore = create(
     }),
     {
       name: 'nike-theme-storage',
+    }
+  )
+);
+
+export const useRecentStore = create(
+  persist(
+    (set) => ({
+      recentProducts: [],
+      addRecentProduct: (product) => {
+        set((state) => {
+          const exists = state.recentProducts.find(p => p.id === product.id);
+          if (exists) return state;
+          const updated = [product, ...state.recentProducts].slice(0, 8);
+          return { recentProducts: updated };
+        });
+      },
+    }),
+    {
+      name: 'nike-recent-storage',
+    }
+  )
+);
+
+export const useUserStore = create(
+  persist(
+    (set) => ({
+      user: {
+        name: "Carlos",
+        email: "carlos@example.com",
+        coins: 1250, // Initial coins for demo
+      },
+      addCoins: (amount) => set((state) => ({ user: { ...state.user, coins: state.user.coins + amount } })),
+      redeemCoins: (amount) => set((state) => ({ user: { ...state.user, coins: Math.max(0, state.user.coins - amount) } })),
+    }),
+    {
+      name: 'nike-user-storage',
     }
   )
 );

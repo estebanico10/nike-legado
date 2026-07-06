@@ -1,24 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "../components/common/SEOHead";
-import { useCartStore } from "../store/useStore";
+import { useUserStore } from "../store/useStore";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user } = useUserStore();
 
   useEffect(() => {
-    const userData = localStorage.getItem("nike_user");
-    if (!userData) {
+    if (!user) {
       navigate("/login");
-    } else {
-      setUser(JSON.parse(userData));
     }
-  }, [navigate]);
+  }, [user, navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("nike_user");
+    // Logic for logout would go here
     navigate("/login");
   };
 
@@ -43,7 +40,11 @@ export default function ProfilePage() {
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h2)", textTransform: "uppercase", margin: 0, color: "#F5F5F5" }}>
               Hola, {user.name}
             </h1>
-            <p style={{ color: "#A0A0A0", fontSize: "var(--type-body)", marginTop: "8px" }}>{user.email}</p>
+            <p style={{ color: "#A0A0A0", fontSize: "var(--type-body)", marginTop: "8px", marginBottom: "16px" }}>{user.email}</p>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", backgroundColor: "rgba(212, 255, 0, 0.1)", color: "var(--color-volt)", padding: "4px 12px", borderRadius: "100px", fontSize: "var(--type-caption)", fontWeight: 700, border: "1px solid var(--color-volt)" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+              {user.coins || 0} NikeCoins
+            </div>
           </div>
           <button onClick={handleLogout} className="btn btn--secondary btn--sm">
             Cerrar Sesión

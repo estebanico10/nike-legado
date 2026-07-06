@@ -6,9 +6,20 @@ import { useToast } from "../context/ToastContext";
 import { resolveAsset } from "../utils/resolveAsset";
 import OptimizedImage from "./OptimizedImage";
 import { useWishlistStore } from "../store/useStore";
+import CountdownTimer from "./CountdownTimer";
 
 export default function ProductCard({ producto, index, onQuickView }) {
-  const portada = resolveAsset(producto.imagenes[0]);
+  const [hoveredColor, setHoveredColor] = useState(null);
+  
+  // Use the color's specific image if available, else default
+  const getDisplayImage = () => {
+    if (hoveredColor && hoveredColor.imagen) {
+      return resolveAsset(hoveredColor.imagen);
+    }
+    return resolveAsset(producto.imagenes[0]);
+  };
+
+  const portada = getDisplayImage();
   const segundaImagen = resolveAsset(producto.imagenes[1] || producto.imagenes[0]);
   const [imgError] = useState(false);
   const [img2Error] = useState(false);
@@ -334,21 +345,14 @@ export default function ProductCard({ producto, index, onQuickView }) {
             letterSpacing: "0.02em",
           }}
         >
-          {producto.nombre}
+          {producto.esNuevo && (
+            <span style={{ position: "absolute", top: "12px", left: "12px", backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", padding: "4px 8px", fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", zIndex: 5, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>Nuevo</span>
+          )}
         </h3>
 
-        <p
-          style={{
-            fontSize: "var(--type-body-sm)",
-            color: "var(--color-ink-soft)",
-            lineHeight: 1.5,
-          }}
-        >
-          {producto.categoria}
-          {producto.tipo ? ` — ${producto.tipo}` : ""}
-        </p>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+        <div style={{ padding: "var(--space-md)" }}>
+          {producto.enOferta && <div style={{ marginBottom: "8px" }}><CountdownTimer hours={Math.floor(Math.random() * 48) + 12} /></div>}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "var(--space-xs)" }}>
           <span
             style={{
               fontSize: "var(--type-body)",
@@ -387,6 +391,34 @@ export default function ProductCard({ producto, index, onQuickView }) {
             ))}
           </div>
         </div>
+        </div>
+        
+        {producto.colores && producto.colores.length > 0 && (
+          <div style={{ display: "flex", gap: "6px", padding: "0 var(--space-md) var(--space-md)", marginTop: "-4px" }}>
+            {producto.colores.map((colorStr, idx) => {
+              // Extract hex if formatted as "Name|#HEX" (mocking it for now, assuming color mappings)
+              const colorMap = {
+                "Blanco": "#ffffff", "Negro": "#111111", "Rojo": "#D30005", "Azul": "#0033a0", "Gris": "#cccccc", "Beige": "#f5f5dc", "Rosa": "#ffc0cb", "Verde": "#ceff00"
+              };
+              const hex = colorMap[colorStr] || "#ddd";
+              return (
+                <div 
+                  key={idx}
+                  onMouseEnter={() => setHoveredColor({ nombre: colorStr })}
+                  onMouseLeave={() => setHoveredColor(null)}
+                  style={{ 
+                    width: "14px", height: "14px", borderRadius: "50%", 
+                    backgroundColor: hex, 
+                    border: "1px solid var(--color-ink-muted)",
+                    boxShadow: hoveredColor?.nombre === colorStr ? "0 0 0 2px var(--color-canvas), 0 0 0 3px var(--color-ink)" : "none",
+                    cursor: "pointer", transition: "all 0.2s"
+                  }}
+                  title={colorStr}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
       </motion.article>
     </Link>

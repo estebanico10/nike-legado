@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { useToast } from "../context/ToastContext";
-import { useCartStore } from "../store/useStore";
 import OptimizedImage from "../components/OptimizedImage";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CustomerReviews from "../components/CustomerReviews";
@@ -12,12 +11,17 @@ import ProductCard from "../components/ProductCard";
 import SizeGuideModal from "../components/SizeGuideModal";
 import InteractiveShoe3D from "../components/InteractiveShoe3D";
 import SizeRecommender from "../components/SizeRecommender";
+import CountdownTimer from "../components/CountdownTimer";
+import BundleBuilder from "../components/BundleBuilder";
+import RelatedProducts from "../components/RelatedProducts";
+import { useCartStore, useRecentStore } from "../store/useStore";
 
 export default function ProductoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { productos, wishlist, toggleWishlist } = useProducts();
   const { addToCart } = useCartStore();
+  const { addRecentProduct } = useRecentStore();
   const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
   const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
@@ -27,6 +31,7 @@ export default function ProductoPage() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [added, setAdded] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const sliderRef = useRef(null);
 
   // Set initial selected values when product loads
   useEffect(() => {
@@ -34,6 +39,13 @@ export default function ProductoPage() {
       window.scrollTo(0, 0); // Scroll to top
     }
   }, [producto]);
+
+  // When a product is loaded, add it to recent views
+  useEffect(() => {
+    if (producto) {
+      addRecentProduct(producto);
+    }
+  }, [producto, addRecentProduct]);
 
   // Derived state to avoid cascading renders
   const currentTalla = selectedTalla || (producto?.tallas?.length > 0 ? producto.tallas[0] : null);
@@ -159,9 +171,21 @@ export default function ProductoPage() {
                   )}
                 </div>
 
-                <p style={{ color: "var(--color-ink-soft)", lineHeight: 1.6, marginBottom: "var(--space-2xl)" }}>
+                {producto.enOferta && (
+                  <div style={{ marginBottom: "var(--space-md)" }}>
+                    <CountdownTimer hours={24} />
+                  </div>
+                )}
+
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-body)", lineHeight: 1.6, color: "var(--color-ink-soft)", marginBottom: "var(--space-xl)", maxWidth: "500px" }}>
                   {producto.descripcion}
                 </p>
+
+                <div style={{ padding: "12px", backgroundColor: "rgba(211,0,5,0.05)", borderLeft: "4px solid #D30005", marginBottom: "var(--space-xl)" }}>
+                  <p style={{ margin: 0, fontSize: "var(--type-caption)", fontWeight: 600, color: "#D30005" }}>
+                    🔥 ¡Atención! Solo quedan {Math.floor(Math.random() * 5) + 1} unidades disponibles en tu talla.
+                  </p>
+                </div>
 
                 {/* Colors */}
                 {producto.colores && producto.colores.length > 0 && (
@@ -169,6 +193,7 @@ export default function ProductoPage() {
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)" }}>
                       <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Color</span>
                     </div>
+                    
                     <div style={{ display: "flex", gap: "var(--space-sm)" }}>
                       {producto.colores.map(c => (
                         <button
@@ -298,8 +323,57 @@ export default function ProductoPage() {
             <InteractiveShoe3D />
           </div>
 
-          {/* Customer Reviews Section */}
-          <CustomerReviews />
+      {/* HOW IT'S MADE SECTION */}
+      <section style={{ backgroundColor: "#000", color: "#fff", padding: "var(--space-4xl) 0" }}>
+        <div className="container">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-3xl)", alignItems: "center" }}>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h2)", textTransform: "uppercase", marginBottom: "var(--space-md)" }}>
+                Cómo se hace: <span style={{ color: "var(--color-volt)" }}>Legado</span>
+              </h3>
+              <p style={{ color: "#A0A0A0", fontSize: "var(--type-body)", lineHeight: 1.6, marginBottom: "var(--space-lg)" }}>
+                Cada par de {producto.nombre} pasa por un proceso de diseño meticuloso. Utilizamos materiales reciclados en un 30% para reducir nuestro impacto ambiental sin sacrificar la durabilidad extrema que requieren las canchas de cemento.
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+                {[
+                  "Suela vulcanizada de alta tracción",
+                  "Malla transpirable Flyknit®",
+                  "Costuras reforzadas para desgaste",
+                  "Amortiguación reactiva React"
+                ].map((item, i) => (
+                  <li key={i} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "var(--type-body-sm)" }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-volt)" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              style={{ position: "relative", aspectRatio: "4/5", borderRadius: "16px", overflow: "hidden" }}
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1618354691438-25bc04584c23?q=80&w=1200&auto=format&fit=crop" 
+                alt="Proceso de fabricación" 
+                style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+              />
+              <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.2)" }} />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* REVIEWS & RELATED */}
+      <CustomerReviews />
 
           {/* Related Products */}
           {relacionados.length > 0 && (
@@ -317,6 +391,8 @@ export default function ProductoPage() {
 
         </div>
       </main>
+
+      <RelatedProducts currentProduct={producto} />
       <SizeGuideModal isOpen={showSizeGuide} onClose={() => setShowSizeGuide(false)} />
     </>
   );

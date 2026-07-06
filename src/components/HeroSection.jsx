@@ -27,17 +27,23 @@ export default function HeroSection() {
         backgroundColor: "var(--color-canvas)",
       }}
     >
-      {/* Advanced CSS Animated Gradient Background */}
-      <motion.div
-        style={{ y, opacity, position: "absolute", inset: 0, zIndex: 0 }}
-      >
-        <div className="hero-gradient-mesh"></div>
-        {/* Particles/Stars effect */}
-        <div className="hero-particles"></div>
-      </motion.div>
+      {/* Video Background */}
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        >
+          <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" type="video/mp4" />
+        </video>
+        {/* Overlay to ensure text readability */}
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.4)" }} />
+      </div>
 
       {/* Content */}
-      <div className="container" style={{ position: "relative", zIndex: 1, padding: "var(--space-xl) var(--space-md)" }}>
+      <div className="container" style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: "var(--space-4xl)" }}>
         
         <motion.div
           initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}

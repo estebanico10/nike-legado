@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import NewsletterModal from "./NewsletterModal";
 
 export default function Footer() {
+  const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
+
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -33,9 +37,8 @@ export default function Footer() {
               Recibe acceso anticipado a los últimos lanzamientos, colaboraciones exclusivas y eventos.
             </p>
             <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.3)", paddingBottom: "var(--space-xs)" }}>
-              <input 
-                type="email" 
-                placeholder="TU CORREO ELECTRÓNICO"
+              <button 
+                onClick={() => setIsNewsletterOpen(true)}
                 style={{
                   background: "transparent",
                   border: "none",
@@ -45,11 +48,16 @@ export default function Footer() {
                   fontSize: "var(--type-body-sm)",
                   letterSpacing: "0.05em",
                   flex: 1,
-                  padding: "var(--space-xs) 0"
+                  padding: "var(--space-xs) 0",
+                  textAlign: "left",
+                  cursor: "text"
                 }}
-              />
+              >
+                TU CORREO ELECTRÓNICO
+              </button>
               <motion.button 
                 whileHover={{ x: 5 }}
+                onClick={() => setIsNewsletterOpen(true)}
                 style={{
                   background: "transparent",
                   border: "none",
@@ -176,6 +184,7 @@ export default function Footer() {
           pointerEvents: "none"
         }}
       />
+      <NewsletterModal isOpen={isNewsletterOpen} onClose={() => setIsNewsletterOpen(false)} />
     </motion.footer>
   );
 }

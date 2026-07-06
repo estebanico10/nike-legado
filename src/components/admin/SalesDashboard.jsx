@@ -41,6 +41,20 @@ export default function SalesDashboard() {
 
   const totalSales = MOCK_DATA[period].reduce((sum, item) => sum + item.ventas, 0);
 
+  const handleExportCSV = () => {
+    const data = MOCK_DATA[period];
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Periodo,Ventas\n"
+      + data.map(e => `${e.name},${e.ventas}`).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `reporte_ventas_${period}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xl)" }}>
       {/* Header and Period selector */}
@@ -71,6 +85,18 @@ export default function SalesDashboard() {
             </button>
           ))}
         </div>
+        <button 
+          onClick={handleExportCSV}
+          className="btn btn--secondary btn--sm"
+          style={{ borderColor: "#333", color: "#A0A0A0" }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: "8px", verticalAlign: "middle" }}>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Exportar CSV
+        </button>
       </div>
 
       {/* Main KPI */}

@@ -1,8 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useCartStore } from "../store/useStore";
+import { useCartStore, useUserStore } from "../store/useStore";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { resolveAsset } from "../utils/resolveAsset";
+
+const confettis = Array.from({ length: 50 }).map(() => ({
+  x: Math.random() * 100,
+  scale: Math.random() * 1.5 + 0.5,
+  rotate: Math.random() * 360,
+  duration: Math.random() * 2 + 2,
+  repeatDelay: Math.random() * 2,
+  bgColor: ["#D4FF00", "#FF4500", "#00E5FF", "#FFF"][Math.floor(Math.random() * 4)],
+  borderRadius: Math.random() > 0.5 ? "50%" : "0%"
+}));
 
 const InputField = ({ label, name, type = "text", placeholder, maxLength, formData, handleChange, errors }) => (
   <div style={{ marginBottom: "var(--space-md)" }}>
@@ -26,8 +36,10 @@ const InputField = ({ label, name, type = "text", placeholder, maxLength, formDa
 const ease = [0, 0, 0.2, 1];
 
 export default function CheckoutPage() {
-  const { items: cart, clearCart } = useCartStore();
+  const { items: cart, clearCart, discountPercent, couponCode } = useCartStore();
+  const { user, redeemCoins, addCoins } = useUserStore();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [useCoins, setUseCoins] = useState(false);
   
   const [formData, setFormData] = useState({
     email: "",
@@ -39,7 +51,7 @@ export default function CheckoutPage() {
     cardCVC: ""
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("card"); // 'card', 'transfer', 'deuna'
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [errors, setErrors] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -54,8 +66,10 @@ export default function CheckoutPage() {
     marginBottom: "var(--space-3xl)"
   };
 
-  const subtotal = cart.reduce((acc, item) => acc + (item.precioOferta || item.precio) * item.qty, 0);
-  const total = subtotal;
+  const subtotal = cart.reduce((acc, item) => acc + (item.precioOferta || item.precio) * item.quantity, 0);
+  const discountAmount = (subtotal * discountPercent) / 100;
+  const coinsDiscount = useCoins ? Math.min(user.coins / 100, subtotal - discountAmount) : 0;
+  const total = subtotal - discountAmount - coinsDiscount;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -88,8 +102,13 @@ export default function CheckoutPage() {
     
     if (validateForm()) {
       setIsProcessing(true);
-      // Simular procesamiento de pago
       setTimeout(() => {
+        if (useCoins) {
+          redeemCoins(Math.floor(coinsDiscount * 100));
+        }
+        const earnedCoins = Math.floor(total * 5);
+        addCoins(earnedCoins);
+        
         setIsProcessing(false);
         setIsSuccess(true);
         clearCart();
@@ -118,24 +137,23 @@ export default function CheckoutPage() {
               </svg>
             </div>
             
-            {/* Confetti simulation using Framer Motion */}
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "100%", pointerEvents: "none", overflow: "hidden" }}>
-              {[...Array(30)].map((_, i) => (
+              {confettis.map((c, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 1, y: -50, x: "50vw", scale: 0 }}
+                  initial={{ y: "-10vh", x: `${c.x}vw`, scale: 0, rotate: 0 }}
                   animate={{ 
                     y: "100vh", 
-                    x: `${Math.random() * 100}vw`,
-                    scale: Math.random() * 1.5 + 0.5,
-                    rotate: Math.random() * 360
+                    x: `${c.x}vw`,
+                    scale: c.scale,
+                    rotate: c.rotate
                   }}
-                  transition={{ duration: Math.random() * 2 + 2, ease: "easeOut", repeat: Infinity, repeatDelay: Math.random() * 2 }}
+                  transition={{ duration: c.duration, ease: "easeOut", repeat: Infinity, repeatDelay: c.repeatDelay }}
                   style={{
                     position: "absolute",
                     width: "10px", height: "10px",
-                    backgroundColor: ["#D4FF00", "#FF4500", "#00E5FF", "#FFF"][Math.floor(Math.random() * 4)],
-                    borderRadius: Math.random() > 0.5 ? "50%" : "0%"
+                    backgroundColor: c.bgColor,
+                    borderRadius: c.borderRadius
                   }}
                 />
               ))}
@@ -452,6 +470,36 @@ export default function CheckoutPage() {
                     <span>Subtotal</span>
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
+                  {discountPercent > 0 && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "#D30005", fontSize: "var(--type-body-sm)" }}>
+                      <span>Cupón ({couponCode})</span>
+                      <span>-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+
+                  {user.coins > 0 && (
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", padding: "var(--space-sm)", border: "1px solid var(--color-volt)", borderRadius: "var(--radius-sm)", backgroundColor: "rgba(212, 255, 0, 0.05)" }}>
+                      <div>
+                        <span style={{ fontSize: "var(--type-caption)", fontWeight: 700, display: "block" }}>NikeCoins</span>
+                        <span style={{ fontSize: "var(--type-micro)", color: "var(--color-ink-soft)" }}>Tienes {user.coins} disponibles (${(user.coins/100).toFixed(2)})</span>
+                      </div>
+                      <button 
+                        onClick={() => setUseCoins(!useCoins)}
+                        className={`btn ${useCoins ? 'btn--secondary' : 'btn--volt'} btn--sm`}
+                        style={{ padding: "4px 12px" }}
+                      >
+                        {useCoins ? "Cancelar" : "Canjear"}
+                      </button>
+                    </div>
+                  )}
+
+                  {useCoins && coinsDiscount > 0 && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "var(--color-volt)", fontSize: "var(--type-body-sm)" }}>
+                      <span>Descuento Coins</span>
+                      <span>-${coinsDiscount.toFixed(2)}</span>
+                    </div>
+                  )}
+
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-xl)", fontFamily: "var(--font-body)", color: "var(--color-ink-soft)" }}>
                     <span>Envío</span>
                     <span>Gratis</span>

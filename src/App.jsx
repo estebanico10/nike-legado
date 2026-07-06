@@ -4,7 +4,7 @@ import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
 import { ToastProvider } from "./context/ToastContext";
 import Navbar from "./components/Navbar";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import PageTransition from "./components/PageTransition";
 
@@ -24,6 +24,8 @@ import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
 import { useState } from "react";
 import WhatsAppFAB from "./components/WhatsAppFAB";
+import CustomCursor from "./components/CustomCursor";
+import ExitIntentPopup from "./components/ExitIntentPopup";
 import LuckyWheel from "./components/LuckyWheel";
 import CartDrawer from "./components/CartDrawer";
 import { useUIStore, useThemeStore } from "./store/useStore";

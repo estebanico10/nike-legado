@@ -1,13 +1,27 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCartStore, useUIStore } from '../store/useStore';
 import { Link } from 'react-router-dom';
+import { useCartStore, useUIStore } from '../store/useStore';
 import { resolveAsset } from '../utils/resolveAsset';
+import { useState } from 'react';
 
 export default function CartDrawer() {
+  const { items, removeFromCart, updateQuantity, getCartTotal, couponCode, discountPercent, applyCoupon, removeCoupon } = useCartStore();
   const { isCartOpen, closeCart } = useUIStore();
-  const { items, removeFromCart, updateQuantity, getCartTotal } = useCartStore();
+  const [couponInput, setCouponInput] = useState("");
+  const [couponMsg, setCouponMsg] = useState(null);
 
-  const total = getCartTotal();
+  const subtotal = getCartTotal();
+  const discountAmount = (subtotal * discountPercent) / 100;
+  const total = subtotal - discountAmount;
+
+  const handleApplyCoupon = (e) => {
+    e.preventDefault();
+    if (!couponInput.trim()) return;
+    const result = applyCoupon(couponInput.trim());
+    setCouponMsg(result);
+    if (result.success) setCouponInput("");
+    setTimeout(() => setCouponMsg(null), 3000);
+  };
 
   return (
     <AnimatePresence>
@@ -102,11 +116,48 @@ export default function CartDrawer() {
             {/* Footer */}
             {items.length > 0 && (
               <div style={{ padding: 'var(--space-lg)', borderTop: '1px solid #222', backgroundColor: '#0D0D0D' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-md)', color: '#F5F5F5', fontSize: 'var(--type-body)' }}>
-                  <span>Subtotal</span>
-                  <span style={{ fontWeight: 700 }}>${total.toFixed(2)}</span>
-                </div>
-                <p style={{ fontSize: 'var(--type-micro)', color: '#757575', marginBottom: 'var(--space-md)', textAlign: 'center' }}>Los impuestos y el envío se calculan en el checkout.</p>
+                  {/* Coupon System */}
+                  <div style={{ marginBottom: "var(--space-md)" }}>
+                    {couponCode ? (
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "rgba(212, 255, 0, 0.1)", padding: "8px 12px", borderRadius: "4px", border: "1px dashed var(--color-volt)" }}>
+                        <span style={{ fontSize: "var(--type-micro)", fontWeight: 700, color: "var(--color-ink)", textTransform: "uppercase" }}>Cupón: {couponCode}</span>
+                        <button onClick={removeCoupon} style={{ background: "none", border: "none", color: "#D30005", fontSize: "var(--type-micro)", cursor: "pointer", textDecoration: "underline" }}>Remover</button>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleApplyCoupon} style={{ display: "flex", gap: "8px" }}>
+                        <input 
+                          type="text" 
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value)}
+                          placeholder="Código de cupón..."
+                          style={{ flex: 1, padding: "8px 12px", border: "1px solid var(--color-ink-muted)", backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", outline: "none", fontSize: "var(--type-caption)" }}
+                        />
+                        <button type="submit" className="btn btn--secondary btn--sm">Aplicar</button>
+                      </form>
+                    )}
+                    {couponMsg && (
+                      <p style={{ fontSize: "10px", marginTop: "4px", color: couponMsg.success ? "#4CAF50" : "#D30005" }}>{couponMsg.message}</p>
+                    )}
+                  </div>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>
+                    <span>Subtotal</span>
+                    <span>${subtotal.toFixed(2)}</span>
+                  </div>
+                  {discountPercent > 0 && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "#D30005", fontSize: "var(--type-body-sm)" }}>
+                      <span>Descuento ({discountPercent}%)</span>
+                      <span>-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-md)", color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>
+                    <span>Envío</span>
+                    <span>Gratis</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid var(--color-ink-muted)", paddingTop: "var(--space-md)", marginBottom: "var(--space-xl)", fontWeight: 700, fontSize: "var(--type-h4)", fontFamily: "var(--font-display)" }}>
+                    <span>Total</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
                 <Link to="/checkout" onClick={closeCart} className="btn btn--volt" style={{ width: '100%', textAlign: 'center', padding: '16px', fontSize: 'var(--type-body)' }}>
                   Ir a Pagar
                 </Link>

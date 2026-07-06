@@ -4,11 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#D4FF00" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="description" content="Nike Legado — Streetwear × Herencia Ecuatoriana. Colección cápsula de pixel art 16-bit y cartografía ancestral." />
     <title>NIKE LEGADO — Streetwear Ecuatoriano</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('SW registered: ', registration);
+          }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+        });
+      }
+    </script>
   </body>
 </html>

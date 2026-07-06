@@ -1,22 +1,23 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "../context/ToastContext";
+import { useCartStore } from "../store/useStore";
+import { Link } from "react-router-dom";
+import { resolveAsset } from "../utils/resolveAsset";
 
 export default function ExitIntentPopup() {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasShown, setHasShown] = useState(false);
+  const [hasShown, setHasShown] = useState(() => !!sessionStorage.getItem("exitIntentShown"));
   const [email, setEmail] = useState("");
   const { addToast } = useToast();
+  const { items } = useCartStore();
+  const hasCartItems = items.length > 0;
 
   useEffect(() => {
-    // Check if already shown this session
-    if (sessionStorage.getItem("exitIntentShown")) {
-      setHasShown(true);
-      return;
-    }
+    if (hasShown) return;
 
     const handleMouseLeave = (e) => {
-      if (e.clientY <= 0 && !hasShown) {
+      if (e.clientY <= 0) {
         setIsOpen(true);
         setHasShown(true);
         sessionStorage.setItem("exitIntentShown", "true");
@@ -91,48 +92,84 @@ export default function ExitIntentPopup() {
               </button>
 
               <div style={{ display: "flex", flexDirection: "column" }}>
-                {/* Image Section */}
-                <div style={{ height: "200px", width: "100%", backgroundColor: "var(--color-ink)", overflow: "hidden", position: "relative" }}>
-                   <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, var(--color-ink), var(--color-indoor-blue))", opacity: 0.8 }} />
-                   <img src="https://images.unsplash.com/photo-1552346154-21d32810baa3?auto=format&fit=crop&w=800&q=80" alt="Nike Lifestyle" style={{ width: "100%", height: "100%", objectFit: "cover", mixBlendMode: "overlay" }} />
-                   <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-                     <h2 style={{ fontFamily: "var(--font-display)", fontSize: "4rem", fontWeight: 800, margin: 0, color: "var(--color-volt)", textTransform: "uppercase", lineHeight: 1 }}>10% OFF</h2>
-                     <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", textTransform: "uppercase", letterSpacing: "0.2em" }}>EN TU PRIMERA COMPRA</span>
-                   </div>
-                </div>
+                {hasCartItems ? (
+                  // Abandoned Cart Mode
+                  <>
+                    <div style={{ backgroundColor: "var(--color-volt)", padding: "var(--space-lg)", textAlign: "center", color: "var(--color-ink)" }}>
+                      <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", fontWeight: 800, margin: 0, textTransform: "uppercase" }}>¡No te vayas!</h2>
+                      <p style={{ margin: "4px 0 0", fontSize: "var(--type-body-sm)" }}>Tienes artículos increíbles esperando en tu carrito.</p>
+                    </div>
+                    <div style={{ padding: "var(--space-2xl)" }}>
+                      <div style={{ display: "flex", gap: "var(--space-md)", overflowX: "auto", paddingBottom: "var(--space-md)", marginBottom: "var(--space-xl)", scrollbarWidth: "none" }}>
+                        {items.slice(0, 3).map(item => (
+                          <div key={`${item.id}-${item.size}-${item.color}`} style={{ minWidth: "120px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                            <div style={{ width: "100%", aspectRatio: "1/1", borderRadius: "8px", overflow: "hidden", backgroundColor: "rgba(255,255,255,0.05)" }}>
+                              <img src={resolveAsset(item.imagenes[0])} alt={item.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                            </div>
+                            <div>
+                              <p style={{ margin: 0, fontSize: "var(--type-caption)", fontWeight: 600, color: "var(--color-canvas)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.nombre}</p>
+                              <p style={{ margin: 0, fontSize: "var(--type-micro)", color: "var(--color-volt)" }}>${(item.precioOferta || item.precio).toFixed(2)}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <Link to="/checkout" onClick={() => setIsOpen(false)} className="btn btn--volt" style={{ width: "100%", textAlign: "center", padding: "16px", fontSize: "var(--type-body-sm)" }}>
+                        Completar mi Pedido Ahora
+                      </Link>
+                      <div style={{ textAlign: "center" }}>
+                        <button onClick={() => setIsOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: "var(--type-micro)", marginTop: "var(--space-lg)", cursor: "pointer", textDecoration: "underline" }}>
+                          Seguir explorando
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  // Normal Newsletter Mode
+                  <>
+                    {/* Image Section */}
+                    <div style={{ height: "200px", width: "100%", backgroundColor: "var(--color-ink)", overflow: "hidden", position: "relative" }}>
+                      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(45deg, var(--color-ink), var(--color-indoor-blue))", opacity: 0.8 }} />
+                      <img src="https://images.unsplash.com/photo-1552346154-21d32810baa3?auto=format&fit=crop&w=800&q=80" alt="Nike Lifestyle" style={{ width: "100%", height: "100%", objectFit: "cover", mixBlendMode: "overlay" }} />
+                      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "4rem", fontWeight: 800, margin: 0, color: "var(--color-volt)", textTransform: "uppercase", lineHeight: 1 }}>10% OFF</h2>
+                        <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", textTransform: "uppercase", letterSpacing: "0.2em" }}>EN TU PRIMERA COMPRA</span>
+                      </div>
+                    </div>
 
-                {/* Form Section */}
-                <div style={{ padding: "var(--space-2xl)", textAlign: "center" }}>
-                  <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-body-sm)", color: "rgba(255,255,255,0.7)", marginBottom: "var(--space-xl)", lineHeight: 1.5 }}>
-                    Únete a nuestra lista VIP y recibe acceso anticipado a drops exclusivos, eventos y un cupón de descuento en tu primer pedido.
-                  </p>
+                    {/* Form Section */}
+                    <div style={{ padding: "var(--space-2xl)", textAlign: "center" }}>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-body-sm)", color: "rgba(255,255,255,0.7)", marginBottom: "var(--space-xl)", lineHeight: 1.5 }}>
+                        Únete a nuestra lista VIP y recibe acceso anticipado a drops exclusivos, eventos y un cupón de descuento en tu primer pedido.
+                      </p>
 
-                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-                    <input 
-                      type="email" 
-                      placeholder="Tu correo electrónico" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      style={{ 
-                        width: "100%", 
-                        padding: "16px", 
-                        borderRadius: "var(--radius-sm)", 
-                        border: "1px solid rgba(255,255,255,0.2)", 
-                        backgroundColor: "rgba(255,255,255,0.05)", 
-                        color: "var(--color-canvas)",
-                        fontSize: "var(--type-body)",
-                        outline: "none"
-                      }} 
-                    />
-                    <button type="submit" className="btn btn--volt" style={{ padding: "16px", fontSize: "var(--type-body-sm)", fontWeight: 700, borderRadius: "var(--radius-sm)" }}>
-                      RECLAMAR MI 10%
-                    </button>
-                  </form>
-                  <button onClick={() => setIsOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: "var(--type-micro)", marginTop: "var(--space-lg)", cursor: "pointer", textDecoration: "underline" }}>
-                    No, prefiero pagar precio completo
-                  </button>
-                </div>
+                      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+                        <input 
+                          type="email" 
+                          placeholder="Tu correo electrónico" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          style={{ 
+                            width: "100%", 
+                            padding: "16px", 
+                            borderRadius: "var(--radius-sm)", 
+                            border: "1px solid rgba(255,255,255,0.2)", 
+                            backgroundColor: "rgba(255,255,255,0.05)", 
+                            color: "var(--color-canvas)",
+                            fontSize: "var(--type-body)",
+                            outline: "none"
+                          }} 
+                        />
+                        <button type="submit" className="btn btn--volt" style={{ padding: "16px", fontSize: "var(--type-body-sm)", fontWeight: 700, borderRadius: "var(--radius-sm)" }}>
+                          RECLAMAR MI 10%
+                        </button>
+                      </form>
+                      <button onClick={() => setIsOpen(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: "var(--type-micro)", marginTop: "var(--space-lg)", cursor: "pointer", textDecoration: "underline" }}>
+                        No, prefiero pagar precio completo
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </motion.div>
           </motion.div>
