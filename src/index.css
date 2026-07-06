@@ -348,3 +348,24 @@ img {
   color: #A0A0A0;
   margin-bottom: var(--space-xs);
 }
+
+/* ─── Utilities ─── */
+
+.glass {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .glass {
+  background-color: rgba(17, 17, 17, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.interactive {
+  transition: transform var(--duration-std) var(--ease-out);
+}
+.interactive:hover {
+  transform: translateY(-4px);
+}

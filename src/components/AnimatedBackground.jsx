@@ -26,7 +26,7 @@ export default function AnimatedBackground() {
           position: "absolute",
           top: 0, left: 0, right: 0, bottom: 0,
           background: "var(--color-canvas)",
-          zIndex: -3,
+          zIndex: -4,
         }}
       />
       {/* Orb 1 (follows mouse directly but smooth) */}
@@ -42,7 +42,7 @@ export default function AnimatedBackground() {
           y: useTransform(y, [-1, 1], ["-60%", "10%"]),
           translateX: "-50%",
           translateY: "-50%",
-          zIndex: -2,
+          zIndex: -3,
         }}
       />
       {/* Orb 2 (moves opposite to mouse) */}
@@ -58,7 +58,49 @@ export default function AnimatedBackground() {
           y: useTransform(y, [-1, 1], ["10%", "-60%"]),
           translateX: "-50%",
           translateY: "-50%",
-          zIndex: -2,
+          zIndex: -3,
+        }}
+      />
+      
+      {/* Partículas Flotantes */}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          style={{
+            position: "absolute",
+            width: Math.random() * 4 + 1 + "px",
+            height: Math.random() * 4 + 1 + "px",
+            backgroundColor: "var(--color-ink)",
+            borderRadius: "50%",
+            opacity: Math.random() * 0.15 + 0.05,
+            top: Math.random() * 100 + "%",
+            left: Math.random() * 100 + "%",
+            zIndex: -2,
+          }}
+          animate={{
+            y: [0, Math.random() * -100 - 50],
+            x: [0, (Math.random() - 0.5) * 50],
+            opacity: [0, Math.random() * 0.15 + 0.05, 0],
+          }}
+          transition={{
+            duration: Math.random() * 10 + 10,
+            repeat: Infinity,
+            ease: "linear",
+            delay: Math.random() * -20,
+          }}
+        />
+      ))}
+
+      {/* Noise Overlay */}
+      <div 
+        style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          opacity: 0.05,
+          zIndex: -1,
+          pointerEvents: "none",
+          mixBlendMode: "overlay"
         }}
       />
     </div>
