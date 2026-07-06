@@ -27,7 +27,7 @@ export default function ProductCard({ producto, index, onQuickView }) {
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useProducts();
   const { addToast } = useToast();
-  const { toggleWishlist, wishlist } = useWishlistStore();
+  const { toggleWishlist, items: wishlist } = useWishlistStore();
   const isWished = wishlist.some((item) => item.id === producto.id);
   const cardRef = useRef(null);
 
