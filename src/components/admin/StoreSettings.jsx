@@ -72,6 +72,35 @@ export default function StoreSettings() {
             <button type="submit" className="btn btn--secondary btn--sm" style={{ borderColor: "#333", color: "#F5F5F5" }}>Agregar</button>
           </form>
         </div>
+
+        {/* Gamificación (Lucky Wheel) */}
+        <div style={{ backgroundColor: "#111111", border: "1px solid #222", borderRadius: "var(--radius-md)", padding: "var(--space-md)" }}>
+          <h3 style={{ fontSize: "var(--type-body)", color: "var(--color-volt)", marginBottom: "var(--space-sm)" }}>Gamificación</h3>
+          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", marginBottom: "var(--space-md)" }}>
+            Ajustes para la Ruleta de la Suerte interactiva.
+          </p>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", backgroundColor: "#1A1A1A", border: "1px solid #333", borderRadius: "4px" }}>
+              <span style={{ fontSize: "var(--type-caption)", color: "#F5F5F5" }}>Estado de la Ruleta</span>
+              <span style={{ fontSize: "var(--type-micro)", color: "#111", backgroundColor: "var(--color-volt)", padding: "2px 6px", fontWeight: "bold", borderRadius: "2px" }}>ACTIVO</span>
+            </div>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", backgroundColor: "#1A1A1A", border: "1px solid #333", borderRadius: "4px" }}>
+              <span style={{ fontSize: "var(--type-caption)", color: "#F5F5F5" }}>Descuento Máximo</span>
+              <span style={{ fontSize: "var(--type-micro)", color: "#A0A0A0" }}>20% OFF</span>
+            </div>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", backgroundColor: "#1A1A1A", border: "1px solid #333", borderRadius: "4px" }}>
+              <span style={{ fontSize: "var(--type-caption)", color: "#F5F5F5" }}>Correos Captados</span>
+              <span style={{ fontSize: "var(--type-micro)", color: "#A0A0A0" }}>14</span>
+            </div>
+          </div>
+          
+          <button className="btn btn--secondary btn--sm" style={{ width: "100%", marginTop: "var(--space-md)", borderColor: "#333", color: "#F5F5F5" }}>
+            Editar Premios
+          </button>
+        </div>
       </div>
     </div>
   );

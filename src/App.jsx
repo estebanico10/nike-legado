@@ -22,6 +22,9 @@ import Footer from "./components/Footer";
 import { useState } from "react";
 import CustomCursor from "./components/CustomCursor";
 import ExitIntentPopup from "./components/ExitIntentPopup";
+import WhatsAppFAB from "./components/WhatsAppFAB";
+import LuckyWheel from "./components/LuckyWheel";
+import { useUIStore } from "./store/useStore";
 
 function AppRoutes() {
   const location = useLocation();
@@ -63,6 +66,7 @@ function AppRoutes() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const { isLuckyWheelOpen, closeLuckyWheel } = useUIStore();
 
   return (
     <HashRouter>
@@ -78,7 +82,9 @@ export default function App() {
                 <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
                   <AppRoutes />
                   <BackToTop />
+                  <WhatsAppFAB />
                   <ExitIntentPopup />
+                  {isLuckyWheelOpen && <LuckyWheel onClose={closeLuckyWheel} />}
                 </motion.div>
               )}
             </AnimatePresence>

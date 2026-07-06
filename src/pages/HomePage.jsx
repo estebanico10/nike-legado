@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useProducts } from "../context/ProductContext";
 import { useSite } from "../context/SiteContext";
 import { resolveAsset } from "../utils/resolveAsset";
+import { useUIStore } from "../store/useStore";
 import HeroSection from "../components/HeroSection";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
@@ -10,9 +11,11 @@ import NewsTicker from "../components/NewsTicker";
 import StatsCounter from "../components/StatsCounter";
 import TestimonialsSection from "../components/TestimonialsSection";
 import ShopTheLook from "../components/ShopTheLook";
+import MagneticButton from "../components/MagneticButton";
 import CTASection from "../components/CTASection";
 
 export default function HomePage() {
+  const { openLuckyWheel } = useUIStore();
   const { productos } = useProducts();
   const { homeSections } = useSite();
   const [quickViewProduct, setQuickViewProduct] = useState(null);
@@ -100,6 +103,18 @@ const LookbookSection = ({ section, resolveAsset }) => {
                   color: "white"
                 }}
               >
+                {/* CTA Buttons */}
+                <div style={{ display: "flex", gap: "var(--space-md)", flexWrap: "wrap", justifyContent: "center" }}>
+                  <Link to="/tienda" className="btn btn--volt">
+                    Comprar Ahora
+                  </Link>
+                  <MagneticButton>
+                    <button onClick={openLuckyWheel} className="btn btn--secondary" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 22h20L12 2z"/></svg>
+                      Jugar Ruleta y Ganar
+                    </button>
+                  </MagneticButton>
+                </div>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-caption)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "var(--space-xs)", color: "var(--color-volt)" }}>{img.subtitle}</p>
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h2)", fontWeight: 700, letterSpacing: "0.02em" }}>{img.title}</h3>
                 
