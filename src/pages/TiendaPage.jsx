@@ -1,9 +1,24 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useSpring, useTransform, animate } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import AnimatedBackground from "../components/AnimatedBackground";
+
+function CountUp({ value }) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    const controls = animate(displayValue, value, {
+      duration: 0.8,
+      ease: "easeOut",
+      onUpdate: (v) => setDisplayValue(Math.round(v))
+    });
+    return controls.stop;
+  }, [value]);
+
+  return <span>{displayValue}</span>;
+}
 
 export default function TiendaPage() {
   const { productos, categorias, tiposProducto } = useProducts();
@@ -83,7 +98,7 @@ export default function TiendaPage() {
                 color: "var(--color-ink-soft)",
               }}
             >
-              {productosFiltrados.length}{" "}
+              <CountUp value={productosFiltrados.length} />{" "}
               {productosFiltrados.length === 1 ? "producto" : "productos"}
             </p>
           </motion.div>
@@ -113,8 +128,17 @@ export default function TiendaPage() {
                   <button
                     key={cat}
                     onClick={() => setFiltroActivo(cat)}
-                    className={`btn ${filtroActivo === cat ? "btn--primary" : "btn--secondary"}`}
-                    style={{ whiteSpace: "nowrap", fontSize: "var(--type-caption)", padding: "8px 16px", borderRadius: "999px", transition: "all 0.3s ease" }}
+                    className="btn btn--secondary"
+                    style={{ 
+                      whiteSpace: "nowrap", 
+                      fontSize: "var(--type-caption)", 
+                      padding: "8px 16px", 
+                      borderRadius: "999px", 
+                      transition: "all 0.3s ease",
+                      border: filtroActivo === cat ? "1px solid var(--color-ink)" : "1px solid var(--color-ink-muted)",
+                      backgroundColor: filtroActivo === cat ? "var(--color-ink)" : "transparent",
+                      color: filtroActivo === cat ? "var(--color-canvas)" : "var(--color-ink)",
+                    }}
                   >
                     {cat}
                   </button>
@@ -190,6 +214,7 @@ export default function TiendaPage() {
           </div>
 
           {/* Grid Animado */}
+          <AnimatePresence mode="popLayout">
           <motion.div 
             className="product-grid"
             initial="hidden"
@@ -205,10 +230,12 @@ export default function TiendaPage() {
             {productosFiltrados.map((producto, i) => (
               <motion.div 
                 key={producto.id}
+                layout
                 variants={{
                   hidden: { opacity: 0, y: 30, scale: 0.95 },
                   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } }
                 }}
+                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                 whileHover={{ y: -8 }}
               >
                 <ProductCard
@@ -219,6 +246,7 @@ export default function TiendaPage() {
               </motion.div>
             ))}
           </motion.div>
+          </AnimatePresence>
 
           {productosFiltrados.length === 0 && (
             <motion.div

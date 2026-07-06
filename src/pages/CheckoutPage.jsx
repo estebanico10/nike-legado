@@ -23,6 +23,16 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("card"); // 'card', 'transfer', 'deuna'
   const [errors, setErrors] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const glassStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    border: "1px solid rgba(255, 255, 255, 0.1)",
+    padding: "var(--space-2xl)",
+    marginBottom: "var(--space-3xl)"
+  };
 
   const subtotal = cart.reduce((acc, item) => acc + (item.precioOferta || item.precio) * item.qty, 0);
   const total = subtotal;
@@ -176,10 +186,39 @@ export default function CheckoutPage() {
             
             {/* Formulario de Checkout */}
             <motion.div initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1, duration: 0.6, ease }}>
+              
+              {/* Stepper Visual */}
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-3xl)", position: "relative" }}>
+                <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px", backgroundColor: "var(--color-ink-muted)", zIndex: 0 }} />
+                <div style={{ position: "absolute", top: "50%", left: 0, width: currentStep === 1 ? "0%" : currentStep === 2 ? "50%" : "100%", height: "2px", backgroundColor: "var(--color-ink)", zIndex: 0, transition: "width 0.4s ease-out" }} />
+                
+                {[
+                  { step: 1, label: "Contacto" },
+                  { step: 2, label: "Envío" },
+                  { step: 3, label: "Pago" }
+                ].map((s) => (
+                  <div key={s.step} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", position: "relative", zIndex: 1, backgroundColor: "var(--color-canvas)", padding: "0 var(--space-sm)" }}>
+                    <div style={{ 
+                      width: "32px", height: "32px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                      backgroundColor: currentStep >= s.step ? "var(--color-ink)" : "var(--color-canvas)",
+                      color: currentStep >= s.step ? "var(--color-canvas)" : "var(--color-ink-soft)",
+                      border: `2px solid ${currentStep >= s.step ? "var(--color-ink)" : "var(--color-ink-muted)"}`,
+                      fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "14px",
+                      transition: "all 0.3s ease-out"
+                    }}>
+                      {s.step}
+                    </div>
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-micro)", fontWeight: currentStep >= s.step ? 600 : 400, textTransform: "uppercase", letterSpacing: "0.05em", color: currentStep >= s.step ? "var(--color-ink)" : "var(--color-ink-soft)" }}>
+                      {s.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
               <form onSubmit={handleCheckout}>
                 
                 {/* Contacto */}
-                <section style={{ marginBottom: "var(--space-3xl)" }}>
+                <section style={{ ...glassStyle, opacity: currentStep >= 1 ? 1 : 0.5, pointerEvents: currentStep >= 1 ? "auto" : "none" }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     1. Información de Contacto
                   </h2>
@@ -187,19 +226,28 @@ export default function CheckoutPage() {
                     <InputField label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" />
                     <InputField label="Nombre Completo" name="name" placeholder="Tu nombre" />
                   </div>
+                  {currentStep === 1 && (
+                    <motion.button type="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setCurrentStep(2)} className="btn btn--secondary" style={{ marginTop: "var(--space-md)" }}>Continuar a Envío</motion.button>
+                  )}
                 </section>
 
                 {/* Envío */}
-                <section style={{ marginBottom: "var(--space-3xl)" }}>
+                <section style={{ ...glassStyle, opacity: currentStep >= 2 ? 1 : 0.5, pointerEvents: currentStep >= 2 ? "auto" : "none" }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     2. Dirección de Envío
                   </h2>
                   <InputField label="Dirección Completa" name="address" placeholder="Av. Principal y Secundaria" />
                   <InputField label="Ciudad" name="city" placeholder="Guayaquil, Quito..." />
+                  {currentStep === 2 && (
+                    <div style={{ display: "flex", gap: "var(--space-sm)", marginTop: "var(--space-md)" }}>
+                      <motion.button type="button" onClick={() => setCurrentStep(1)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent" }}>Volver</motion.button>
+                      <motion.button type="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setCurrentStep(3)} className="btn btn--secondary">Continuar a Pago</motion.button>
+                    </div>
+                  )}
                 </section>
 
                 {/* Método de Pago */}
-                <section style={{ marginBottom: "var(--space-3xl)" }}>
+                <section style={{ ...glassStyle, opacity: currentStep >= 3 ? 1 : 0.5, pointerEvents: currentStep >= 3 ? "auto" : "none", marginBottom: currentStep === 3 ? "var(--space-2xl)" : 0 }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     3. Método de Pago
                   </h2>
@@ -306,19 +354,29 @@ export default function CheckoutPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
+                  
+                  {currentStep === 3 && (
+                    <div style={{ marginTop: "var(--space-md)" }}>
+                      <motion.button type="button" onClick={() => setCurrentStep(2)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent", marginBottom: "var(--space-xl)" }}>Volver</motion.button>
+                    </div>
+                  )}
                 </section>
 
-                <button 
-                  type="submit" 
-                  className="btn btn--primary" 
-                  disabled={isProcessing}
-                  style={{ width: "100%", padding: "var(--space-lg)", fontSize: "var(--type-h4)", opacity: isProcessing ? 0.7 : 1 }}
-                >
-                  {isProcessing ? "PROCESANDO..." : `CONFIRMAR ORDEN ($${total.toFixed(2)})`}
-                </button>
-                <p style={{ textAlign: "center", fontSize: "var(--type-micro)", color: "var(--color-ink-soft)", marginTop: "var(--space-sm)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  Pago Seguro Encriptado (Simulación)
-                </p>
+                {currentStep === 3 && (
+                  <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                    <button 
+                      type="submit" 
+                      className="btn btn--primary" 
+                      disabled={isProcessing}
+                      style={{ width: "100%", padding: "var(--space-lg)", fontSize: "var(--type-h4)", opacity: isProcessing ? 0.7 : 1 }}
+                    >
+                      {isProcessing ? "PROCESANDO..." : `CONFIRMAR ORDEN ($${total.toFixed(2)})`}
+                    </button>
+                    <p style={{ textAlign: "center", fontSize: "var(--type-micro)", color: "var(--color-ink-soft)", marginTop: "var(--space-sm)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                      Pago Seguro Encriptado (Simulación)
+                    </p>
+                  </motion.div>
+                )}
               </form>
             </motion.div>
 
