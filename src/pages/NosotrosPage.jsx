@@ -131,13 +131,12 @@ function MarqueeText() {
 function DonutChart({ data, size = 260 }) {
   const cx = size / 2, cy = size / 2, radius = size * 0.38, strokeWidth = size * 0.18;
   const circumference = 2 * Math.PI * radius;
-  let accumulated = 0;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block" }}>
       {data.map((item, i) => {
         const dashLength = (item.pct / 100) * circumference;
-        const dashOffset = -(accumulated / 100) * circumference;
-        accumulated += item.pct;
+        const prevSum = data.slice(0, i).reduce((sum, curr) => sum + curr.pct, 0);
+        const dashOffset = -(prevSum / 100) * circumference;
         return (
           <motion.circle key={item.name} cx={cx} cy={cy} r={radius} fill="none"
             stroke={item.hex} strokeWidth={strokeWidth}
@@ -523,7 +522,7 @@ export default function NosotrosPage() {
               { num: "I", title: "INNOVACIÓN SOSTENIBLE", text: "Desafiamos el status quo. Creamos soluciones digitales que no solo se ven bien, sino que rinden excepcionalmente, reduciendo el peso de la página y optimizando cada carga." },
               { num: "II", title: "IDENTIDAD CULTURAL", text: "Llevamos lo ecuatoriano en nuestro ADN. Desde la inspiración de nuestras paletas hasta las metáforas visuales. El diseño global debe tener raíces locales." },
               { num: "III", title: "EXCELENCIA TÉCNICA", text: "El código es arte. Escribimos interfaces escalables, componentes modulares y mantenemos una estructura impecable. Somos artesanos del front-end." }
-            ].map((v, i) => (
+            ].map((v) => (
               <motion.div key={v.num}
                 whileHover={{ scale: 1.02, borderColor: "var(--color-volt)" }}
                 transition={{ duration: 0.4, ease }}
