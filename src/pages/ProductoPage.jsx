@@ -12,7 +12,6 @@ import SizeGuideModal from "../components/SizeGuideModal";
 import InteractiveShoe3D from "../components/InteractiveShoe3D";
 import SizeRecommender from "../components/SizeRecommender";
 import CountdownTimer from "../components/CountdownTimer";
-import BundleBuilder from "../components/BundleBuilder";
 import RelatedProducts from "../components/RelatedProducts";
 import { useCartStore, useRecentStore } from "../store/useStore";
 
@@ -31,7 +30,6 @@ export default function ProductoPage() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [added, setAdded] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
-  const sliderRef = useRef(null);
 
   // Set initial selected values when product loads
   useEffect(() => {
@@ -183,7 +181,7 @@ export default function ProductoPage() {
 
                 <div style={{ padding: "12px", backgroundColor: "rgba(211,0,5,0.05)", borderLeft: "4px solid #D30005", marginBottom: "var(--space-xl)" }}>
                   <p style={{ margin: 0, fontSize: "var(--type-caption)", fontWeight: 600, color: "#D30005" }}>
-                    🔥 ¡Atención! Solo quedan {Math.floor(Math.random() * 5) + 1} unidades disponibles en tu talla.
+                    🔥 ¡Atención! Solo quedan {producto.id ? (producto.id.length % 5) + 1 : 3} unidades disponibles en tu talla.
                   </p>
                 </div>
 

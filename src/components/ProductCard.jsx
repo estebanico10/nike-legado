@@ -351,7 +351,7 @@ export default function ProductCard({ producto, index, onQuickView }) {
         </h3>
 
         <div style={{ padding: "var(--space-md)" }}>
-          {producto.enOferta && <div style={{ marginBottom: "8px" }}><CountdownTimer hours={Math.floor(Math.random() * 48) + 12} /></div>}
+          {producto.enOferta && <div style={{ marginBottom: "8px" }}><CountdownTimer hours={producto.id ? (producto.id.length * 5) % 48 + 12 : 24} /></div>}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "var(--space-xs)" }}>
           <span
             style={{
