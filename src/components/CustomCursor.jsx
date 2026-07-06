@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [cursorText, setCursorText] = useState("");
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible] = useState(() => typeof window !== 'undefined' && window.matchMedia("(pointer: fine)").matches);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -16,8 +16,6 @@ export default function CustomCursor() {
   useEffect(() => {
     // Solo mostrar el cursor custom en dispositivos con mouse
     if (!window.matchMedia("(pointer: fine)").matches) return;
-    
-    setIsVisible(true);
 
     const updateMousePosition = (e) => {
       cursorX.set(e.clientX);

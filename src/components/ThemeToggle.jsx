@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem("nike-legado-theme") === "dark";
+    }
+    return false;
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem("nike-legado-theme");
     if (saved === "dark") {
-      setIsDark(true);
       document.documentElement.setAttribute("data-theme", "dark");
     }
   }, []);

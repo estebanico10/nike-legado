@@ -18,7 +18,7 @@ function loadProductos() {
     }
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return JSON.parse(saved);
-  } catch {}
+  } catch (e) { console.warn("Cache info:", e); }
   return seedData;
 }
 
@@ -28,6 +28,7 @@ function saveProductos(productos) {
 
 const ProductContext = createContext(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const tiposProducto = [
   "gorra",
   "gorro",
@@ -45,7 +46,7 @@ export function ProductProvider({ children }) {
     try {
       const saved = localStorage.getItem("nike-legado-categorias");
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch (e) { console.warn("Cache info:", e); }
     return categorias; // fallback to seed
   });
   
@@ -53,7 +54,7 @@ export function ProductProvider({ children }) {
     try {
       const saved = localStorage.getItem("nike-legado-tipos");
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch (e) { console.warn("Cache info:", e); }
     return tiposProducto; // fallback to seed
   });
 
@@ -61,7 +62,7 @@ export function ProductProvider({ children }) {
     try {
       const saved = localStorage.getItem("nike-legado-cart");
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch (e) { console.warn("Cache info:", e); }
     return [];
   });
 
@@ -176,6 +177,7 @@ export function ProductProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useProducts() {
   const ctx = useContext(ProductContext);
   if (!ctx) throw new Error("useProducts debe usarse dentro de ProductProvider");

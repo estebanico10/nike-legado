@@ -4,6 +4,25 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { resolveAsset } from "../utils/resolveAsset";
 
+const InputField = ({ label, name, type = "text", placeholder, maxLength, formData, handleChange, errors }) => (
+  <div style={{ marginBottom: "var(--space-md)" }}>
+    <label style={{ display: "block", fontSize: "var(--type-caption)", textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--color-ink-soft)", marginBottom: "var(--space-xs)", fontWeight: 500 }}>
+      {label}
+    </label>
+    <input 
+      type={type} name={name} value={formData[name]} onChange={handleChange} placeholder={placeholder} maxLength={maxLength}
+      style={{ 
+        width: "100%", padding: "var(--space-sm) var(--space-md)", border: `1px solid ${errors[name] ? 'red' : 'var(--color-ink-muted)'}`, 
+        backgroundColor: "var(--color-canvas)", fontFamily: "var(--font-body)", color: "var(--color-ink)",
+        outline: "none", transition: "border-color 0.3s ease"
+      }}
+      onFocus={(e) => e.target.style.borderColor = "var(--color-ink)"}
+      onBlur={(e) => e.target.style.borderColor = errors[name] ? 'red' : 'var(--color-ink-muted)'}
+    />
+    {errors[name] && <span style={{ color: "red", fontSize: "var(--type-micro)", marginTop: "4px", display: "block" }}>{errors[name]}</span>}
+  </div>
+);
+
 const ease = [0, 0, 0.2, 1];
 
 export default function CheckoutPage() {
@@ -24,6 +43,7 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [orderId] = useState(() => Math.floor(Math.random() * 10000));
 
   const glassStyle = {
     backgroundColor: "rgba(255, 255, 255, 0.05)",
@@ -122,24 +142,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const InputField = ({ label, name, type = "text", placeholder, maxLength }) => (
-    <div style={{ marginBottom: "var(--space-md)" }}>
-      <label style={{ display: "block", fontSize: "var(--type-caption)", textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--color-ink-soft)", marginBottom: "var(--space-xs)", fontWeight: 500 }}>
-        {label}
-      </label>
-      <input 
-        type={type} name={name} value={formData[name]} onChange={handleChange} placeholder={placeholder} maxLength={maxLength}
-        style={{ 
-          width: "100%", padding: "var(--space-sm) var(--space-md)", border: `1px solid ${errors[name] ? 'red' : 'var(--color-ink-muted)'}`, 
-          backgroundColor: "var(--color-canvas)", fontFamily: "var(--font-body)", color: "var(--color-ink)",
-          outline: "none", transition: "border-color 0.3s ease"
-        }}
-        onFocus={(e) => e.target.style.borderColor = "var(--color-ink)"}
-        onBlur={(e) => e.target.style.borderColor = errors[name] ? 'red' : 'var(--color-ink-muted)'}
-      />
-      {errors[name] && <span style={{ color: "red", fontSize: "var(--type-micro)", marginTop: "4px", display: "block" }}>{errors[name]}</span>}
-    </div>
-  );
+
 
   return (
     <main style={{ paddingTop: "var(--space-4xl)", paddingBottom: "var(--space-5xl)" }}>
@@ -223,8 +226,8 @@ export default function CheckoutPage() {
                     1. Información de Contacto
                   </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "0" }}>
-                    <InputField label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" />
-                    <InputField label="Nombre Completo" name="name" placeholder="Tu nombre" />
+                    <InputField formData={formData} handleChange={handleChange} errors={errors} label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" />
+                    <InputField formData={formData} handleChange={handleChange} errors={errors} label="Nombre Completo" name="name" placeholder="Tu nombre" />
                   </div>
                   {currentStep === 1 && (
                     <motion.button type="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setCurrentStep(2)} className="btn btn--secondary" style={{ marginTop: "var(--space-md)" }}>Continuar a Envío</motion.button>
@@ -236,8 +239,8 @@ export default function CheckoutPage() {
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     2. Dirección de Envío
                   </h2>
-                  <InputField label="Dirección Completa" name="address" placeholder="Av. Principal y Secundaria" />
-                  <InputField label="Ciudad" name="city" placeholder="Guayaquil, Quito..." />
+                  <InputField formData={formData} handleChange={handleChange} errors={errors} label="Dirección Completa" name="address" placeholder="Av. Principal y Secundaria" />
+                  <InputField formData={formData} handleChange={handleChange} errors={errors} label="Ciudad" name="city" placeholder="Guayaquil, Quito..." />
                   {currentStep === 2 && (
                     <div style={{ display: "flex", gap: "var(--space-sm)", marginTop: "var(--space-md)" }}>
                       <motion.button type="button" onClick={() => setCurrentStep(1)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent" }}>Volver</motion.button>
@@ -285,10 +288,10 @@ export default function CheckoutPage() {
                       >
                         <div style={{ backgroundColor: "var(--color-canvas-alt)", padding: "var(--space-xl)", border: "1px solid var(--color-ink-muted)" }}>
                           <p style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", marginBottom: "var(--space-md)", textTransform: "uppercase" }}>Aceptamos Visa y Mastercard</p>
-                          <InputField label="Número de Tarjeta" name="cardNumber" placeholder="0000 0000 0000 0000" maxLength="19" />
+                          <InputField formData={formData} handleChange={handleChange} errors={errors} label="Número de Tarjeta" name="cardNumber" placeholder="0000 0000 0000 0000" maxLength="19" />
                           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" }}>
-                            <InputField label="Fecha de Expiración" name="cardExpiry" placeholder="MM/AA" maxLength="5" />
-                            <InputField label="CVC" name="cardCVC" placeholder="123" maxLength="4" />
+                            <InputField formData={formData} handleChange={handleChange} errors={errors} label="Fecha de Expiración" name="cardExpiry" placeholder="MM/AA" maxLength="5" />
+                            <InputField formData={formData} handleChange={handleChange} errors={errors} label="CVC" name="cardCVC" placeholder="123" maxLength="4" />
                           </div>
                         </div>
                       </motion.div>
@@ -344,7 +347,7 @@ export default function CheckoutPage() {
                           <p style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", marginBottom: "var(--space-lg)" }}>Escanea este código desde la app De Una! en tu celular.</p>
                           
                           <div style={{ display: "inline-block", padding: "var(--space-sm)", backgroundColor: "#fff", border: "2px solid var(--color-ink)", borderRadius: "12px", marginBottom: "var(--space-md)" }}>
-                            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=NikeLegado-Orden-${Math.floor(Math.random()*10000)}&bgcolor=ffffff&color=111111`} alt="QR De Una" style={{ display: "block" }} />
+                            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=NikeLegado-Orden-${orderId}&bgcolor=ffffff&color=111111`} alt="QR De Una" style={{ display: "block" }} />
                           </div>
                           
                           <p style={{ fontSize: "var(--type-micro)", color: "var(--color-ink-muted)", lineHeight: 1.5 }}>

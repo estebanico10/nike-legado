@@ -16,20 +16,20 @@ function FAQAccordion() {
         PREGUNTAS FRECUENTES
       </p>
       <div style={{ display: "flex", flexDirection: "column", borderTop: "1px solid var(--color-ink-muted)" }}>
-        {faqs.map((faq, i) => (
-          <div key={i} style={{ borderBottom: "1px solid var(--color-ink-muted)" }}>
+        {faqs.map((faq, index) => (
+          <div key={index} style={{ borderBottom: "1px solid var(--color-ink-muted)" }}>
             <button
-              onClick={() => setOpen(open === i ? null : i)}
+              onClick={() => setOpen(open === index ? null : index)}
               style={{ width: "100%", textAlign: "left", padding: "var(--space-lg) 0", backgroundColor: "transparent", border: "none", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", outline: "none" }}
             >
               <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-body-sm)", fontWeight: 600, color: "var(--color-ink)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 {faq.q}
               </span>
-              <motion.span animate={{ rotate: open === i ? 45 : 0 }} style={{ fontSize: "1.4rem", color: "var(--color-ink)", lineHeight: 1 }}>+</motion.span>
+              <motion.span animate={{ rotate: open === index ? 45 : 0 }} style={{ fontSize: "1.4rem", color: "var(--color-ink)", lineHeight: 1 }}>+</motion.span>
             </button>
             <motion.div
               initial={false}
-              animate={{ height: open === i ? "auto" : 0, opacity: open === i ? 1 : 0 }}
+              animate={{ height: open === index ? "auto" : 0, opacity: open === index ? 1 : 0 }}
               style={{ overflow: "hidden" }}
               transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] }}
             >
@@ -214,9 +214,9 @@ export default function ContactoPage() {
                 onSubmit={handleSubmit}
                 style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)", marginBottom: "var(--space-3xl)" }}
               >
-                <InputField name="name" label="Nombre Completo" />
-                <InputField name="email" label="Correo Electrónico" type="email" />
-                <InputField name="message" label="Mensaje" isTextArea={true} />
+                {InputField({ name: "name", label: "Nombre Completo" })}
+                {InputField({ name: "email", label: "Correo Electrónico", type: "email" })}
+                {InputField({ name: "message", label: "Mensaje", isTextArea: true })}
 
                 <motion.button 
                   className="btn btn--primary" 
@@ -298,7 +298,7 @@ export default function ContactoPage() {
                 { name: "TIKTOK", handle: "@nikelegado.ec" },
                 { name: "YOUTUBE", handle: "Nike Legado EC" },
                 { name: "LINKEDIN", handle: "Grupo FRENM Studios" }
-              ].map((social, i) => (
+              ].map((social) => (
                 <motion.a 
                   key={social.name}
                   href="#"

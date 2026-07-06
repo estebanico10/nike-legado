@@ -1,6 +1,21 @@
 import { useEffect } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
+const generateParticles = () => [...Array(20)].map(() => ({
+  width: Math.random() * 4 + 1 + "px",
+  height: Math.random() * 4 + 1 + "px",
+  opacity: Math.random() * 0.15 + 0.05,
+  top: Math.random() * 100 + "%",
+  left: Math.random() * 100 + "%",
+  animY: [0, Math.random() * -100 - 50],
+  animX: [0, (Math.random() - 0.5) * 50],
+  animOpacity: [0, Math.random() * 0.15 + 0.05, 0],
+  duration: Math.random() * 10 + 10,
+  delay: Math.random() * -20,
+}));
+
+const staticParticles = generateParticles();
+
 export default function AnimatedBackground() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -63,30 +78,30 @@ export default function AnimatedBackground() {
       />
       
       {/* Partículas Flotantes */}
-      {[...Array(20)].map((_, i) => (
+      {[...staticParticles].map((p, i) => (
         <motion.div
           key={i}
           style={{
             position: "absolute",
-            width: Math.random() * 4 + 1 + "px",
-            height: Math.random() * 4 + 1 + "px",
+            width: p.width,
+            height: p.height,
             backgroundColor: "var(--color-ink)",
             borderRadius: "50%",
-            opacity: Math.random() * 0.15 + 0.05,
-            top: Math.random() * 100 + "%",
-            left: Math.random() * 100 + "%",
+            opacity: p.opacity,
+            top: p.top,
+            left: p.left,
             zIndex: -2,
           }}
           animate={{
-            y: [0, Math.random() * -100 - 50],
-            x: [0, (Math.random() - 0.5) * 50],
-            opacity: [0, Math.random() * 0.15 + 0.05, 0],
+            y: p.animY,
+            x: p.animX,
+            opacity: p.animOpacity,
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: p.duration,
             repeat: Infinity,
             ease: "linear",
-            delay: Math.random() * -20,
+            delay: p.delay,
           }}
         />
       ))}

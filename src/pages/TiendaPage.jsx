@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useSpring, useTransform, animate } from "framer-motion";
+import { motion, AnimatePresence, animate } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
@@ -9,7 +9,7 @@ function CountUp({ value }) {
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    const controls = animate(displayValue, value, {
+    const controls = animate(0, value, {
       duration: 0.8,
       ease: "easeOut",
       onUpdate: (v) => setDisplayValue(Math.round(v))
@@ -30,7 +30,7 @@ export default function TiendaPage() {
   const productosFiltrados = productos
     .filter((p) => (filtroActivo ? p.categoria === filtroActivo : true))
     .filter((p) => (filtroTipo ? p.tipo === filtroTipo : true))
-    .map(p => ({ ...p, ventas: p.ventas || Math.floor(Math.random() * 50) })) // mock ventas for sorting
+    .map(p => ({ ...p, ventas: p.ventas || ((p.id.charCodeAt(0) * 17) % 50) })) // mock ventas for sorting
     .sort((a, b) => {
       const pA = a.precioOferta || a.precio;
       const pB = b.precioOferta || b.precio;
