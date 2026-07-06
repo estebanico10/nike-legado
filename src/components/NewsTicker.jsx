@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 const ITEMS = [
@@ -12,18 +12,24 @@ const ITEMS = [
 
 export default function NewsTicker({ variant = "dark" }) {
   const isDark = variant === "dark";
+  const [isHovered, setIsHovered] = useState(false);
 
   const repeatedItems = [...ITEMS, ...ITEMS, ...ITEMS];
 
   return (
-    <div
+    <motion.div
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      animate={{ skewX: isHovered ? -5 : 0, scale: isHovered ? 1.02 : 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       style={{
         backgroundColor: isDark ? "var(--color-ink)" : "var(--color-volt)",
         color: isDark ? "var(--color-volt)" : "var(--color-ink)",
         overflow: "hidden",
-        padding: "var(--space-xs) 0",
+        padding: "var(--space-sm) 0",
         borderTop: `1px solid ${isDark ? "transparent" : "rgba(0,0,0,0.1)"}`,
         borderBottom: `1px solid ${isDark ? "transparent" : "rgba(0,0,0,0.1)"}`,
+        cursor: "default"
       }}
     >
       <motion.div
@@ -68,6 +74,6 @@ export default function NewsTicker({ variant = "dark" }) {
           </span>
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

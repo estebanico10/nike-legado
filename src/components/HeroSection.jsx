@@ -1,132 +1,192 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 export default function HeroSection() {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      // Normalize values -1 to 1
-      x.set((e.clientX / window.innerWidth) * 2 - 1);
-      y.set((e.clientY / window.innerHeight) * 2 - 1);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [x, y]);
-
-  // Transform background movement slightly opposite to mouse
-  const bgX = useTransform(x, [-1, 1], ["-3%", "3%"]);
-  const bgY = useTransform(y, [-1, 1], ["-3%", "3%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
     <section
+      ref={containerRef}
       style={{
+        position: "relative",
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        padding: "var(--space-5xl) var(--space-lg)",
-        minHeight: "80vh",
-        gap: "var(--space-lg)",
-        position: "relative",
-        overflow: "hidden"
+        overflow: "hidden",
+        backgroundColor: "var(--color-canvas)",
       }}
     >
-      {/* AnimatedBackground component should be placed in App.jsx or individually on pages, not here. We remove the hardcoded orbs. */}
-
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "var(--type-caption)",
-          fontWeight: 500,
-          textTransform: "uppercase",
-          letterSpacing: "0.12em",
-          color: "var(--color-ink-soft)",
-        }}
-      >
-        Streetwear × Herencia Ecuatoriana
-      </motion.p>
-
-      {/* Animated Staggered Title */}
+      {/* Advanced CSS Animated Gradient Background */}
       <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={{
-          visible: { transition: { staggerChildren: 0.08 } },
-          hidden: {}
-        }}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          flexWrap: "wrap",
-          overflow: "hidden",
-          maxWidth: "900px",
-        }}
+        style={{ y, opacity, position: "absolute", inset: 0, zIndex: 0 }}
       >
-        {["N", "I", "K", "E", "\u00A0", "L", "E", "G", "A", "D", "O"].map((char, i) => (
-          <motion.span
-            key={i}
-            variants={{
-              hidden: { y: "100%", opacity: 0, rotateZ: 5 },
-              visible: { y: "0%", opacity: 1, rotateZ: 0, transition: { duration: 0.7, ease: [0, 0, 0.2, 1] } }
-            }}
-            whileHover={{ y: -10, color: "var(--color-volt)", transition: { duration: 0.2 } }}
+        <div className="hero-gradient-mesh"></div>
+        {/* Particles/Stars effect */}
+        <div className="hero-particles"></div>
+      </motion.div>
+
+      {/* Content */}
+      <div className="container" style={{ position: "relative", zIndex: 1, padding: "var(--space-xl) var(--space-md)" }}>
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          style={{ marginBottom: "var(--space-2xl)", display: "inline-block", position: "relative" }}
+        >
+          {/* Animated Badge */}
+          <div style={{
+            position: "absolute", inset: "-4px", borderRadius: "100px",
+            background: "linear-gradient(90deg, var(--color-volt), transparent, var(--color-volt))",
+            backgroundSize: "200% 100%",
+            animation: "shimmer 2s infinite linear",
+            zIndex: -1
+          }}></div>
+          <div style={{
+            padding: "var(--space-xs) var(--space-md)",
+            backgroundColor: "var(--color-canvas)",
+            borderRadius: "100px",
+            fontFamily: "var(--font-body)",
+            fontSize: "var(--type-caption)",
+            fontWeight: 600,
+            color: "var(--color-volt)",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            border: "1px solid var(--color-ink-muted)",
+          }}>
+            Colección Cápsula 2026
+          </div>
+        </motion.div>
+
+        {/* Clip-path Reveal Text */}
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <motion.h1
+            initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)", y: 40 }}
+            animate={{ clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0% 100%)", y: 0 }}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "var(--type-hero)",
-              lineHeight: "var(--lh-hero)",
-              fontWeight: 700,
-              letterSpacing: "var(--tracking-tight)",
+              fontSize: "clamp(3.5rem, 10vw, 8rem)",
+              fontWeight: 800,
+              lineHeight: 0.9,
               textTransform: "uppercase",
+              letterSpacing: "var(--tracking-tight)",
               color: "var(--color-ink)",
-              display: "inline-block",
-              WebkitTextStroke: char !== "\u00A0" ? "2px var(--color-ink)" : "none",
+              margin: 0,
             }}
           >
-            {char}
-          </motion.span>
-        ))}
-      </motion.div>
+            NIKE <span style={{ color: "transparent", WebkitTextStroke: "2px var(--color-ink)", display: "block" }}>LEGADO</span>
+          </motion.h1>
+        </div>
 
-      <motion.p
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1], delay: 0.8 }}
-        style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "var(--type-body-lg)",
-          lineHeight: 1.6,
-          color: "var(--color-ink-soft)",
-          maxWidth: "560px",
-        }}
-      >
-        Pixel art de 16-bits. Cartografía ancestral. Prendas que narran
-        territorio. Colección cápsula diseñada desde los Andes para las calles
-        del mundo.
-      </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "clamp(1rem, 2vw, 1.25rem)",
+            lineHeight: 1.6,
+            color: "var(--color-ink-soft)",
+            maxWidth: "600px",
+            margin: "var(--space-xl) auto var(--space-2xl)",
+          }}
+        >
+          Pixel art de 16-bits. Cartografía ancestral. Prendas que narran
+          territorio. Colección diseñada desde los Andes para las calles
+          del mundo.
+        </motion.p>
 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
+          style={{ display: "flex", gap: "var(--space-md)", justifyContent: "center", flexWrap: "wrap" }}
+        >
+          <a href="#coleccion" className="btn btn--primary" style={{
+            position: "relative", overflow: "hidden", display: "inline-flex", alignItems: "center", gap: "var(--space-sm)"
+          }}>
+            EXPLORAR COLECCIÓN
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <Link to="/nosotros" className="btn btn--secondary">
+            NUESTRA HISTORIA
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* Scroll Indicator */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1], delay: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
         style={{
+          position: "absolute",
+          bottom: "var(--space-2xl)",
+          left: "50%",
+          transform: "translateX(-50%)",
           display: "flex",
-          gap: "var(--space-md)",
-          marginTop: "var(--space-lg)",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "var(--space-sm)",
+          zIndex: 1
         }}
       >
-        <a href="#coleccion" className="btn btn--primary">
-          EXPLORAR COLECCIÓN
-        </a>
-        <a href="#/nosotros" className="btn btn--secondary">
-          NUESTRA HISTORIA
-        </a>
+        <span style={{
+          fontFamily: "var(--font-body)", fontSize: "var(--type-micro)",
+          textTransform: "uppercase", letterSpacing: "0.2em", color: "var(--color-ink-soft)"
+        }}>
+          SCROLL
+        </span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          style={{ width: "2px", height: "40px", backgroundColor: "var(--color-volt)", borderRadius: "2px" }}
+        />
       </motion.div>
+
+      <style>{`
+        .hero-gradient-mesh {
+          position: absolute;
+          inset: -50%;
+          background: radial-gradient(circle at 50% 50%, rgba(206, 255, 0, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 80% 20%, rgba(100, 100, 100, 0.1) 0%, transparent 40%),
+                      radial-gradient(circle at 20% 80%, rgba(50, 50, 50, 0.1) 0%, transparent 40%);
+          filter: blur(60px);
+          animation: mesh-rotate 20s infinite linear;
+        }
+        
+        .hero-particles {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(var(--color-ink-muted) 1px, transparent 1px);
+          background-size: 40px 40px;
+          opacity: 0.3;
+          mask-image: radial-gradient(circle at center, black, transparent 80%);
+          -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+
+        @keyframes mesh-rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        
+        @keyframes shimmer {
+          0% { background-position: 200% center; }
+          100% { background-position: -200% center; }
+        }
+      `}</style>
     </section>
   );
 }
