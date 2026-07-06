@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-
 import ThemeToggle from "./ThemeToggle";
 import { useCartStore, useUIStore, useWishlistStore } from "../store/useStore";
 import SearchOverlay from "./SearchOverlay";
-import CartDrawer from "./CartDrawer";
 
 const navLinks = [
   { to: "/inicio", label: "Inicio" },
@@ -21,6 +20,7 @@ export default function Navbar() {
   
   const { scrollY } = useScroll();
   const cartCount = useCartStore((state) => state.getCartCount());
+  const wishlistCount = useWishlistStore((state) => state.items.length);
   const { openCart, openSearch } = useUIStore();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -163,9 +163,9 @@ export default function Navbar() {
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
             <AnimatePresence>
-              {useWishlistStore((state) => state.items.length) > 0 && (
+              {wishlistCount > 0 && (
                 <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} style={{ position: "absolute", top: 0, right: 0, backgroundColor: "var(--color-ink)", color: "var(--color-canvas)", fontSize: "10px", fontWeight: "bold", width: "16px", height: "16px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", transform: "translate(25%, -25%)" }}>
-                  {useWishlistStore((state) => state.items.length)}
+                  {wishlistCount}
                 </motion.span>
               )}
             </AnimatePresence>
@@ -186,7 +186,7 @@ export default function Navbar() {
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
             <AnimatePresence>
-              {cartItemsCount > 0 && (
+              {cartCount > 0 && (
                 <motion.span 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -208,7 +208,7 @@ export default function Navbar() {
                     transform: "translate(25%, -25%)"
                   }}
                 >
-                  {cartItemsCount}
+                  {cartCount}
                 </motion.span>
               )}
             </AnimatePresence>
