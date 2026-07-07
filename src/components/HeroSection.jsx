@@ -27,19 +27,11 @@ export default function HeroSection() {
         backgroundColor: "var(--color-canvas)",
       }}
     >
-      {/* Video Background */}
+      {/* Abstract Background */}
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        >
-          <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" type="video/mp4" />
-        </video>
-        {/* Overlay to ensure text readability */}
-        <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.4)" }} />
+        <div className="hero-gradient-mesh" />
+        <div className="hero-particles" />
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)" }} />
       </div>
 
       {/* Content */}
