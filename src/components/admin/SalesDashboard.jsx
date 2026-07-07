@@ -59,7 +59,7 @@ export default function SalesDashboard() {
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xl)" }}>
       {/* Header and Period selector */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "var(--space-md)" }}>
-        <h3 style={{ fontSize: "var(--type-h3)", fontFamily: "var(--font-display)", color: "#F5F5F5", textTransform: "uppercase" }}>
+        <h3 className="admin-card-title" style={{ marginBottom: 0 }}>
           Rendimiento de Ventas
         </h3>
         
@@ -101,19 +101,19 @@ export default function SalesDashboard() {
 
       {/* Main KPI */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--space-md)" }}>
-        <div style={{ backgroundColor: "#111111", padding: "var(--space-lg)", borderRadius: "var(--radius-md)", border: "1px solid #222" }}>
+        <div className="admin-card">
           <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ingresos Totales ({period})</p>
           <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: "var(--color-volt)", marginTop: "var(--space-xs)" }}>
             ${totalSales.toLocaleString()}
           </div>
         </div>
-        <div style={{ backgroundColor: "#111111", padding: "var(--space-lg)", borderRadius: "var(--radius-md)", border: "1px solid #222" }}>
+        <div className="admin-card">
           <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Órdenes</p>
           <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: "#F5F5F5", marginTop: "var(--space-xs)" }}>
             {Math.floor(totalSales / 85).toLocaleString()}
           </div>
         </div>
-        <div style={{ backgroundColor: "#111111", padding: "var(--space-lg)", borderRadius: "var(--radius-md)", border: "1px solid #222" }}>
+        <div className="admin-card">
           <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ticket Promedio</p>
           <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: "#F5F5F5", marginTop: "var(--space-xs)" }}>
             $85.00
@@ -122,7 +122,7 @@ export default function SalesDashboard() {
       </div>
 
       {/* Chart */}
-      <div style={{ backgroundColor: "#111111", padding: "var(--space-xl)", borderRadius: "var(--radius-md)", border: "1px solid #222", height: "400px" }}>
+      <div className="admin-card" style={{ height: "400px" }}>
         <h4 style={{ color: "#F5F5F5", marginBottom: "var(--space-lg)", fontSize: "var(--type-body)" }}>Tendencia de Ingresos</h4>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={MOCK_DATA[period]} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
@@ -146,7 +146,7 @@ export default function SalesDashboard() {
       </div>
 
       {/* Top Products */}
-      <div style={{ backgroundColor: "#111111", padding: "var(--space-xl)", borderRadius: "var(--radius-md)", border: "1px solid #222" }}>
+      <div className="admin-card">
         <h4 style={{ color: "#F5F5F5", marginBottom: "var(--space-lg)", fontSize: "var(--type-body)" }}>Productos Más Vendidos</h4>
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
           {topSellers.map((product, index) => (

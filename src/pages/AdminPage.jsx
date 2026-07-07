@@ -8,6 +8,13 @@ import HomeAdmin from "../components/admin/HomeAdmin";
 import TeamAdmin from "../components/admin/TeamAdmin";
 import SocialAdmin from "../components/admin/SocialAdmin";
 
+// Nuevos componentes
+import OrderManagement from "../components/admin/OrderManagement";
+import CustomerCRM from "../components/admin/CustomerCRM";
+import MarketingAdmin from "../components/admin/MarketingAdmin";
+import ReviewsModeration from "../components/admin/ReviewsModeration";
+import AnalyticsMetrics from "../components/admin/AnalyticsMetrics";
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("inventario");
 
@@ -17,6 +24,16 @@ export default function AdminPage() {
         return <InventoryTable />;
       case "ventas":
         return <SalesDashboard />;
+      case "pedidos":
+        return <OrderManagement />;
+      case "clientes":
+        return <CustomerCRM />;
+      case "marketing":
+        return <MarketingAdmin />;
+      case "resenas":
+        return <ReviewsModeration />;
+      case "metricas":
+        return <AnalyticsMetrics />;
       case "social":
         return <SocialAdmin />;
       case "configuracion":
