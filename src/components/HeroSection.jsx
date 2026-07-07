@@ -20,12 +20,7 @@ export default function HeroSection() {
         backgroundColor: "var(--color-canvas)",
       }}
     >
-      {/* Abstract Background */}
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-        <div className="hero-gradient-mesh" />
-        <div className="hero-particles" />
-        <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)" }} />
-      </div>
+
 
       {/* Content */}
       <div className="container" style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: "var(--space-4xl)" }}>
@@ -162,31 +157,6 @@ export default function HeroSection() {
       </motion.div>
 
       <style>{`
-        .hero-gradient-mesh {
-          position: absolute;
-          inset: -50%;
-          background: radial-gradient(circle at 50% 50%, rgba(206, 255, 0, 0.15) 0%, transparent 40%),
-                      radial-gradient(circle at 80% 20%, rgba(100, 100, 100, 0.1) 0%, transparent 40%),
-                      radial-gradient(circle at 20% 80%, rgba(50, 50, 50, 0.1) 0%, transparent 40%);
-          filter: blur(60px);
-          animation: mesh-rotate 20s infinite linear;
-        }
-        
-        .hero-particles {
-          position: absolute;
-          inset: 0;
-          background-image: radial-gradient(var(--color-ink-muted) 1px, transparent 1px);
-          background-size: 40px 40px;
-          opacity: 0.3;
-          mask-image: radial-gradient(circle at center, black, transparent 80%);
-          -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
-        }
-
-        @keyframes mesh-rotate {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
         @keyframes shimmer {
           0% { background-position: 200% center; }
           100% { background-position: -200% center; }
