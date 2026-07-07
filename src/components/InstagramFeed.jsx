@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { useSocialStore } from "../store/useStore";
+import { resolveAsset } from "../utils/resolveAsset";
 
 export default function InstagramFeed() {
   const { posts } = useSocialStore();
@@ -76,9 +77,9 @@ export default function InstagramFeed() {
               whileHover="hover"
             >
               {post.type === "video" ? (
-                <video src={post.src} autoPlay loop muted playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <video src={resolveAsset(post.src)} autoPlay loop muted playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               ) : (
-                <img src={post.src} alt="Instagram Post" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <img src={resolveAsset(post.src)} alt="Instagram Post" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               )}
 
               <motion.div
