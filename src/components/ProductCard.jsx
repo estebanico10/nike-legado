@@ -152,6 +152,7 @@ export default function ProductCard({ producto, index, onQuickView }) {
           <>
             {/* Primary Image */}
             <motion.div
+              layoutId={`product-image-${producto.id}`}
               style={{
                 position: "absolute",
                 inset: 0,
@@ -335,7 +336,8 @@ export default function ProductCard({ producto, index, onQuickView }) {
 
       {/* Product Info */}
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2xs)" }}>
-        <h3
+        <motion.h3
+          layoutId={`product-title-${producto.id}`}
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "var(--type-body)",
@@ -343,12 +345,15 @@ export default function ProductCard({ producto, index, onQuickView }) {
             color: "var(--color-ink)",
             textTransform: "uppercase",
             letterSpacing: "0.02em",
+            position: "relative",
+            margin: 0
           }}
         >
+          {producto.nombre}
           {producto.esNuevo && (
-            <span style={{ position: "absolute", top: "12px", left: "12px", backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", padding: "4px 8px", fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", zIndex: 5, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>Nuevo</span>
+            <span style={{ position: "absolute", top: "-24px", left: "0px", backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", padding: "2px 6px", fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", zIndex: 5, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>Nuevo</span>
           )}
-        </h3>
+        </motion.h3>
 
         <div style={{ padding: "var(--space-md)" }}>
           {producto.enOferta && <div style={{ marginBottom: "8px" }}><CountdownTimer hours={producto.id ? (producto.id.length * 5) % 48 + 12 : 24} /></div>}

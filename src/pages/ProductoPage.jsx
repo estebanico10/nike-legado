@@ -134,6 +134,7 @@ export default function ProductoPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
+                      layoutId={activeImage === 0 ? `product-image-${producto.id}` : undefined}
                       style={{ position: "absolute", inset: 0 }}
                     >
                       <OptimizedImage src={images[activeImage]} alt={producto.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -154,9 +155,12 @@ export default function ProductoPage() {
 
               {/* Product Info Area */}
               <div style={{ flex: "1 1 400px", display: "flex", flexDirection: "column" }}>
-                <h1 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h1)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", marginBottom: "var(--space-sm)" }}>
+                <motion.h1 
+                  layoutId={`product-title-${producto.id}`}
+                  style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h1)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", marginBottom: "var(--space-sm)", margin: 0 }}
+                >
                   {producto.nombre}
-                </h1>
+                </motion.h1>
                 
                 <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                   <span style={{ fontSize: "var(--type-h3)", fontWeight: 600 }}>

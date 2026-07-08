@@ -14,22 +14,40 @@ const confettis = Array.from({ length: 50 }).map(() => ({
   borderRadius: Math.random() > 0.5 ? "50%" : "0%"
 }));
 
-const InputField = ({ label, name, type = "text", placeholder, maxLength, formData, handleChange, errors }) => (
-  <div style={{ marginBottom: "var(--space-md)" }}>
+const InputField = ({ label, name, type = "text", placeholder, maxLength, formData, handleChange, errors, isValid }) => (
+  <div style={{ marginBottom: "var(--space-md)", position: "relative" }}>
     <label style={{ display: "block", fontSize: "var(--type-caption)", textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--color-ink-soft)", marginBottom: "var(--space-xs)", fontWeight: 500 }}>
       {label}
     </label>
-    <input 
-      type={type} name={name} value={formData[name]} onChange={handleChange} placeholder={placeholder} maxLength={maxLength}
-      style={{ 
-        width: "100%", padding: "var(--space-sm) var(--space-md)", border: `1px solid ${errors[name] ? 'red' : 'var(--color-ink-muted)'}`, 
-        backgroundColor: "var(--color-canvas)", fontFamily: "var(--font-body)", color: "var(--color-ink)",
-        outline: "none", transition: "border-color 0.3s ease"
-      }}
-      onFocus={(e) => e.target.style.borderColor = "var(--color-ink)"}
-      onBlur={(e) => e.target.style.borderColor = errors[name] ? 'red' : 'var(--color-ink-muted)'}
-    />
-    {errors[name] && <span style={{ color: "red", fontSize: "var(--type-micro)", marginTop: "4px", display: "block" }}>{errors[name]}</span>}
+    <div style={{ position: "relative" }}>
+      <input 
+        type={type} name={name} value={formData[name]} onChange={handleChange} placeholder={placeholder} maxLength={maxLength}
+        style={{ 
+          width: "100%", padding: "var(--space-sm) var(--space-md)", paddingRight: isValid ? "40px" : "var(--space-md)", border: `1px solid ${errors[name] ? 'red' : isValid ? 'var(--color-volt)' : 'var(--color-ink-muted)'}`, 
+          backgroundColor: "var(--color-canvas)", fontFamily: "var(--font-body)", color: "var(--color-ink)",
+          outline: "none", transition: "all 0.3s ease"
+        }}
+        onFocus={(e) => e.target.style.borderColor = "var(--color-ink)"}
+        onBlur={(e) => e.target.style.borderColor = errors[name] ? 'red' : isValid ? 'var(--color-volt)' : 'var(--color-ink-muted)'}
+      />
+      <AnimatePresence>
+        {isValid && (
+          <motion.div 
+            initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
+            style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--color-volt)", display: "flex" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+    <AnimatePresence>
+      {errors[name] && (
+        <motion.span initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} style={{ color: "red", fontSize: "var(--type-micro)", marginTop: "4px", display: "block" }}>
+          {errors[name]}
+        </motion.span>
+      )}
+    </AnimatePresence>
   </div>
 );
 
@@ -262,36 +280,40 @@ export default function CheckoutPage() {
               <form onSubmit={handleCheckout}>
                 
                 {/* Contacto */}
-                <section style={{ ...glassStyle, opacity: currentStep >= 1 ? 1 : 0.5, pointerEvents: currentStep >= 1 ? "auto" : "none" }}>
+                <motion.section layout style={{ ...glassStyle, opacity: currentStep >= 1 ? 1 : 0.5, pointerEvents: currentStep >= 1 ? "auto" : "none" }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     1. Información de Contacto
                   </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "0" }}>
-                    <InputField formData={formData} handleChange={handleChange} errors={errors} label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" />
-                    <InputField formData={formData} handleChange={handleChange} errors={errors} label="Nombre Completo" name="name" placeholder="Tu nombre" />
+                    <InputField formData={formData} handleChange={handleChange} errors={errors} label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" isValid={formData.email.includes("@") && formData.email.includes(".")} />
+                    <InputField formData={formData} handleChange={handleChange} errors={errors} label="Nombre Completo" name="name" placeholder="Tu nombre" isValid={formData.name.trim().length >= 3} />
                   </div>
-                  {currentStep === 1 && (
-                    <motion.button type="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setCurrentStep(2)} className="btn btn--secondary" style={{ marginTop: "var(--space-md)" }}>Continuar a Envío</motion.button>
-                  )}
-                </section>
+                  <AnimatePresence>
+                    {currentStep === 1 && (
+                      <motion.button layout type="button" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }} onClick={() => setCurrentStep(2)} className="btn btn--secondary" style={{ marginTop: "var(--space-md)", overflow: "hidden" }}>Continuar a Envío</motion.button>
+                    )}
+                  </AnimatePresence>
+                </motion.section>
 
                 {/* Envío */}
-                <section style={{ ...glassStyle, opacity: currentStep >= 2 ? 1 : 0.5, pointerEvents: currentStep >= 2 ? "auto" : "none" }}>
+                <motion.section layout style={{ ...glassStyle, opacity: currentStep >= 2 ? 1 : 0.5, pointerEvents: currentStep >= 2 ? "auto" : "none" }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     2. Dirección de Envío
                   </h2>
-                  <InputField formData={formData} handleChange={handleChange} errors={errors} label="Dirección Completa" name="address" placeholder="Av. Principal y Secundaria" />
-                  <InputField formData={formData} handleChange={handleChange} errors={errors} label="Ciudad" name="city" placeholder="Guayaquil, Quito..." />
-                  {currentStep === 2 && (
-                    <div style={{ display: "flex", gap: "var(--space-sm)", marginTop: "var(--space-md)" }}>
-                      <motion.button type="button" onClick={() => setCurrentStep(1)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent" }}>Volver</motion.button>
-                      <motion.button type="button" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setCurrentStep(3)} className="btn btn--secondary">Continuar a Pago</motion.button>
-                    </div>
-                  )}
-                </section>
+                  <InputField formData={formData} handleChange={handleChange} errors={errors} label="Dirección Completa" name="address" placeholder="Av. Principal y Secundaria" isValid={formData.address.trim().length >= 5} />
+                  <InputField formData={formData} handleChange={handleChange} errors={errors} label="Ciudad" name="city" placeholder="Guayaquil, Quito..." isValid={formData.city.trim().length >= 3} />
+                  <AnimatePresence>
+                    {currentStep === 2 && (
+                      <motion.div layout initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }} style={{ display: "flex", gap: "var(--space-sm)", marginTop: "var(--space-md)", overflow: "hidden" }}>
+                        <button type="button" onClick={() => setCurrentStep(1)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent" }}>Volver</button>
+                        <button type="button" onClick={() => setCurrentStep(3)} className="btn btn--secondary">Continuar a Pago</button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.section>
 
                 {/* Método de Pago */}
-                <section style={{ ...glassStyle, opacity: currentStep >= 3 ? 1 : 0.5, pointerEvents: currentStep >= 3 ? "auto" : "none", marginBottom: currentStep === 3 ? "var(--space-2xl)" : 0 }}>
+                <motion.section layout style={{ ...glassStyle, opacity: currentStep >= 3 ? 1 : 0.5, pointerEvents: currentStep >= 3 ? "auto" : "none", marginBottom: currentStep === 3 ? "var(--space-2xl)" : 0 }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "var(--tracking-tight)", borderBottom: "1px solid var(--color-ink)", paddingBottom: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
                     3. Método de Pago
                   </h2>
@@ -326,13 +348,14 @@ export default function CheckoutPage() {
                         key="card"
                         initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
+                        style={{ overflow: "hidden" }}
                       >
                         <div style={{ backgroundColor: "var(--color-canvas-alt)", padding: "var(--space-xl)", border: "1px solid var(--color-ink-muted)" }}>
                           <p style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", marginBottom: "var(--space-md)", textTransform: "uppercase" }}>Aceptamos Visa y Mastercard</p>
-                          <InputField formData={formData} handleChange={handleChange} errors={errors} label="Número de Tarjeta" name="cardNumber" placeholder="0000 0000 0000 0000" maxLength="19" />
+                          <InputField formData={formData} handleChange={handleChange} errors={errors} label="Número de Tarjeta" name="cardNumber" placeholder="0000 0000 0000 0000" maxLength="19" isValid={formData.cardNumber.replace(/\s/g, '').length >= 15} />
                           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" }}>
-                            <InputField formData={formData} handleChange={handleChange} errors={errors} label="Fecha de Expiración" name="cardExpiry" placeholder="MM/AA" maxLength="5" />
-                            <InputField formData={formData} handleChange={handleChange} errors={errors} label="CVC" name="cardCVC" placeholder="123" maxLength="4" />
+                            <InputField formData={formData} handleChange={handleChange} errors={errors} label="Fecha de Expiración" name="cardExpiry" placeholder="MM/AA" maxLength="5" isValid={formData.cardExpiry.length === 5} />
+                            <InputField formData={formData} handleChange={handleChange} errors={errors} label="CVC" name="cardCVC" placeholder="123" maxLength="4" isValid={formData.cardCVC.length >= 3} />
                           </div>
                         </div>
                       </motion.div>
@@ -399,22 +422,29 @@ export default function CheckoutPage() {
                     )}
                   </AnimatePresence>
                   
-                  {currentStep === 3 && (
-                    <div style={{ marginTop: "var(--space-md)" }}>
-                      <motion.button type="button" onClick={() => setCurrentStep(2)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent", marginBottom: "var(--space-xl)" }}>Volver</motion.button>
-                    </div>
-                  )}
-                </section>
+                  <AnimatePresence>
+                    {currentStep === 3 && (
+                      <motion.div layout initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} style={{ marginTop: "var(--space-md)", overflow: "hidden" }}>
+                        <button type="button" onClick={() => setCurrentStep(2)} className="btn" style={{ border: "1px solid var(--color-ink-muted)", backgroundColor: "transparent", marginBottom: "var(--space-xl)" }}>Volver</button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.section>
 
                 {currentStep === 3 && (
-                  <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} style={{ position: "relative" }}>
                     <button 
                       type="submit" 
                       className="btn btn--primary" 
                       disabled={isProcessing}
-                      style={{ width: "100%", padding: "var(--space-lg)", fontSize: "var(--type-h4)", opacity: isProcessing ? 0.7 : 1 }}
+                      style={{ width: "100%", padding: "var(--space-lg)", fontSize: "var(--type-h4)", opacity: isProcessing ? 0.7 : 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}
                     >
-                      {isProcessing ? "PROCESANDO..." : `CONFIRMAR ORDEN ($${total.toFixed(2)})`}
+                      {isProcessing ? (
+                        <>
+                          <motion.svg animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></motion.svg>
+                          PROCESANDO...
+                        </>
+                      ) : `CONFIRMAR ORDEN ($${total.toFixed(2)})`}
                     </button>
                     <p style={{ textAlign: "center", fontSize: "var(--type-micro)", color: "var(--color-ink-soft)", marginTop: "var(--space-sm)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       Pago Seguro Encriptado (Simulación)
