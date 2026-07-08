@@ -64,7 +64,7 @@ export default function HeroSection() {
               margin: 0,
             }}
           >
-            NIKE <span style={{ color: "transparent", WebkitTextStroke: "2px var(--color-ink)", display: "block" }}>LEGADO</span>
+            NIKE <span style={{ color: "transparent", WebkitTextStroke: "2px var(--color-ink)", display: "block", fontSize: "clamp(2rem, 6vw, 5rem)" }}>EL ADN DE LA PASIÓN</span>
           </motion.h1>
           
           <motion.div
@@ -104,7 +104,17 @@ export default function HeroSection() {
           }}
         >
           “El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro, y aún, siempre volvíamos.” 
-          <strong style={{ color: "var(--color-ink)", display: "block", marginTop: "8px" }}>FÚTBOL AMIGOS BARRIO SUEÑOS.</strong>
+          <strong style={{ 
+            color: "var(--color-volt)", 
+            display: "block", 
+            marginTop: "16px",
+            fontFamily: "'Permanent Marker', cursive",
+            fontSize: "clamp(1.5rem, 4vw, 2.5rem)",
+            letterSpacing: "2px",
+            transform: "rotate(-2deg)",
+            textShadow: "2px 2px 0px #000",
+            WebkitTextStroke: "1px #000"
+          }}>Fútbol, Amigos, Barrio, Sueños.</strong>
         </motion.p>
 
         <motion.div
@@ -157,6 +167,8 @@ export default function HeroSection() {
       </motion.div>
 
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+        
         @keyframes shimmer {
           0% { background-position: 200% center; }
           100% { background-position: -200% center; }
