@@ -15,6 +15,7 @@ import ShopTheLook from "../components/ShopTheLook";
 import MagneticButton from "../components/MagneticButton";
 import CTASection from "../components/CTASection";
 import InstagramFeed from "../components/InstagramFeed";
+import DropsCalendar from "../components/DropsCalendar";
 
 export default function HomePage() {
   const { openLuckyWheel } = useUIStore();
@@ -248,6 +249,7 @@ const LookbookSection = ({ section, resolveAsset }) => {
         );
       })}
 
+      <DropsCalendar />
       <InstagramFeed />
       <ShopTheLook />
       <CTASection />

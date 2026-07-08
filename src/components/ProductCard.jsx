@@ -5,7 +5,7 @@ import { useProducts } from "../context/ProductContext";
 import { useToast } from "../context/ToastContext";
 import { resolveAsset } from "../utils/resolveAsset";
 import OptimizedImage from "./OptimizedImage";
-import { useWishlistStore } from "../store/useStore";
+import { useWishlistStore, useCompareStore } from "../store/useStore";
 import CountdownTimer from "./CountdownTimer";
 
 export default function ProductCard({ producto, index, onQuickView, layoutMode = "grid3" }) {
@@ -28,7 +28,9 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
   const { addToCart } = useProducts();
   const { addToast } = useToast();
   const { toggleWishlist, items: wishlist } = useWishlistStore();
+  const { toggleCompare, compareItems } = useCompareStore();
   const isWished = wishlist.some((item) => item.id === producto.id);
+  const isCompared = compareItems.some((item) => item.id === producto.id);
   const cardRef = useRef(null);
 
   // 3D Tilt Effect State
@@ -328,6 +330,28 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
+                </svg>
+              </motion.button>
+              
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleCompare(producto); }}
+                style={{
+                  padding: "var(--space-sm)",
+                  backgroundColor: isCompared ? "var(--color-ink)" : "rgba(255,255,255,0.92)",
+                  color: isCompared ? "var(--color-canvas)" : "var(--color-ink)",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backdropFilter: "blur(8px)",
+                }}
+                title={isCompared ? "Quitar de comparar" : "Comparar"}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="18" rx="1"></rect>
+                  <rect x="14" y="3" width="7" height="18" rx="1"></rect>
                 </svg>
               </motion.button>
             </motion.div>

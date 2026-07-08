@@ -28,6 +28,7 @@ import CustomCursor from "./components/CustomCursor";
 import ExitIntentPopup from "./components/ExitIntentPopup";
 import LuckyWheel from "./components/LuckyWheel";
 import CartDrawer from "./components/CartDrawer";
+import AIPersonalShopper from "./components/AIPersonalShopper";
 import { useUIStore, useThemeStore } from "./store/useStore";
 
 function AppRoutes() {
@@ -95,6 +96,7 @@ export default function App() {
                   <AppRoutes />
                   <BackToTop />
                   <WhatsAppFAB />
+                  <AIPersonalShopper />
                   <ExitIntentPopup />
                   <CartDrawer />
                   {isLuckyWheelOpen && <LuckyWheel onClose={closeLuckyWheel} />}

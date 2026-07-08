@@ -13,6 +13,8 @@ import InteractiveShoe3D from "../components/InteractiveShoe3D";
 import SizeRecommender from "../components/SizeRecommender";
 import CountdownTimer from "../components/CountdownTimer";
 import RelatedProducts from "../components/RelatedProducts";
+import BundleBuilder from "../components/BundleBuilder";
+import ARSimulatorModal from "../components/ARSimulatorModal";
 import { useCartStore, useRecentStore } from "../store/useStore";
 
 export default function ProductoPage() {
@@ -30,6 +32,7 @@ export default function ProductoPage() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [added, setAdded] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [showAR, setShowAR] = useState(false);
 
   // Set initial selected values when product loads
   useEffect(() => {
@@ -260,14 +263,14 @@ export default function ProductoPage() {
                 )}
 
                 {/* Actions */}
-                <div style={{ display: "flex", gap: "var(--space-md)" }}>
+                <div style={{ display: "flex", gap: "var(--space-md)", flexWrap: "wrap" }}>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleAddToCart}
                     className="btn btn--primary"
                     style={{
-                      flex: 1,
+                      flex: "1 1 200px",
                       padding: "18px 0",
                       fontSize: "var(--type-body)",
                       fontWeight: 600,
@@ -289,6 +292,25 @@ export default function ProductoPage() {
                       "Añadir al Carrito"
                     )}
                   </motion.button>
+                  
+                  {/* AR Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowAR(true)}
+                    className="btn btn--secondary"
+                    style={{
+                      padding: "18px 24px",
+                      borderRadius: "100px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px"
+                    }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline><polyline points="7.5 19.79 7.5 14.6 3 12"></polyline><polyline points="21 12 16.5 14.6 16.5 19.79"></polyline><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Ver en AR
+                  </motion.button>
+
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -377,6 +399,8 @@ export default function ProductoPage() {
       {/* REVIEWS & RELATED */}
       <CustomerReviews />
 
+      <BundleBuilder mainProduct={producto} />
+
           {/* Related Products */}
           {relacionados.length > 0 && (
             <section style={{ paddingTop: "var(--space-3xl)", borderTop: "1px solid var(--color-ink-muted)" }}>
@@ -396,6 +420,7 @@ export default function ProductoPage() {
 
       <RelatedProducts currentProduct={producto} />
       <SizeGuideModal isOpen={showSizeGuide} onClose={() => setShowSizeGuide(false)} />
+      <ARSimulatorModal isOpen={showAR} onClose={() => setShowAR(false)} product={producto} />
     </>
   );
 }

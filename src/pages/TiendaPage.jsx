@@ -6,6 +6,7 @@ import { useWishlistStore, useRecentStore } from "../store/useStore";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import AnimatedBackground from "../components/AnimatedBackground";
+import CompareDrawer from "../components/CompareDrawer";
 
 function CountUp({ value }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -419,6 +420,7 @@ export default function TiendaPage() {
           />
         )}
       </AnimatePresence>
+      <CompareDrawer />
     </>
   );
 }

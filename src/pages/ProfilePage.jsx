@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "../components/common/SEOHead";
-import { useUserStore } from "../store/useStore";
-
+import { useUserStore, useOrderStore } from "../store/useStore";
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { user } = useUserStore();
@@ -21,10 +20,8 @@ export default function ProfilePage() {
 
   if (!user) return null;
 
-  const orderHistory = [
-    { id: "MX-8930", date: "12 May, 2026", status: "Entregado", total: "$3,499", item: "Nike Air Max Pulse" },
-    { id: "MX-7621", date: "04 Abr, 2026", status: "Entregado", total: "$2,899", item: "Nike Dunk Low" },
-  ];
+  const { orders } = useOrderStore();
+  const orderHistory = orders.filter(o => o.customerEmail === user.email);
 
   return (
     <div style={{

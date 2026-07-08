@@ -7,6 +7,7 @@ import OptimizedImage from "./OptimizedImage";
 
 export default function SearchOverlay({ isOpen, onClose }) {
   const [query, setQuery] = useState("");
+  const [predictedText, setPredictedText] = useState("");
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const { productos } = useProducts();
@@ -17,6 +18,8 @@ export default function SearchOverlay({ isOpen, onClose }) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
+      setQuery("");
+      setPredictedText("");
     }
     return () => {
       document.body.style.overflow = "auto";
@@ -26,6 +29,19 @@ export default function SearchOverlay({ isOpen, onClose }) {
   const results = query.length > 1 
     ? productos.filter(p => p.nombre.toLowerCase().includes(query.toLowerCase()) || p.categoria.toLowerCase().includes(query.toLowerCase()))
     : [];
+
+  useEffect(() => {
+    if (query.length > 1 && results.length > 0) {
+      const firstMatch = results[0].nombre.toLowerCase();
+      if (firstMatch.startsWith(query.toLowerCase())) {
+        setPredictedText(query + firstMatch.slice(query.length));
+      } else {
+        setPredictedText("");
+      }
+    } else {
+      setPredictedText("");
+    }
+  }, [query, results]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -68,28 +84,58 @@ export default function SearchOverlay({ isOpen, onClose }) {
               </button>
             </div>
             
-            <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-ink-soft)" strokeWidth="1.5">
+            <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center", gap: "var(--space-md)", position: "relative" }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-ink-soft)" strokeWidth="1.5" style={{ zIndex: 2 }}>
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <input
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar zapatillas, ropa, colecciones..."
-                style={{
-                  flex: 1,
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  color: "var(--color-ink)",
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(24px, 5vw, 48px)",
-                  textTransform: "uppercase",
-                }}
-              />
+              <div style={{ position: "relative", flex: 1 }}>
+                <input
+                  type="text"
+                  value={predictedText}
+                  readOnly
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    color: "var(--color-ink-muted)",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(24px, 5vw, 48px)",
+                    textTransform: "uppercase",
+                    zIndex: 0,
+                    pointerEvents: "none"
+                  }}
+                />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Tab" && predictedText) {
+                      e.preventDefault();
+                      setQuery(predictedText);
+                    }
+                  }}
+                  placeholder="Buscar zapatillas, ropa, colecciones..."
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    color: "var(--color-ink)",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(24px, 5vw, 48px)",
+                    textTransform: "uppercase",
+                    position: "relative",
+                    zIndex: 1
+                  }}
+                />
+              </div>
             </form>
           </div>
 

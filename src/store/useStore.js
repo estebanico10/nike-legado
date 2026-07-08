@@ -240,3 +240,25 @@ export const useReviewsStore = create(
     { name: 'nike-reviews-storage' }
   )
 );
+
+export const useCompareStore = create(
+  persist(
+    (set, get) => ({
+      compareItems: [],
+      toggleCompare: (product) => {
+        const items = get().compareItems;
+        const exists = items.some(item => item.id === product.id);
+        if (exists) {
+          set({ compareItems: items.filter(item => item.id !== product.id) });
+        } else if (items.length < 3) {
+          set({ compareItems: [...items, product] });
+        }
+      },
+      removeFromCompare: (id) => {
+        set({ compareItems: get().compareItems.filter(item => item.id !== id) });
+      },
+      clearCompare: () => set({ compareItems: [] }),
+    }),
+    { name: 'nike-compare-storage' }
+  )
+);
