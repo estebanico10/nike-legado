@@ -23,7 +23,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
     };
   }, [isOpen]);
 
-  const results = query.length > 2 
+  const results = query.length > 1 
     ? productos.filter(p => p.nombre.toLowerCase().includes(query.toLowerCase()) || p.categoria.toLowerCase().includes(query.toLowerCase()))
     : [];
 
@@ -111,28 +111,32 @@ export default function SearchOverlay({ isOpen, onClose }) {
               </div>
             )}
 
-            {query.length > 2 && results.length === 0 && (
+            {query.length > 1 && results.length === 0 && (
               <div style={{ textAlign: "center", color: "var(--color-ink-soft)", paddingTop: "var(--space-3xl)" }}>
                 No se encontraron resultados para "{query}"
               </div>
             )}
             
             {results.length > 0 && (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "var(--space-lg)" }}>
-                {results.slice(0, 10).map((producto) => (
-                  <div 
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "var(--space-lg)" }}>
+                {results.slice(0, 10).map((producto, idx) => (
+                  <motion.div 
                     key={producto.id} 
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05, duration: 0.3 }}
                     onClick={() => { onClose(); navigate(`/producto/${producto.id}`); }}
                     style={{ cursor: "pointer", display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}
+                    whileHover={{ scale: 1.02 }}
                   >
-                    <div style={{ aspectRatio: "1/1", backgroundColor: "var(--color-surface)", borderRadius: "var(--radius-md)", overflow: "hidden" }}>
-                      <OptimizedImage src={resolveAsset(producto.imagenes[0])} alt={producto.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <div style={{ aspectRatio: "1/1", backgroundColor: "var(--color-surface)", borderRadius: "var(--radius-md)", overflow: "hidden", border: "1px solid var(--color-ink-muted)", position: "relative" }}>
+                      <OptimizedImage src={resolveAsset(producto.imagenes[0])} alt={producto.nombre} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }} className="search-result-img" />
                     </div>
                     <div>
-                      <h4 style={{ margin: 0, fontSize: "var(--type-body-sm)", textTransform: "uppercase" }}>{producto.nombre}</h4>
-                      <p style={{ margin: 0, fontSize: "var(--type-caption)", color: "var(--color-ink-soft)" }}>${producto.precio}</p>
+                      <h4 style={{ margin: 0, fontSize: "var(--type-body-sm)", textTransform: "uppercase", color: "var(--color-ink)", fontWeight: 600 }}>{producto.nombre}</h4>
+                      <p style={{ margin: "2px 0 0", fontSize: "var(--type-caption)", color: "var(--color-volt)", fontWeight: 700 }}>${producto.precio}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useCartStore, useUserStore } from "../store/useStore";
+import { useCartStore, useUserStore, useOrderStore } from "../store/useStore";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { resolveAsset } from "../utils/resolveAsset";
@@ -126,6 +126,17 @@ export default function CheckoutPage() {
         }
         const earnedCoins = Math.floor(total * 5);
         addCoins(earnedCoins);
+        
+        const newOrder = {
+          id: `MX-${Math.floor(1000 + Math.random() * 9000)}`,
+          customerName: formData.name,
+          customerEmail: formData.email,
+          date: new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' }),
+          status: "Procesando",
+          total: total,
+          items: cart.map(item => ({ nombre: item.nombre, quantity: item.quantity, precio: item.precioOferta || item.precio }))
+        };
+        addOrder(newOrder);
         
         setIsProcessing(false);
         setIsSuccess(true);

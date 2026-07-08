@@ -8,7 +8,7 @@ import OptimizedImage from "./OptimizedImage";
 import { useWishlistStore } from "../store/useStore";
 import CountdownTimer from "./CountdownTimer";
 
-export default function ProductCard({ producto, index, onQuickView }) {
+export default function ProductCard({ producto, index, onQuickView, layoutMode = "grid3" }) {
   const [hoveredColor, setHoveredColor] = useState(null);
   
   // Use the color's specific image if available, else default
@@ -93,8 +93,8 @@ export default function ProductCard({ producto, index, onQuickView }) {
       onMouseLeave={handleMouseLeave}
       style={{
         display: "flex",
-        flexDirection: "column",
-        gap: "var(--space-sm)",
+        flexDirection: layoutMode === "list" ? "row" : "column",
+        gap: "var(--space-md)",
         cursor: "pointer",
         perspective: "1000px" // For 3D tilt
       }}
@@ -104,6 +104,7 @@ export default function ProductCard({ producto, index, onQuickView }) {
         style={{
           position: "relative",
           aspectRatio: "1 / 1",
+          width: layoutMode === "list" ? "200px" : "100%",
           overflow: "hidden",
           backgroundColor: "var(--color-canvas-alt)",
           rotateX,

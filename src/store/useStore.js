@@ -187,3 +187,56 @@ export const useUserStore = create(
     }
   )
 );
+
+export const useOrderStore = create(
+  persist(
+    (set) => ({
+      orders: [
+        { id: "MX-8930", customerName: "Carlos Gómez", customerEmail: "carlos@example.com", date: "12 May, 2026", status: "Entregado", total: 3499, items: [{ nombre: "Nike Air Max Pulse", quantity: 1, precio: 3499 }] },
+        { id: "MX-7621", customerName: "Esteban López", customerEmail: "esteban@example.com", date: "04 Abr, 2026", status: "Procesando", total: 2899, items: [{ nombre: "Nike Dunk Low", quantity: 1, precio: 2899 }] },
+      ],
+      addOrder: (order) => set((state) => ({ orders: [order, ...state.orders] })),
+      updateOrderStatus: (orderId, status) => set((state) => ({
+        orders: state.orders.map(order => order.id === orderId ? { ...order, status } : order)
+      })),
+    }),
+    { name: 'nike-orders-storage' }
+  )
+);
+
+export const useCustomerStore = create(
+  persist(
+    (set) => ({
+      customers: [
+        { id: "CUST-001", name: "Carlos Gómez", email: "carlos@example.com", tier: "Gold", spent: 6398, ordersCount: 2, status: "Activo" },
+        { id: "CUST-002", name: "Sofía Martínez", email: "sofia.m@example.com", tier: "Silver", spent: 2899, ordersCount: 1, status: "Activo" },
+        { id: "CUST-003", name: "Alejandro Pérez", email: "ale.perez@example.com", tier: "Standard", spent: 0, ordersCount: 0, status: "Suspendido" },
+      ],
+      addCustomer: (customer) => set((state) => ({ customers: [...state.customers, customer] })),
+      toggleCustomerStatus: (id) => set((state) => ({
+        customers: state.customers.map(c => c.id === id ? { ...c, status: c.status === "Activo" ? "Suspendido" : "Activo" } : c)
+      })),
+    }),
+    { name: 'nike-customers-storage' }
+  )
+);
+
+export const useReviewsStore = create(
+  persist(
+    (set) => ({
+      reviews: [
+        { id: "REV-001", productName: "Nike Air Max Pulse", customerName: "Carlos Gómez", rating: 5, comment: "Excelente calzado, muy cómodos y el estilo es insuperable.", date: "15 May, 2026", approved: true },
+        { id: "REV-002", productName: "Nike Dunk Low", customerName: "Sofía Martínez", rating: 4, comment: "Buen producto, pero la entrega tardó dos días más de lo previsto.", date: "10 May, 2026", approved: false },
+        { id: "REV-003", productName: "Nike Pegasus 40", customerName: "Roberto D.", rating: 5, comment: "Increíbles para correr maratones. El rebote de la suela es perfecto.", date: "02 May, 2026", approved: true },
+      ],
+      addReview: (review) => set((state) => ({ reviews: [review, ...state.reviews] })),
+      approveReview: (id) => set((state) => ({
+        reviews: state.reviews.map(r => r.id === id ? { ...r, approved: true } : r)
+      })),
+      deleteReview: (id) => set((state) => ({
+        reviews: state.reviews.filter(r => r.id !== id)
+      })),
+    }),
+    { name: 'nike-reviews-storage' }
+  )
+);

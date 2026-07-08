@@ -2,17 +2,54 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useCartStore, useUIStore } from '../store/useStore';
 import { resolveAsset } from '../utils/resolveAsset';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CartDrawer() {
-  const { items, removeFromCart, updateQuantity, getCartTotal, couponCode, discountPercent, applyCoupon, removeCoupon } = useCartStore();
+  const { items, removeFromCart, updateQuantity, getCartTotal, couponCode, discountPercent, applyCoupon, removeCoupon, addToCart } = useCartStore();
   const { isCartOpen, closeCart } = useUIStore();
   const [couponInput, setCouponInput] = useState("");
   const [couponMsg, setCouponMsg] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(900);
 
   const subtotal = getCartTotal();
   const discountAmount = (subtotal * discountPercent) / 100;
   const total = subtotal - discountAmount;
+
+  const UPSELLS = [
+    { id: "socks-volt-001", nombre: "Calcetines Volt Crew", precio: 10.00, imagenes: ["./assets/products/indoor-genz-specs.png"], tallas: ["M"], colores: ["#CEFF00"], categoria: "Equipamiento", tipo: "accesorios" },
+    { id: "indoor-cap-genz-001", nombre: "Gorra Street Fútbol", precio: 20.00, imagenes: ["./assets/products/timeless-cap-001-front.webp"], tallas: ["Talla única"], colores: ["#111111"], categoria: "Indoor Gen Z", tipo: "gorra" },
+    { id: "laces-volt-001", nombre: "Cordones Volt Sport", precio: 5.00, imagenes: ["./assets/products/indoor-genz-front.png"], tallas: ["Talla única"], colores: ["#CEFF00"], categoria: "Equipamiento", tipo: "accesorios" }
+  ];
+
+  const filteredUpsells = UPSELLS.filter(u => !items.some(item => item.id === u.id));
+
+  useEffect(() => {
+    if (!isCartOpen) return;
+    
+    let expiresAt = sessionStorage.getItem("cart_expiry");
+    if (!expiresAt) {
+      expiresAt = Date.now() + 15 * 60 * 1000;
+      sessionStorage.setItem("cart_expiry", expiresAt.toString());
+    } else {
+      expiresAt = parseInt(expiresAt, 10);
+    }
+
+    const interval = setInterval(() => {
+      const remaining = Math.max(0, Math.round((expiresAt - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining === 0) {
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isCartOpen]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
@@ -60,6 +97,46 @@ export default function CartDrawer() {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
+
+            {/* Scarcity Timer */}
+            {items.length > 0 && (
+              <div style={{
+                backgroundColor: timeLeft < 180 ? 'rgba(211, 0, 5, 0.15)' : 'rgba(212, 255, 0, 0.08)',
+                color: timeLeft < 180 ? '#FF4500' : 'var(--color-volt)',
+                padding: '10px var(--space-lg)',
+                fontSize: '11px',
+                fontFamily: 'var(--font-display)',
+                letterSpacing: '0.05em',
+                textAlign: 'center',
+                borderBottom: '1px solid #1A1A1A',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                animation: timeLeft < 180 ? 'pulse 1s infinite alternate' : 'none'
+              }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>¡RESERVA DE STOCK ACTIVA! EXPIRA EN: <strong>{formatTime(timeLeft)}</strong></span>
+              </div>
+            )}
+
+            {/* Free Shipping Progress Bar */}
+            {items.length > 0 && (
+              <div style={{ padding: '16px var(--space-lg) 8px', borderBottom: '1px solid #1A1A1A' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: 'var(--type-micro)', color: '#A0A0A0' }}>
+                  <span>{subtotal >= 150 ? '¡Envío gratis desbloqueado!' : `Te faltan $${(150 - subtotal).toFixed(2)} para envío gratis`}</span>
+                  <span>${subtotal.toFixed(2)} / $150.00</span>
+                </div>
+                <div style={{ width: '100%', height: '6px', backgroundColor: '#222', borderRadius: '3px', overflow: 'hidden' }}>
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min((subtotal / 150) * 100, 100)}%` }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    style={{ height: '100%', backgroundColor: 'var(--color-volt)', borderRadius: '3px' }}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Items */}
             <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-md)' }}>
@@ -109,6 +186,43 @@ export default function CartDrawer() {
                       </div>
                     );
                   })}
+
+                  {/* Completa tu Look (Cross-Selling) */}
+                  {filteredUpsells.length > 0 && (
+                    <div style={{ marginTop: 'var(--space-md)', borderTop: '1px solid #1A1A1A', paddingTop: 'var(--space-md)' }}>
+                      <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '11px', textTransform: 'uppercase', color: '#757575', letterSpacing: '0.08em', marginBottom: 'var(--space-sm)' }}>
+                        Completa Tu Look
+                      </h4>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {filteredUpsells.map(u => (
+                          <div key={u.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', backgroundColor: '#111', borderRadius: '4px', border: '1px solid #1A1A1A' }}>
+                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                              <div style={{ width: '40px', height: '40px', backgroundColor: '#1A1A1A', borderRadius: '4px', overflow: 'hidden', flexShrink: 0 }}>
+                                <img src={resolveAsset(u.imagenes[0])} alt={u.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              </div>
+                              <div>
+                                <h5 style={{ margin: 0, fontSize: '12px', color: '#F5F5F5', fontWeight: 500 }}>{u.nombre}</h5>
+                                <span style={{ fontSize: '11px', color: 'var(--color-volt)', fontWeight: 600 }}>${u.precio.toFixed(2)}</span>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => addToCart(u, u.tallas[0], 1, u.colores[0])}
+                              style={{
+                                backgroundColor: 'var(--color-volt)', color: '#000', border: 'none',
+                                width: '28px', height: '28px', borderRadius: '50%', display: 'flex',
+                                alignItems: 'center', justifyContent: 'center', fontWeight: 'bold',
+                                cursor: 'pointer', transition: 'transform 0.2s'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            >
+                              +
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -150,13 +264,13 @@ export default function CartDrawer() {
                       <span>-${discountAmount.toFixed(2)}</span>
                     </div>
                   )}
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-md)", color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>
                     <span>Envío</span>
-                    <span>Gratis</span>
+                    <span>{subtotal >= 150 ? 'Gratis' : '$15.00'}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid var(--color-ink-muted)", paddingTop: "var(--space-md)", marginBottom: "var(--space-xl)", fontWeight: 700, fontSize: "var(--type-h4)", fontFamily: "var(--font-display)" }}>
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>${(total + (subtotal >= 150 ? 0 : 15)).toFixed(2)}</span>
                   </div>
                 <Link to="/checkout" onClick={closeCart} className="btn btn--volt" style={{ width: '100%', textAlign: 'center', padding: '16px', fontSize: 'var(--type-body)' }}>
                   Ir a Pagar

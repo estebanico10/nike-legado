@@ -34,6 +34,7 @@ export default function TiendaPage() {
   const [filtroColor, setFiltroColor] = useState(null);
   const [maxPrecio, setMaxPrecio] = useState(200);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [layoutMode, setLayoutMode] = useState("grid3"); // grid2, grid3, list
 
   const query = searchParams.get("q") || "";
   const isWishlistMode = searchParams.get("filter") === "wishlist";
@@ -175,30 +176,65 @@ export default function TiendaPage() {
                 ))}
               </div>
 
-              {/* Ordenamiento */}
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
-                <label style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500, textTransform: "uppercase" }}>Ordenar:</label>
-                <select
-                  value={orden}
-                  onChange={(e) => setOrden(e.target.value)}
-                  style={{
-                    backgroundColor: "var(--color-canvas)",
-                    border: "1px solid #E5E5E5",
-                    color: "var(--color-ink)",
-                    padding: "6px 12px",
-                    borderRadius: "999px",
-                    fontSize: "var(--type-caption)",
-                    fontFamily: "var(--font-body)",
-                    cursor: "pointer",
-                    outline: "none",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
-                  }}
-                >
-                  <option value="default">Relevancia</option>
-                  <option value="precio_asc">Precio: Menor a Mayor</option>
-                  <option value="precio_desc">Precio: Mayor a Menor</option>
-                  <option value="ventas">Más Vendidos</option>
-                </select>
+              {/* Ordenamiento y Layout */}
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+                  <label style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500, textTransform: "uppercase" }}>Ordenar:</label>
+                  <select
+                    value={orden}
+                    onChange={(e) => setOrden(e.target.value)}
+                    style={{
+                      backgroundColor: "var(--color-canvas)",
+                      border: "1px solid #E5E5E5",
+                      color: "var(--color-ink)",
+                      padding: "6px 12px",
+                      borderRadius: "999px",
+                      fontSize: "var(--type-caption)",
+                      fontFamily: "var(--font-body)",
+                      cursor: "pointer",
+                      outline: "none",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+                    }}
+                  >
+                    <option value="default">Relevancia</option>
+                    <option value="precio_asc">Precio: Menor a Mayor</option>
+                    <option value="precio_desc">Precio: Mayor a Menor</option>
+                    <option value="ventas">Más Vendidos</option>
+                  </select>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", borderLeft: "1px solid var(--color-ink-muted)", paddingLeft: "12px", marginLeft: "4px" }}>
+                  <button
+                    onClick={() => setLayoutMode("grid2")}
+                    style={{
+                      background: "none", border: "none", color: layoutMode === "grid2" ? "var(--color-volt)" : "var(--color-ink-soft)",
+                      cursor: "pointer", display: "flex", padding: "4px", transition: "color 0.2s"
+                    }}
+                    title="Vista 2 Columnas"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="18"></rect><rect x="14" y="3" width="7" height="18"></rect></svg>
+                  </button>
+                  <button
+                    onClick={() => setLayoutMode("grid3")}
+                    style={{
+                      background: "none", border: "none", color: layoutMode === "grid3" ? "var(--color-volt)" : "var(--color-ink-soft)",
+                      cursor: "pointer", display: "flex", padding: "4px", transition: "color 0.2s"
+                    }}
+                    title="Vista 3 Columnas"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="5" height="18"></rect><rect x="9.5" y="3" width="5" height="18"></rect><rect x="17" y="3" width="5" height="18"></rect></svg>
+                  </button>
+                  <button
+                    onClick={() => setLayoutMode("list")}
+                    style={{
+                      background: "none", border: "none", color: layoutMode === "list" ? "var(--color-volt)" : "var(--color-ink-soft)",
+                      cursor: "pointer", display: "flex", padding: "4px", transition: "color 0.2s"
+                    }}
+                    title="Vista Lista"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -303,7 +339,6 @@ export default function TiendaPage() {
           {/* Grid Animado */}
           <AnimatePresence mode="popLayout">
           <motion.div 
-            className="product-grid"
             initial="hidden"
             animate="visible"
             variants={{
@@ -312,6 +347,15 @@ export default function TiendaPage() {
                 opacity: 1,
                 transition: { staggerChildren: 0.1 }
               }
+            }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: layoutMode === "grid2" 
+                ? "repeat(auto-fill, minmax(calc(50% - var(--space-md)), 1fr))" 
+                : layoutMode === "grid3"
+                ? "repeat(auto-fill, minmax(calc(33.333% - var(--space-md)), 1fr))"
+                : "1fr",
+              gap: "var(--space-lg)",
             }}
           >
             {productosFiltrados.slice(0, visibleCount).map((producto, i) => (
@@ -323,12 +367,13 @@ export default function TiendaPage() {
                   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } }
                 }}
                 exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                whileHover={{ y: -8 }}
+                whileHover={{ y: layoutMode === "list" ? 0 : -8 }}
               >
                 <ProductCard
                   producto={producto}
                   index={i}
                   onQuickView={setQuickViewProduct}
+                  layoutMode={layoutMode}
                 />
               </motion.div>
             ))}
