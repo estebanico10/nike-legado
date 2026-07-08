@@ -1,0 +1,114 @@
+{
+  "productos": [
+    {
+      "id": "1",
+      "nombre": "Nike Air Max Pulse",
+      "precio": 3499.00,
+      "precioOferta": 2899.00,
+      "categoria": "Lifestyle",
+      "imagenes": [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1605348532760-6753d2c43329?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "tallas": ["25", "26", "27", "28", "29"],
+      "colores": ["#FF0000", "#000000", "#FFFFFF"],
+      "enOferta": true,
+      "esNuevo": false,
+      "descripcion": "Inspirados en la escena musical de Londres, los Air Max Pulse aportan un toque underground a la icónica línea Air Max. Cuentan con una entresuela envuelta en material textil y acentos sellados al vacío. Los colores inspirados en la escena de la música grime les dan un toque urbano y rudo."
+    },
+    {
+      "id": "2",
+      "nombre": "Nike Dunk Low Retro",
+      "precio": 2799.00,
+      "precioOferta": null,
+      "categoria": "Lifestyle",
+      "imagenes": [
+        "https://images.unsplash.com/photo-1514989940723-e8e51635b782?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "tallas": ["24", "25", "26", "27", "28", "29"],
+      "colores": ["#000000", "#FFFFFF", "#0000FF"],
+      "enOferta": false,
+      "esNuevo": true,
+      "descripcion": "El icono del baloncesto de los 80 vuelve con detalles clásicos y un estilo de baloncesto retro. Llevan el estilo vintage de nuevo a las calles, mientras que el cuello acolchado te permite llevar tu juego a cualquier parte con comodidad."
+    },
+    {
+      "id": "3",
+      "nombre": "Nike Pegasus 40",
+      "precio": 2999.00,
+      "precioOferta": null,
+      "categoria": "Running",
+      "imagenes": [
+        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "tallas": ["26", "27", "28", "29"],
+      "colores": ["#FFFFFF", "#000000"],
+      "enOferta": false,
+      "esNuevo": true,
+      "descripcion": "El caballo de batalla con alas nunca decepciona. Con una amortiguación reactiva React y dos unidades Zoom Air, los Pegasus 40 están diseñados para durar. Tienen un ajuste mejorado que te proporciona comodidad desde el primer día."
+    },
+    {
+      "id": "4",
+      "nombre": "Nike ZoomX Vaporfly",
+      "precio": 5299.00,
+      "precioOferta": 4899.00,
+      "categoria": "Running",
+      "imagenes": [
+        "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "tallas": ["25", "26", "27", "28"],
+      "colores": ["#00FF00", "#FF00FF"],
+      "enOferta": true,
+      "esNuevo": false,
+      "descripcion": "Preparados para la carrera, los ZoomX Vaporfly NEXT% 2 se han diseñado con tecnología punta que persigue los límites y supera récords. La parte superior renovada mejora la comodidad y la transpirabilidad."
+    },
+    {
+      "id": "5",
+      "nombre": "Nike LeBron XX",
+      "precio": 4599.00,
+      "precioOferta": null,
+      "categoria": "Basketball",
+      "imagenes": [
+        "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "tallas": ["27", "28", "29", "30", "31"],
+      "colores": ["#FF0000", "#000000", "#FFFF00"],
+      "enOferta": false,
+      "esNuevo": true,
+      "descripcion": "Las primeras zapatillas de baloncesto de LeBron James son más ligeras, tienen un corte más bajo y un diseño turbo. La amortiguación Max Air en el talón absorbe y disipa los impactos."
+    },
+    {
+      "id": "6",
+      "nombre": "Nike KD 16",
+      "precio": 3799.00,
+      "precioOferta": null,
+      "categoria": "Basketball",
+      "imagenes": [
+        "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "tallas": ["26", "27", "28", "29", "30"],
+      "colores": ["#0000FF", "#FFFFFF", "#000000"],
+      "enOferta": false,
+      "esNuevo": false,
+      "descripcion": "Diseñadas para el estilo de juego de Kevin Durant, estas zapatillas combinan un agarre excelente con una amortiguación reactiva gracias a la unidad Zoom Air en el antepié."
+    }
+  ],
+  "homeSections": [
+    { "id": "1", "type": "hero", "title": "Hero Principal", "order": 1, "visible": true },
+    { "id": "2", "type": "lookbook", "title": "Lookbook Invierno", "description": "Descubre la nueva colección diseñada para enfrentar el clima frío con estilo y comodidad extrema.", "images": [
+        { "src": "https://images.unsplash.com/photo-1552346154-21d32810baa3?q=80&w=1000&auto=format&fit=crop", "title": "Winter Jacket", "subtitle": "Abrigado y ligero" },
+        { "src": "https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=1000&auto=format&fit=crop", "title": "Thermal Pants", "subtitle": "Movimiento total" },
+        { "src": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop", "title": "Beanie & Gloves", "subtitle": "Accesorios clave" }
+      ], "order": 2, "visible": true },
+    { "id": "3", "type": "destacados", "title": "Lo Más Destacado", "order": 3, "visible": true }
+  ],
+  "presentationSections": [
+    { "id": "1", "title": "Nombre del Proyecto", "content": "Nike Legado: EL ADN DE LA PASIÓN", "order": 1 },
+    { "id": "2", "title": "Integrantes", "content": "- Integrante 1\n- Integrante 2\n- Integrante 3", "order": 2 },
+    { "id": "3", "title": "Insight", "content": "Conectar emocionalmente a los jóvenes con sus raíces en el fútbol de barrio.", "order": 3 },
+    { "id": "4", "title": "Diseño", "content": "Estilo moderno, alto contraste, texturas grunge y tipografías expresivas.", "order": 4 },
+    { "id": "5", "title": "Marca de Identidad/visual", "content": "Colores neón (Volt), negro profundo, y detalles urbanos.", "order": 5 },
+    { "id": "6", "title": "Cronograma de Posts de redes sociales", "content": "1. Lanzamiento Teaser (Lunes)\n2. Presentación del Producto (Miércoles)\n3. Testimonios de la Comunidad (Viernes)", "order": 6 }
+  ],
+  "orders": []
+}

@@ -1,12 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useCartStore, useUIStore } from '../store/useStore';
+import { useI18nStore } from '../store/useI18nStore';
 import { resolveAsset } from '../utils/resolveAsset';
 import { useState, useEffect } from 'react';
 
 export default function CartDrawer() {
   const { items, removeFromCart, updateQuantity, getCartTotal, couponCode, discountPercent, applyCoupon, removeCoupon, addToCart } = useCartStore();
   const { isCartOpen, closeCart } = useUIStore();
+  const { formatPrice } = useI18nStore();
   const [couponInput, setCouponInput] = useState("");
   const [couponMsg, setCouponMsg] = useState(null);
   const [timeLeft, setTimeLeft] = useState(900);
@@ -124,8 +126,8 @@ export default function CartDrawer() {
             {items.length > 0 && (
               <div style={{ padding: '16px var(--space-lg) 8px', borderBottom: '1px solid #1A1A1A' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: 'var(--type-micro)', color: '#A0A0A0' }}>
-                  <span>{subtotal >= 150 ? '¡Envío gratis desbloqueado!' : `Te faltan $${(150 - subtotal).toFixed(2)} para envío gratis`}</span>
-                  <span>${subtotal.toFixed(2)} / $150.00</span>
+                  <span>{subtotal >= 150 ? '¡Envío gratis desbloqueado!' : `Te faltan ${formatPrice(150 - subtotal)} para envío gratis`}</span>
+                  <span>{formatPrice(subtotal)} / {formatPrice(150)}</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', backgroundColor: '#222', borderRadius: '3px', overflow: 'hidden' }}>
                   <motion.div
@@ -180,7 +182,7 @@ export default function CartDrawer() {
                               <span style={{ color: '#FFF', fontSize: 'var(--type-caption)', minWidth: '20px', textAlign: 'center' }}>{item.quantity}</span>
                               <button onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity + 1)} style={{ padding: '4px 10px', background: 'none', border: 'none', color: '#FFF', cursor: 'pointer' }}>+</button>
                             </div>
-                            <span style={{ color: 'var(--color-volt)', fontWeight: 600 }}>${(price * item.quantity).toFixed(2)}</span>
+                            <span style={{ color: 'var(--color-volt)', fontWeight: 600 }}>{formatPrice(price * item.quantity)}</span>
                           </div>
                         </div>
                       </div>
@@ -202,7 +204,7 @@ export default function CartDrawer() {
                               </div>
                               <div>
                                 <h5 style={{ margin: 0, fontSize: '12px', color: '#F5F5F5', fontWeight: 500 }}>{u.nombre}</h5>
-                                <span style={{ fontSize: '11px', color: 'var(--color-volt)', fontWeight: 600 }}>${u.precio.toFixed(2)}</span>
+                                <span style={{ fontSize: '11px', color: 'var(--color-volt)', fontWeight: 600 }}>{formatPrice(u.precio)}</span>
                               </div>
                             </div>
                             <button
@@ -256,21 +258,21 @@ export default function CartDrawer() {
 
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
                   {discountPercent > 0 && (
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "#D30005", fontSize: "var(--type-body-sm)" }}>
                       <span>Descuento ({discountPercent}%)</span>
-                      <span>-${discountAmount.toFixed(2)}</span>
+                      <span>-{formatPrice(discountAmount)}</span>
                     </div>
                   )}
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>
                     <span>Envío</span>
-                    <span>{subtotal >= 150 ? 'Gratis' : '$15.00'}</span>
+                    <span>{subtotal >= 150 ? 'Gratis' : formatPrice(15)}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid var(--color-ink-muted)", paddingTop: "var(--space-md)", marginBottom: "var(--space-xl)", fontWeight: 700, fontSize: "var(--type-h4)", fontFamily: "var(--font-display)" }}>
                     <span>Total</span>
-                    <span>${(total + (subtotal >= 150 ? 0 : 15)).toFixed(2)}</span>
+                    <span>{formatPrice(total + (subtotal >= 150 ? 0 : 15))}</span>
                   </div>
                 <Link to="/checkout" onClick={closeCart} className="btn btn--volt" style={{ width: '100%', textAlign: 'center', padding: '16px', fontSize: 'var(--type-body)' }}>
                   Ir a Pagar

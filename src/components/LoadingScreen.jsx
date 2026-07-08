@@ -5,19 +5,26 @@ export default function LoadingScreen({ onComplete }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate loading progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(onComplete, 500); // Wait half second at 100%
-          return 100;
-        }
-        return prev + Math.floor(Math.random() * 15) + 5; // Random increment
-      });
-    }, 150);
+    let animationFrame;
+    let start;
+    const duration = 1500; // 1.5 seconds
 
-    return () => clearInterval(interval);
+    const animateProgress = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      const percentage = Math.min((progress / duration) * 100, 100);
+      
+      setProgress(Math.floor(percentage));
+      
+      if (percentage < 100) {
+        animationFrame = requestAnimationFrame(animateProgress);
+      } else {
+        setTimeout(onComplete, 500);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animateProgress);
+    return () => cancelAnimationFrame(animationFrame);
   }, [onComplete]);
 
   return (

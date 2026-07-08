@@ -16,6 +16,7 @@ import RelatedProducts from "../components/RelatedProducts";
 import BundleBuilder from "../components/BundleBuilder";
 import ARSimulatorModal from "../components/ARSimulatorModal";
 import { useCartStore, useRecentStore } from "../store/useStore";
+import { useI18nStore } from "../store/useI18nStore";
 
 export default function ProductoPage() {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export default function ProductoPage() {
   const { productos, wishlist, toggleWishlist } = useProducts();
   const { addToCart } = useCartStore();
   const { addRecentProduct } = useRecentStore();
+  const { formatPrice } = useI18nStore();
   const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
   const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
@@ -165,13 +167,13 @@ export default function ProductoPage() {
                   {producto.nombre}
                 </motion.h1>
                 
-                <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-sm)", marginBottom: "var(--space-xl)" }}>
-                  <span style={{ fontSize: "var(--type-h3)", fontWeight: 600 }}>
-                    ${producto.precioOferta ? producto.precioOferta.toFixed(2) : producto.precio.toFixed(2)}
+                <div style={{ display: "flex", gap: "var(--space-md)", alignItems: "center", marginBottom: "var(--space-md)" }}>
+                  <span style={{ fontSize: "var(--type-h3)", fontWeight: "500", color: "var(--color-ink)" }}>
+                    {formatPrice(producto.precioOferta ? producto.precioOferta : producto.precio)}
                   </span>
                   {producto.precioOferta && (
                     <span style={{ fontSize: "var(--type-body)", color: "var(--color-ink-soft)", textDecoration: "line-through" }}>
-                      ${producto.precio.toFixed(2)}
+                      {formatPrice(producto.precio)}
                     </span>
                   )}
                 </div>

@@ -1,3 +1,4 @@
+import { HelmetProvider } from "react-helmet-async";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
@@ -19,6 +20,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const WishlistPage = lazy(() => import("./pages/WishlistPage"));
+const PresentationPage = lazy(() => import("./pages/PresentationPage"));
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
@@ -40,12 +42,13 @@ function AppRoutes() {
   }, [accentColor]);
 
   /* Admin and Portal page have their own layouts — no navbar/footer */
-  if (location.pathname === "/admin" || location.pathname === "/" || location.pathname === "/login" || location.pathname === "/perfil" || location.pathname === "/favoritos") {
+  if (location.pathname === "/admin" || location.pathname === "/" || location.pathname === "/login" || location.pathname === "/perfil" || location.pathname === "/favoritos" || location.pathname === "/presentacion") {
     return (
       <AnimatePresence mode="wait">
         <Suspense fallback={<LoadingScreen key="lazy-loading-admin" />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition transitionKey="portal"><PortalPage /></PageTransition>} />
+            <Route path="/presentacion" element={<PageTransition transitionKey="presentacion"><PresentationPage /></PageTransition>} />
             <Route path="/admin/*" element={<AdminPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/perfil" element={<ProfilePage />} />
@@ -82,30 +85,32 @@ export default function App() {
   const { isLuckyWheelOpen, closeLuckyWheel } = useUIStore();
 
   return (
-    <HashRouter>
-      <ProductProvider>
-        <SiteProvider>
-          <ToastProvider>
-            <ScrollProgress />
-            <CustomCursor />
-            <AnimatePresence mode="wait">
-              {loading ? (
-                <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
-              ) : (
-                <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                  <AppRoutes />
-                  <BackToTop />
-                  <WhatsAppFAB />
-                  <AIPersonalShopper />
-                  <ExitIntentPopup />
-                  <CartDrawer />
-                  {isLuckyWheelOpen && <LuckyWheel onClose={closeLuckyWheel} />}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </ToastProvider>
-        </SiteProvider>
-      </ProductProvider>
-    </HashRouter>
+    <HelmetProvider>
+      <HashRouter>
+        <ProductProvider>
+          <SiteProvider>
+            <ToastProvider>
+              <ScrollProgress />
+              <CustomCursor />
+              <AnimatePresence mode="wait">
+                {loading ? (
+                  <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
+                ) : (
+                  <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+                    <AppRoutes />
+                    <BackToTop />
+                    <WhatsAppFAB />
+                    <AIPersonalShopper />
+                    <ExitIntentPopup />
+                    <CartDrawer />
+                    {isLuckyWheelOpen && <LuckyWheel onClose={closeLuckyWheel} />}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </ToastProvider>
+          </SiteProvider>
+        </ProductProvider>
+      </HashRouter>
+    </HelmetProvider>
   );
 }

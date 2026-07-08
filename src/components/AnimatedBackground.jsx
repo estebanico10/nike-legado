@@ -1,18 +1,21 @@
 import { useEffect } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
-const generateParticles = () => [...Array(20)].map(() => ({
-  width: Math.random() * 4 + 1 + "px",
-  height: Math.random() * 4 + 1 + "px",
-  opacity: Math.random() * 0.15 + 0.05,
-  top: Math.random() * 100 + "%",
-  left: Math.random() * 100 + "%",
-  animY: [0, Math.random() * -100 - 50],
-  animX: [0, (Math.random() - 0.5) * 50],
-  animOpacity: [0, Math.random() * 0.15 + 0.05, 0],
-  duration: Math.random() * 10 + 10,
-  delay: Math.random() * -20,
-}));
+const generateParticles = () => {
+  if (typeof window !== 'undefined' && window.innerWidth < 768) return [];
+  return [...Array(20)].map(() => ({
+    width: Math.random() * 4 + 1 + "px",
+    height: Math.random() * 4 + 1 + "px",
+    opacity: Math.random() * 0.15 + 0.05,
+    top: Math.random() * 100 + "%",
+    left: Math.random() * 100 + "%",
+    animY: [0, Math.random() * -100 - 50],
+    animX: [0, (Math.random() - 0.5) * 50],
+    animOpacity: [0, Math.random() * 0.15 + 0.05, 0],
+    duration: Math.random() * 10 + 10,
+    delay: Math.random() * -20,
+  }));
+};
 
 const staticParticles = generateParticles();
 

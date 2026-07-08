@@ -42,6 +42,19 @@ export const tiposProducto = [
 
 export function ProductProvider({ children }) {
   const [productos, setProductos] = useState(loadProductos);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/productos")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          setProductos(data);
+          saveProductos(data);
+        }
+      })
+      .catch(err => console.warn("json-server offline, usando fallback local"));
+  }, []);
+
   const [categoriasState, setCategoriasState] = useState(() => {
     try {
       const saved = localStorage.getItem("nike-legado-categorias");
@@ -95,17 +108,31 @@ export function ProductProvider({ children }) {
   }, [wishlist]);
 
   const addProducto = useCallback((producto) => {
-    setProductos((prev) => [...prev, { ...producto, id: producto.id || crypto.randomUUID() }]);
+    const newProducto = { ...producto, id: producto.id || crypto.randomUUID() };
+    setProductos((prev) => [...prev, newProducto]);
+    fetch("http://localhost:3001/productos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProducto)
+    }).catch(e => console.warn("Error saving to db", e));
   }, []);
 
   const updateProducto = useCallback((id, updates) => {
     setProductos((prev) =>
       prev.map((p) => (p.id === id ? { ...p, ...updates } : p))
     );
+    fetch(`http://localhost:3001/productos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates)
+    }).catch(e => console.warn("Error updating db", e));
   }, []);
 
   const removeProducto = useCallback((id) => {
     setProductos((prev) => prev.filter((p) => p.id !== id));
+    fetch(`http://localhost:3001/productos/${id}`, {
+      method: "DELETE"
+    }).catch(e => console.warn("Error deleting from db", e));
   }, []);
 
   const getProducto = useCallback(

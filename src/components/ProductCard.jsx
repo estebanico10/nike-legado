@@ -7,8 +7,10 @@ import { resolveAsset } from "../utils/resolveAsset";
 import OptimizedImage from "./OptimizedImage";
 import { useWishlistStore, useCompareStore } from "../store/useStore";
 import CountdownTimer from "./CountdownTimer";
+import { useI18nStore } from "../store/useI18nStore";
 
 export default function ProductCard({ producto, index, onQuickView, layoutMode = "grid3" }) {
+  const { formatPrice } = useI18nStore();
   const [hoveredColor, setHoveredColor] = useState(null);
   
   // Use the color's specific image if available, else default
@@ -390,7 +392,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
               color: producto.enOferta ? "var(--color-sale)" : "var(--color-ink)",
             }}
           >
-            ${(producto.precioOferta || producto.precio).toFixed(2)}
+            {formatPrice(producto.precioOferta || producto.precio)}
           </span>
 
           {producto.enOferta && producto.precioOferta && (
@@ -401,7 +403,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
                 textDecoration: "line-through",
               }}
             >
-              ${producto.precio.toFixed(2)}
+              {formatPrice(producto.precio)}
             </span>
           )}
 

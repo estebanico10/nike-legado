@@ -12,6 +12,8 @@ const navLinks = [
   { to: "/contacto", label: "Contacto" },
 ];
 
+import { useI18nStore } from "../store/useI18nStore";
+
 export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,6 +24,7 @@ export default function Navbar() {
   const cartCount = useCartStore((state) => state.getCartCount());
   const wishlistCount = useWishlistStore((state) => state.items.length);
   const { openCart, openSearch } = useUIStore();
+  const { currency, setCurrency, lang, setLang } = useI18nStore();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
@@ -134,6 +137,36 @@ export default function Navbar() {
 
         {/* Right: Theme + Cart + Menu */}
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
+          
+          <select 
+            value={currency} 
+            onChange={(e) => setCurrency(e.target.value)}
+            style={{
+              background: "transparent", border: "1px solid var(--color-ink-muted)", 
+              color: "var(--color-ink)", padding: "4px 8px", borderRadius: "4px",
+              fontFamily: "var(--font-body)", fontSize: "12px", cursor: "pointer",
+              outline: "none"
+            }}
+          >
+            <option value="USD">USD</option>
+            <option value="MXN">MXN</option>
+            <option value="EUR">EUR</option>
+          </select>
+
+          <select 
+            value={lang} 
+            onChange={(e) => setLang(e.target.value)}
+            style={{
+              background: "transparent", border: "1px solid var(--color-ink-muted)", 
+              color: "var(--color-ink)", padding: "4px 8px", borderRadius: "4px",
+              fontFamily: "var(--font-body)", fontSize: "12px", cursor: "pointer",
+              outline: "none"
+            }}
+          >
+            <option value="es">ES</option>
+            <option value="en">EN</option>
+          </select>
+
           <ThemeToggle />
 
           {/* Admin Link */}

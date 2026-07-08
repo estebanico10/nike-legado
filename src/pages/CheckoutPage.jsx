@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore, useUserStore, useOrderStore } from "../store/useStore";
+import { useI18nStore } from "../store/useI18nStore";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { resolveAsset } from "../utils/resolveAsset";
@@ -56,6 +57,7 @@ const ease = [0, 0, 0.2, 1];
 export default function CheckoutPage() {
   const { items: cart, clearCart, discountPercent, couponCode } = useCartStore();
   const { user, redeemCoins, addCoins } = useUserStore();
+  const { formatPrice } = useI18nStore();
   const [isSuccess, setIsSuccess] = useState(false);
   const [useCoins, setUseCoins] = useState(false);
   
@@ -455,7 +457,7 @@ export default function CheckoutPage() {
                           <motion.svg animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></motion.svg>
                           PROCESANDO...
                         </>
-                      ) : `CONFIRMAR ORDEN ($${total.toFixed(2)})`}
+                      ) : `CONFIRMAR ORDEN (${formatPrice(total)})`}
                     </button>
                     <p style={{ textAlign: "center", fontSize: "var(--type-micro)", color: "var(--color-ink-soft)", marginTop: "var(--space-sm)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                       Pago Seguro Encriptado (Simulación)
@@ -499,7 +501,7 @@ export default function CheckoutPage() {
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500 }}>CANT: {item.quantity}</span>
-                          <span style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}>${((item.precioOferta || item.precio) * item.quantity).toFixed(2)}</span>
+                          <span style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}>{formatPrice((item.precioOferta || item.precio) * item.quantity)}</span>
                         </div>
                       </div>
                     </div>
@@ -509,12 +511,12 @@ export default function CheckoutPage() {
                 <div style={{ backgroundColor: "var(--color-canvas-alt)", padding: "var(--space-xl)", border: "1px solid var(--color-ink-muted)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", fontFamily: "var(--font-body)", color: "var(--color-ink)" }}>
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
                   {discountPercent > 0 && (
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "#D30005", fontSize: "var(--type-body-sm)" }}>
                       <span>Cupón ({couponCode})</span>
-                      <span>-${discountAmount.toFixed(2)}</span>
+                      <span>-{formatPrice(discountAmount)}</span>
                     </div>
                   )}
 
@@ -522,7 +524,7 @@ export default function CheckoutPage() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", padding: "var(--space-sm)", border: "1px solid var(--color-volt)", borderRadius: "var(--radius-sm)", backgroundColor: "rgba(212, 255, 0, 0.05)" }}>
                       <div>
                         <span style={{ fontSize: "var(--type-caption)", fontWeight: 700, display: "block" }}>NikeCoins</span>
-                        <span style={{ fontSize: "var(--type-micro)", color: "var(--color-ink-soft)" }}>Tienes {user.coins} disponibles (${(user.coins/100).toFixed(2)})</span>
+                        <span style={{ fontSize: "var(--type-micro)", color: "var(--color-ink-soft)" }}>Tienes {user.coins} disponibles ({formatPrice(user.coins/100)})</span>
                       </div>
                       <button 
                         onClick={() => setUseCoins(!useCoins)}
@@ -537,7 +539,7 @@ export default function CheckoutPage() {
                   {useCoins && coinsDiscount > 0 && (
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)", color: "var(--color-volt)", fontSize: "var(--type-body-sm)" }}>
                       <span>Descuento Coins</span>
-                      <span>-${coinsDiscount.toFixed(2)}</span>
+                      <span>-{formatPrice(coinsDiscount)}</span>
                     </div>
                   )}
 
@@ -547,7 +549,7 @@ export default function CheckoutPage() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "var(--space-md)", borderTop: "1px solid var(--color-ink-muted)" }}>
                     <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase" }}>Total</span>
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", fontWeight: 700, color: "var(--color-volt)", textShadow: "0 0 1px #000" }}>${total.toFixed(2)}</span>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", fontWeight: 700, color: "var(--color-volt)", textShadow: "0 0 1px #000" }}>{formatPrice(total)}</span>
                   </div>
                 </div>
 

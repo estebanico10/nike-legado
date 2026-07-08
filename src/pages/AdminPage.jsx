@@ -7,6 +7,7 @@ import SalesDashboard from "../components/admin/SalesDashboard";
 import HomeAdmin from "../components/admin/HomeAdmin";
 import TeamAdmin from "../components/admin/TeamAdmin";
 import SocialAdmin from "../components/admin/SocialAdmin";
+import PresentationAdmin from "../components/admin/PresentationAdmin";
 
 // Nuevos componentes
 import OrderManagement from "../components/admin/OrderManagement";
@@ -40,6 +41,8 @@ export default function AdminPage() {
         return <StoreSettings />;
       case "inicio":
         return <HomeAdmin />;
+      case "presentacion":
+        return <PresentationAdmin />;
       case "equipo":
         return <TeamAdmin />;
       default:
