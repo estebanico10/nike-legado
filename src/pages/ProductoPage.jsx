@@ -15,13 +15,14 @@ import CountdownTimer from "../components/CountdownTimer";
 import RelatedProducts from "../components/RelatedProducts";
 import BundleBuilder from "../components/BundleBuilder";
 import ARSimulatorModal from "../components/ARSimulatorModal";
-import { useCartStore, useRecentStore } from "../store/useStore";
+import { useCartStore, useRecentStore, useWishlistStore } from "../store/useStore";
 import { useI18nStore } from "../store/useI18nStore";
 
 export default function ProductoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { productos, wishlist, toggleWishlist } = useProducts();
+  const { productos } = useProducts();
+  const { items: wishlist, toggleWishlist } = useWishlistStore();
   const { addToCart } = useCartStore();
   const { addRecentProduct } = useRecentStore();
   const { formatPrice } = useI18nStore();

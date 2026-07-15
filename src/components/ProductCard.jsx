@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useProducts } from "../context/ProductContext";
+
 import { useToast } from "../context/ToastContext";
 import { resolveAsset } from "../utils/resolveAsset";
 import OptimizedImage from "./OptimizedImage";
-import { useWishlistStore, useCompareStore } from "../store/useStore";
+import { useWishlistStore, useCompareStore, useCartStore } from "../store/useStore";
 import CountdownTimer from "./CountdownTimer";
 import { useI18nStore } from "../store/useI18nStore";
 
@@ -27,7 +27,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
   const [img2Error] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-  const { addToCart } = useProducts();
+  const { addToCart } = useCartStore();
   const { addToast } = useToast();
   const { toggleWishlist, items: wishlist } = useWishlistStore();
   const { toggleCompare, compareItems } = useCompareStore();
@@ -91,7 +91,6 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
         ease: [0.16, 1, 0.3, 1],
         delay: index * 0.08,
       }}
-      onClick={() => onQuickView?.(producto)}
       onMouseEnter={() => setHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -312,10 +311,9 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
                   "Agregar al carrito"
                 )}
               </motion.button>
-
               <motion.button
                 whileTap={{ scale: 0.96 }}
-                onClick={(e) => { e.stopPropagation(); onQuickView?.(producto); }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onQuickView?.(producto); }}
                 style={{
                   padding: "var(--space-sm)",
                   backgroundColor: "rgba(255,255,255,0.92)",

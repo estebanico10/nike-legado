@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useProducts } from "../context/ProductContext";
+
 import { resolveAsset } from "../utils/resolveAsset";
+import { useCartStore } from "../store/useStore";
 
 const backdrop = {
   hidden: { opacity: 0 },
@@ -24,7 +25,7 @@ export default function ProductQuickView({ producto, onClose }) {
     producto?.tallas?.[0] || "M"
   );
   const [added, setAdded] = useState(false);
-  const { addToCart } = useProducts();
+  const { addToCart } = useCartStore();
   const imgContainerRef = useRef(null);
 
   // Zoom effect states
