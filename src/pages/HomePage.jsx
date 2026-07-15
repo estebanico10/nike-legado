@@ -5,6 +5,7 @@ import { useProducts } from "../context/ProductContext";
 import { useSite } from "../context/SiteContext";
 import { resolveAsset } from "../utils/resolveAsset";
 import { useUIStore } from "../store/useStore";
+import SEO from "../components/SEO";
 import HeroSection from "../components/HeroSection";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
@@ -16,6 +17,7 @@ import MagneticButton from "../components/MagneticButton";
 import CTASection from "../components/CTASection";
 import InstagramFeed from "../components/InstagramFeed";
 import DropsCalendar from "../components/DropsCalendar";
+import BentoGridCategories from "../components/BentoGridCategories";
 
 export default function HomePage() {
   const { openLuckyWheel } = useUIStore();
@@ -240,7 +242,7 @@ const LookbookSection = ({ section, resolveAsset }) => {
             {section.type === "hero" && <HeroSection key={`hero-${section.id}`} />}
             {section.type === "lookbook" && (
               <>
-                <LookbookSection key={section.id} section={section} resolveAsset={resolveAsset} />
+                <BentoGridCategories />
                 <TestimonialsSection />
               </>
             )}

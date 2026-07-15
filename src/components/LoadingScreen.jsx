@@ -7,19 +7,19 @@ export default function LoadingScreen({ onComplete }) {
   useEffect(() => {
     let animationFrame;
     let start;
-    const duration = 1500; // 1.5 seconds
+    const duration = 900; // 0.9 seconds for ultra-fast snappy boot
 
     const animateProgress = (timestamp) => {
       if (!start) start = timestamp;
-      const progress = timestamp - start;
-      const percentage = Math.min((progress / duration) * 100, 100);
+      const elapsed = timestamp - start;
+      const percentage = Math.min((elapsed / duration) * 100, 100);
       
       setProgress(Math.floor(percentage));
       
       if (percentage < 100) {
         animationFrame = requestAnimationFrame(animateProgress);
-      } else {
-        setTimeout(onComplete, 500);
+      } else if (onComplete) {
+        setTimeout(onComplete, 300);
       }
     };
 

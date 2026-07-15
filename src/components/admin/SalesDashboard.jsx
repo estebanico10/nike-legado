@@ -1,29 +1,12 @@
 import { useState } from "react";
 import { useProducts } from "../../context/ProductContext";
+import { useOrderStore } from "../../store/useStore";
 import { resolveAsset } from "../../utils/resolveAsset";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-const MOCK_DATA = {
-  diaria: [
-    { name: "00:00", ventas: 120 }, { name: "04:00", ventas: 80 }, { name: "08:00", ventas: 250 },
-    { name: "12:00", ventas: 400 }, { name: "16:00", ventas: 300 }, { name: "20:00", ventas: 450 },
-  ],
-  semanal: [
-    { name: "Lun", ventas: 1200 }, { name: "Mar", ventas: 1800 }, { name: "Mié", ventas: 1500 },
-    { name: "Jue", ventas: 2100 }, { name: "Vie", ventas: 3000 }, { name: "Sáb", ventas: 3500 }, { name: "Dom", ventas: 2800 },
-  ],
-  mensual: [
-    { name: "S1", ventas: 8500 }, { name: "S2", ventas: 9200 }, { name: "S3", ventas: 7800 }, { name: "S4", ventas: 10500 },
-  ],
-  anual: [
-    { name: "Ene", ventas: 35000 }, { name: "Feb", ventas: 42000 }, { name: "Mar", ventas: 38000 }, { name: "Abr", ventas: 45000 },
-    { name: "May", ventas: 41000 }, { name: "Jun", ventas: 50000 }, { name: "Jul", ventas: 48000 }, { name: "Ago", ventas: 52000 },
-    { name: "Sep", ventas: 47000 }, { name: "Oct", ventas: 55000 }, { name: "Nov", ventas: 80000 }, { name: "Dic", ventas: 95000 },
-  ]
-};
-
 export default function SalesDashboard() {
   const { productos } = useProducts();
+  const { orders } = useOrderStore();
   const [period, setPeriod] = useState("semanal");
 
   // Fake sales for products to show top sellers
@@ -36,20 +19,28 @@ export default function SalesDashboard() {
 
   const topSellers = [...productos].map(p => ({
     ...p,
-    ventas: p.ventas || getStableRandom(p.id)
+    ventas: p.ventas || getStableRandom(p.id.toString())
   })).sort((a, b) => b.ventas - a.ventas).slice(0, 5);
 
-  const totalSales = MOCK_DATA[period].reduce((sum, item) => sum + item.ventas, 0);
+  const realSalesTotal = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+  const realOrdersCount = orders.length;
+  const avgTicket = realOrdersCount ? (realSalesTotal / realOrdersCount) : 0;
+  const lowStockCount = productos.filter(p => p.stock !== undefined && p.stock < 10).length;
+
+  // We use mock chart data combined with real totals for display purposes as real data dates are just strings
+  const chartData = [
+    { name: "Lun", ventas: 1200 }, { name: "Mar", ventas: 1800 }, { name: "Mié", ventas: 1500 },
+    { name: "Jue", ventas: 2100 }, { name: "Vie", ventas: 3000 }, { name: "Sáb", ventas: 3500 }, { name: "Dom", ventas: 2800 }
+  ];
 
   const handleExportCSV = () => {
-    const data = MOCK_DATA[period];
     const csvContent = "data:text/csv;charset=utf-8," 
-      + "Periodo,Ventas\n"
-      + data.map(e => `${e.name},${e.ventas}`).join("\n");
+      + "ID,Cliente,Email,Fecha,Estado,Total\n"
+      + orders.map(o => `${o.id},"${o.customerName}","${o.customerEmail}","${o.date}","${o.status}",${o.total}`).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `reporte_ventas_${period}.csv`);
+    link.setAttribute("download", `reporte_ventas_real.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -102,21 +93,27 @@ export default function SalesDashboard() {
       {/* Main KPI */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--space-md)" }}>
         <div className="admin-card">
-          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ingresos Totales ({period})</p>
+          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ingresos Totales Reales</p>
           <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: "var(--color-volt)", marginTop: "var(--space-xs)" }}>
-            ${totalSales.toLocaleString()}
+            ${realSalesTotal.toLocaleString()}
           </div>
         </div>
         <div className="admin-card">
-          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Órdenes</p>
+          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Órdenes Totales</p>
           <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: "#F5F5F5", marginTop: "var(--space-xs)" }}>
-            {Math.floor(totalSales / 85).toLocaleString()}
+            {realOrdersCount.toLocaleString()}
           </div>
         </div>
         <div className="admin-card">
           <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Ticket Promedio</p>
           <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: "#F5F5F5", marginTop: "var(--space-xs)" }}>
-            $85.00
+            ${avgTicket.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+        </div>
+        <div className="admin-card" style={{ border: lowStockCount > 0 ? "1px solid #D30005" : "none" }}>
+          <p style={{ fontSize: "var(--type-caption)", color: lowStockCount > 0 ? "#D30005" : "#A0A0A0", textTransform: "uppercase", letterSpacing: "0.05em" }}>Alertas de Stock (&lt; 10)</p>
+          <div style={{ fontSize: "var(--type-h2)", fontFamily: "var(--font-display)", color: lowStockCount > 0 ? "#D30005" : "#F5F5F5", marginTop: "var(--space-xs)" }}>
+            {lowStockCount} pzas
           </div>
         </div>
       </div>
@@ -125,7 +122,7 @@ export default function SalesDashboard() {
       <div className="admin-card" style={{ height: "400px" }}>
         <h4 style={{ color: "#F5F5F5", marginBottom: "var(--space-lg)", fontSize: "var(--type-body)" }}>Tendencia de Ingresos</h4>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={MOCK_DATA[period]} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorVentas" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="var(--color-volt)" stopOpacity={0.3}/>

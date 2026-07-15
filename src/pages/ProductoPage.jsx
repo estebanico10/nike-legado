@@ -15,19 +15,20 @@ import CountdownTimer from "../components/CountdownTimer";
 import RelatedProducts from "../components/RelatedProducts";
 import BundleBuilder from "../components/BundleBuilder";
 import ARSimulatorModal from "../components/ARSimulatorModal";
-import { useCartStore, useRecentStore } from "../store/useStore";
+import { useCartStore, useRecentStore, useWishlistStore } from "../store/useStore";
 import { useI18nStore } from "../store/useI18nStore";
 
 export default function ProductoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { productos, wishlist, toggleWishlist } = useProducts();
+  const { productos } = useProducts();
   const { addToCart } = useCartStore();
   const { addRecentProduct } = useRecentStore();
+  const { toggleWishlist, isInWishlist } = useWishlistStore();
   const { formatPrice } = useI18nStore();
   const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
-  const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
+  const isWishlisted = producto ? isInWishlist(producto.id) : false;
   
   const [activeImage, setActiveImage] = useState(0);
   const [selectedTalla, setSelectedTalla] = useState(null);

@@ -61,13 +61,14 @@ export default function CompareDrawer() {
                 </div>
                 
                 {/* Specifications List */}
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "12px", display: "flex", flexDirection: "column", gap: "4px" }}>
-                  <li style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "var(--color-ink-soft)" }}>Categoría:</span> <b>{item.categoria}</b></li>
-                  <li style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "var(--color-ink-soft)" }}>Amortiguación:</span> <b>{item.tipo === 'zapatilla' ? 'React/Zoom' : 'N/A'}</b></li>
-                  <li style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "var(--color-ink-soft)" }}>Materiales:</span> <b>Flyknit / Reciclado</b></li>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "12px", display: "flex", flexDirection: "column", gap: "6px", backgroundColor: "var(--color-canvas)", padding: "12px", borderRadius: "8px", border: "1px solid var(--color-ink-muted)" }}>
+                  <li style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--color-ink-muted)", paddingBottom: "4px" }}><span style={{ color: "var(--color-ink-soft)" }}>Categoría</span> <b style={{ color: "var(--color-ink)" }}>{item.categoria}</b></li>
+                  <li style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--color-ink-muted)", paddingBottom: "4px" }}><span style={{ color: "var(--color-ink-soft)" }}>Colores</span> <div style={{ display: "flex", gap: "4px" }}>{item.colores?.map(c => <span key={c} style={{width:"10px", height:"10px", borderRadius:"50%", backgroundColor:c, display:"inline-block", border:"1px solid var(--color-ink-muted)"}}></span>) || "N/A"}</div></li>
+                  <li style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--color-ink-muted)", paddingBottom: "4px" }}><span style={{ color: "var(--color-ink-soft)" }}>Tallas</span> <b style={{ color: "var(--color-ink)" }}>{item.tallas ? `${item.tallas.length} disponibles` : "N/A"}</b></li>
+                  <li style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "var(--color-ink-soft)" }}>Novedad</span> <b style={{ color: "var(--color-ink)" }}>{item.esNuevo ? 'Nuevo' : (item.enOferta ? 'En Oferta' : 'Standard')}</b></li>
                 </ul>
 
-                <Link to={`/producto/${item.id}`} className="btn btn--secondary" style={{ width: "100%", marginTop: "var(--space-sm)", fontSize: "12px", padding: "8px" }}>
+                <Link to={`/producto/${item.id}`} className="btn btn--primary" style={{ width: "100%", marginTop: "var(--space-md)", fontSize: "12px", padding: "10px" }}>
                   Ver Detalles
                 </Link>
               </div>

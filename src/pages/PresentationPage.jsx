@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import LoadingScreen from "../components/LoadingScreen";
+import SEO from "../components/SEO";
 
 export default function PresentationPage() {
   const [sections, setSections] = useState([]);
@@ -36,10 +36,19 @@ export default function PresentationPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (loading) return <LoadingScreen />;
+  if (loading) {
+    return (
+      <div style={{ height: "100vh", backgroundColor: "var(--color-canvas)", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "16px" }}>
+        <div style={{ width: "40px", height: "40px", border: "3px solid rgba(0,0,0,0.1)", borderTopColor: "var(--color-ink)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <span style={{ fontFamily: "var(--font-display)", fontSize: "14px", letterSpacing: "0.15em", color: "var(--color-ink-soft)" }}>CARGANDO PRESENTACIÓN...</span>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", scrollSnapType: "y mandatory", height: "100vh", overflowY: "scroll", scrollBehavior: "smooth" }}>
+    <>
+      <SEO title="Presentación" description="Presentación del proyecto Nike Legado." />
+      <div style={{ backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", scrollSnapType: "y mandatory", height: "100vh", overflowY: "scroll", scrollBehavior: "smooth" }}>
       
       {/* Presentation Header / Navigation */}
       <div style={{ position: "fixed", top: 0, left: 0, width: "100%", padding: "var(--space-md)", display: "flex", justifyContent: "space-between", zIndex: 50, pointerEvents: "none" }}>
@@ -158,5 +167,6 @@ export default function PresentationPage() {
         ))}
       </AnimatePresence>
     </div>
+    </>
   );
 }

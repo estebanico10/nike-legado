@@ -65,28 +65,60 @@ export default function ProfilePage() {
             <p style={{ color: "#A0A0A0", fontSize: "var(--type-caption)" }}>Tienes acceso a envíos gratis y acceso anticipado a SNKRS.</p>
           </motion.div>
 
-          {/* Historial de Pedidos */}
+          {/* Historial de Pedidos Timeline */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ backgroundColor: "#0A0A0A", padding: "var(--space-lg)", borderRadius: "var(--radius-md)", border: "1px solid #222", gridColumn: "span 2" }}>
             <h3 style={{ fontSize: "var(--type-h4)", marginBottom: "var(--space-md)", color: "#F5F5F5" }}>Historial de Pedidos</h3>
             
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {orderHistory.map(order => (
-                <div key={order.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", backgroundColor: "#111", borderRadius: "4px", border: "1px solid #222" }}>
-                  <div>
-                    <h5 style={{ margin: 0, color: "#F5F5F5", fontSize: "var(--type-body-sm)" }}>{order.item}</h5>
-                    <div style={{ display: "flex", gap: "16px", marginTop: "8px", color: "#757575", fontSize: "var(--type-micro)" }}>
-                      <span>Pedido: {order.id}</span>
-                      <span>Fecha: {order.date}</span>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <p style={{ margin: 0, fontWeight: "bold", color: "#F5F5F5" }}>{order.total}</p>
-                    <p style={{ margin: 0, color: "var(--color-volt)", fontSize: "var(--type-micro)", marginTop: "4px" }}>{order.status}</p>
-                  </div>
+            {orderHistory.length === 0 ? (
+              <div style={{ padding: "var(--space-xl) 0", textAlign: "center", color: "#A0A0A0" }}>
+                No tienes pedidos recientes.
+              </div>
+            ) : (
+              <div style={{ position: "relative", paddingLeft: "32px" }}>
+                {/* Línea vertical del timeline */}
+                <div style={{ position: "absolute", left: "11px", top: "8px", bottom: "8px", width: "2px", backgroundColor: "#222" }}></div>
+                
+                <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+                  {orderHistory.map((order, index) => {
+                    const isDelivered = order.status === "Entregado";
+                    const isProcessing = order.status === "Procesando";
+                    
+                    let statusColor = "#757575";
+                    if (isDelivered) statusColor = "var(--color-volt)";
+                    if (isProcessing) statusColor = "#FFB800"; // Warning color
+
+                    return (
+                      <div key={order.id} style={{ position: "relative" }}>
+                        {/* Punto del timeline */}
+                        <div style={{ position: "absolute", left: "-32px", top: "4px", width: "12px", height: "12px", borderRadius: "50%", backgroundColor: statusColor, border: "2px solid #0A0A0A", zIndex: 2, boxShadow: `0 0 0 4px ${statusColor}33` }}></div>
+                        
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "16px", backgroundColor: "#111", borderRadius: "8px", border: "1px solid #222", transition: "transform 0.2s, border-color 0.2s" }} className="hover-card">
+                          <div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+                              <h5 style={{ margin: 0, color: "#F5F5F5", fontSize: "var(--type-body-sm)" }}>{order.item || "Pedido Múltiple"}</h5>
+                              <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "100px", backgroundColor: `${statusColor}22`, color: statusColor, fontWeight: 700, textTransform: "uppercase" }}>{order.status}</span>
+                            </div>
+                            <div style={{ display: "flex", gap: "16px", color: "#757575", fontSize: "var(--type-micro)" }}>
+                              <span>ID: {order.id}</span>
+                              <span>•</span>
+                              <span>{order.date}</span>
+                            </div>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <p style={{ margin: 0, fontWeight: "bold", color: "#F5F5F5" }}>${order.total}</p>
+                            <button style={{ background: "transparent", border: "none", color: "var(--color-ink-muted)", fontSize: "var(--type-micro)", textDecoration: "underline", marginTop: "4px", cursor: "pointer" }}>Ver Detalles</button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-            <button className="btn btn--secondary" style={{ width: "100%", marginTop: "16px" }}>Ver todos los pedidos</button>
+              </div>
+            )}
+            
+            {orderHistory.length > 0 && (
+              <button className="btn btn--secondary" style={{ width: "100%", marginTop: "24px" }}>Ver todos los pedidos</button>
+            )}
           </motion.div>
 
         </div>

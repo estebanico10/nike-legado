@@ -8,6 +8,9 @@ import HomeAdmin from "../components/admin/HomeAdmin";
 import TeamAdmin from "../components/admin/TeamAdmin";
 import SocialAdmin from "../components/admin/SocialAdmin";
 import PresentationAdmin from "../components/admin/PresentationAdmin";
+import DropsAdmin from "../components/admin/DropsAdmin";
+import CommunityAdmin from "../components/admin/CommunityAdmin";
+import LoyaltyAdmin from "../components/admin/LoyaltyAdmin";
 
 // Nuevos componentes
 import OrderManagement from "../components/admin/OrderManagement";
@@ -17,12 +20,18 @@ import ReviewsModeration from "../components/admin/ReviewsModeration";
 import AnalyticsMetrics from "../components/admin/AnalyticsMetrics";
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState("inventario");
+  const [activeTab, setActiveTab] = useState("ventas");
 
   const renderContent = () => {
     switch (activeTab) {
       case "inventario":
         return <InventoryTable />;
+      case "drops":
+        return <DropsAdmin />;
+      case "comunidad":
+        return <CommunityAdmin />;
+      case "fidelidad":
+        return <LoyaltyAdmin />;
       case "ventas":
         return <SalesDashboard />;
       case "pedidos":

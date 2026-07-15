@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
@@ -8,6 +8,10 @@ import SearchOverlay from "./SearchOverlay";
 const navLinks = [
   { to: "/inicio", label: "Inicio" },
   { to: "/tienda", label: "Tienda" },
+  { to: "/customizer", label: "Nike By You" },
+  { to: "/drops", label: "SNKRS Drops" },
+  { to: "/comunidad", label: "Comunidad" },
+  { to: "/club", label: "Nike Club" },
   { to: "/nosotros", label: "Nosotros" },
   { to: "/contacto", label: "Contacto" },
 ];
@@ -36,6 +40,17 @@ export default function Navbar() {
     }
     setScrolled(latest > 20);
   });
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [openSearch]);
 
   return (
     <motion.nav
@@ -181,13 +196,14 @@ export default function Navbar() {
           {/* Search Icon */}
           <button 
             onClick={openSearch}
-            style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)" }} 
+            style={{ background: "transparent", border: "none", cursor: "pointer", display: "flex", alignItems: "center", color: "var(--color-ink)", padding: "var(--space-xs)", gap: "4px" }} 
             aria-label="Buscar"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
+            <span style={{ fontSize: "10px", color: "var(--color-ink-soft)", border: "1px solid var(--color-ink-muted)", padding: "2px 4px", borderRadius: "4px", display: "none" }} className="nav-desktop">Ctrl+K</span>
           </button>
 
           {/* Wishlist Icon */}

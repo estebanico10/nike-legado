@@ -9,5 +9,19 @@ export default defineConfig({
     watch: {
       ignored: ['**/Recursos/**']
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('framer-motion')) return 'framer-motion';
+            if (id.includes('zustand')) return 'zustand';
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) return 'react-vendor';
+            return 'vendor';
+          }
+        }
+      }
+    }
   }
 })

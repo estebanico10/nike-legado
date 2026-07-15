@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import AnimatedBackground from "../components/AnimatedBackground";
+import { useToast } from "../context/ToastContext";
+import SEO from "../components/SEO";
 
 const faqs = [
   { q: "¿Hacen envíos a todo el Ecuador?", a: "Sí, realizamos envíos a todas las provincias mediante Servientrega. El tiempo estimado de entrega es de 24-48 horas laborables." },
@@ -154,6 +156,7 @@ export default function ContactoPage() {
 
   return (
     <>
+      <SEO title="Contacto" description="Contáctanos para dudas, sugerencias o colaboraciones." />
       <AnimatedBackground />
       <main style={{ paddingTop: "var(--space-4xl)", paddingBottom: "var(--space-5xl)", position: "relative", zIndex: 1 }}>
       <div className="container" style={{ maxWidth: "var(--container-md)" }}>

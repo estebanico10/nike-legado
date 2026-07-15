@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useProducts } from "../context/ProductContext";
+import { useCartStore } from "../store/useStore";
 import { resolveAsset } from "../utils/resolveAsset";
 
 const backdrop = {
@@ -24,7 +24,7 @@ export default function ProductQuickView({ producto, onClose }) {
     producto?.tallas?.[0] || "M"
   );
   const [added, setAdded] = useState(false);
-  const { addToCart } = useProducts();
+  const { addToCart } = useCartStore();
   const imgContainerRef = useRef(null);
 
   // Zoom effect states
@@ -484,7 +484,7 @@ export default function ProductQuickView({ producto, onClose }) {
                 overflow: "hidden"
               }}
               onClick={() => {
-                addToCart(producto, selectedSize, selectedColor);
+                addToCart(producto, selectedSize, 1, selectedColor);
                 setAdded(true);
               }}
               disabled={producto.stock <= 0}

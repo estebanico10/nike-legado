@@ -20,7 +20,19 @@ export default function HeroSection() {
         backgroundColor: "var(--color-canvas)",
       }}
     >
-
+      {/* Video Background */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", zIndex: 1 }}></div>
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        >
+          <source src="https://videos.pexels.com/video-files/3688863/3688863-uhd_3840_2160_25fps.mp4" type="video/mp4" />
+        </video>
+      </div>
 
       {/* Content */}
       <div className="container" style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-end", paddingBottom: "var(--space-4xl)" }}>

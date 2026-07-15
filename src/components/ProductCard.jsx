@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useProducts } from "../context/ProductContext";
+
 import { useToast } from "../context/ToastContext";
 import { resolveAsset } from "../utils/resolveAsset";
 import OptimizedImage from "./OptimizedImage";
-import { useWishlistStore, useCompareStore } from "../store/useStore";
+import { useCartStore, useWishlistStore, useCompareStore } from "../store/useStore";
 import CountdownTimer from "./CountdownTimer";
 import { useI18nStore } from "../store/useI18nStore";
 
@@ -27,7 +27,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
   const [img2Error] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-  const { addToCart } = useProducts();
+  const { addToCart } = useCartStore();
   const { addToast } = useToast();
   const { toggleWishlist, items: wishlist } = useWishlistStore();
   const { toggleCompare, compareItems } = useCompareStore();
@@ -73,7 +73,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
     e.stopPropagation();
     const defaultSize = producto.tallas?.[0] || "M";
     const defaultColor = producto.colores?.[0] || "#000000";
-    addToCart(producto, defaultSize, defaultColor);
+    addToCart(producto, defaultSize, 1, defaultColor);
     addToast(`${producto.nombre} añadido al carrito`, "success");
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 1800);

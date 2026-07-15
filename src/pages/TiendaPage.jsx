@@ -7,6 +7,7 @@ import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CompareDrawer from "../components/CompareDrawer";
+import SEO from "../components/SEO";
 
 function CountUp({ value }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -73,6 +74,7 @@ export default function TiendaPage() {
 
   return (
     <>
+      <SEO title="Tienda" description="Explora nuestra colección de ropa, zapatos y accesorios con el estilo único del fútbol callejero ecuatoriano." />
       <AnimatedBackground />
       <main style={{ paddingTop: "var(--space-3xl)", paddingBottom: "var(--space-5xl)", position: "relative", zIndex: 1 }}>
         <div className="container">

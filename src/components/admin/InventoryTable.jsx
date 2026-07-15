@@ -29,16 +29,39 @@ export default function InventoryTable() {
     setEditing(null);
   };
 
+  const handleExportCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "ID,Nombre,Categoria,Precio,Stock,EnOferta\n"
+      + productos.map(p => `${p.id},"${p.nombre}","${p.categoria}",${p.precioOferta || p.precio},${p.stock !== undefined ? p.stock : 0},${p.enOferta ? 'Si' : 'No'}`).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `inventario_nike.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       {/* Header and Actions */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-xl)", flexWrap: "wrap", gap: "16px" }}>
         <h2 className="admin-card-title" style={{ marginBottom: 0 }}>Inventario</h2>
-        {!showForm && (
-          <button className="btn btn--volt" onClick={() => { setEditing(null); setShowForm(true); }}>
-            + Nuevo Producto
+        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <button onClick={handleExportCSV} className="btn btn--secondary btn--sm" style={{ borderColor: "#333", color: "#A0A0A0" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: "8px", verticalAlign: "middle" }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Exportar CSV
           </button>
-        )}
+          {!showForm && (
+            <button className="btn btn--volt" onClick={() => { setEditing(null); setShowForm(true); }}>
+              + Nuevo Producto
+            </button>
+          )}
+        </div>
       </div>
 
       {/* KPI Bar */}
