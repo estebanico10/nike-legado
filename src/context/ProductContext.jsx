@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import dbData from "../../db.json";
 
 const ProductContext = createContext(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 // eslint-disable-next-line react-refresh/only-export-components
 export const defaultCategorias = [
   "Indoor Gen Z",
@@ -37,9 +37,14 @@ export function ProductProvider({ children }) {
       .then(data => {
         if (data && data.length > 0) {
           setProductos(data);
+        } else {
+          setProductos(dbData.productos || []);
         }
       })
-      .catch(err => console.warn("json-server offline, catálogo vacío hasta que el servidor esté disponible.", err));
+      .catch(err => {
+        console.warn("json-server offline, usando catálogo local de respaldo.", err);
+        setProductos(dbData.productos || []);
+      });
   }, []);
 
   const [categoriasState, setCategoriasState] = useState(() => {
