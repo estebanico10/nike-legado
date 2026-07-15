@@ -4,11 +4,42 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../admin.css";
 import { useAuthStore } from "../../store/useAuthStore";
 
+const CATEGORIES = [
+  "Análisis y Resumen",
+  "Gestión de Tienda",
+  "Marketing y Ventas",
+  "Contenido y Comunidad",
+  "Sistema y Seguridad"
+];
+
 const TABS = [
-  { id: "inventario", label: "Inventario", icon: "box" },
-  { id: "inicio", label: "CMS de Inicio", icon: "layout" },
-  { id: "equipo", label: "Equipo", icon: "user-check" },
-  { id: "configuracion", label: "Configuración Tienda", icon: "settings" },
+  // Análisis y Resumen
+  { id: "dashboard", label: "Dashboard Principal", icon: "ventas", category: "Análisis y Resumen" },
+  { id: "metricas", label: "Analítica Avanzada", icon: "metricas", category: "Análisis y Resumen" },
+  
+  // Gestión de Tienda
+  { id: "pedidos", label: "Pedidos", icon: "pedidos", category: "Gestión de Tienda" },
+  { id: "inventario", label: "Inventario", icon: "inventario", category: "Gestión de Tienda" },
+  { id: "clientes", label: "Clientes (CRM)", icon: "clientes", category: "Gestión de Tienda" },
+  
+  // Marketing y Ventas
+  { id: "marketing", label: "Campañas", icon: "marketing", category: "Marketing y Ventas" },
+  { id: "fidelidad", label: "Club Lealtad", icon: "fidelidad", category: "Marketing y Ventas" },
+  { id: "drops", label: "Lanzamientos", icon: "drops", category: "Marketing y Ventas" },
+  { id: "ai-stylist", label: "AI Stylist", icon: "ai-stylist", category: "Marketing y Ventas" },
+  
+  // Contenido y Comunidad
+  { id: "inicio", label: "CMS de Inicio", icon: "inicio", category: "Contenido y Comunidad" },
+  { id: "comunidad", label: "Comunidad OOTD", icon: "comunidad", category: "Contenido y Comunidad" },
+  { id: "presentacion", label: "Lookbooks", icon: "presentacion", category: "Contenido y Comunidad" },
+  { id: "resenas", label: "Reseñas", icon: "resenas", category: "Contenido y Comunidad" },
+  { id: "social", label: "Redes Sociales", icon: "social", category: "Contenido y Comunidad" },
+  { id: "medios", label: "Gestor de Medios", icon: "medios", category: "Contenido y Comunidad" },
+  
+  // Sistema y Seguridad
+  { id: "equipo", label: "Equipo", icon: "equipo", category: "Sistema y Seguridad" },
+  { id: "configuracion", label: "Configuración Tienda", icon: "configuracion", category: "Sistema y Seguridad" },
+  { id: "auditoria", label: "Logs de Auditoría", icon: "auditoria", category: "Sistema y Seguridad" }
 ];
 
 export default function AdminLayout({ activeTab, setActiveTab, children }) {
@@ -17,7 +48,10 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { user, role, canAccess, logout } = useAuthStore();
   
-  const filteredTabs = useMemo(() => TABS.filter(tab => canAccess(tab.id)), [canAccess, role]);
+  const filteredTabs = useMemo(() => {
+    // Reference role so it recomputes when role changes
+    return role ? TABS.filter(tab => canAccess(tab.id)) : [];
+  }, [canAccess, role]);
 
   useEffect(() => {
     if (filteredTabs.length > 0 && !filteredTabs.some(t => t.id === activeTab)) {
@@ -49,6 +83,9 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
       case "comunidad": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>;
       case "fidelidad": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>;
       case "ai-stylist": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>;
+      case "medios": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>;
+      case "auditoria": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
+      case "dashboard": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>;
       default: return null;
     }
   };
@@ -75,18 +112,40 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
           <span className="admin-brand-name">Nike CMS</span>
         </div>
 
-        <nav className="admin-nav">
-          {filteredTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
-              className={`admin-nav-btn ${activeTab === tab.id ? "active" : ""}`}
-              title={isSidebarCollapsed ? tab.label : ""}
-            >
-              {renderIcon(tab.id)}
-              <span>{tab.label}</span>
-            </button>
-          ))}
+        <nav className="admin-nav" style={{ overflowY: "auto", paddingBottom: "80px" }}>
+          {CATEGORIES.map(category => {
+            const tabsInCategory = filteredTabs.filter(t => t.category === category);
+            if (tabsInCategory.length === 0) return null;
+            
+            return (
+              <div key={category} style={{ marginBottom: "16px" }}>
+                {!isSidebarCollapsed && (
+                  <div style={{
+                    fontSize: "0.65rem",
+                    textTransform: "uppercase",
+                    color: "#666",
+                    fontWeight: 700,
+                    letterSpacing: "1px",
+                    padding: "0 20px 8px",
+                    marginTop: "8px"
+                  }}>
+                    {category}
+                  </div>
+                )}
+                {tabsInCategory.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabClick(tab.id)}
+                    className={`admin-nav-btn ${activeTab === tab.id ? "active" : ""}`}
+                    title={isSidebarCollapsed ? tab.label : ""}
+                  >
+                    {renderIcon(tab.id)}
+                    <span>{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
         </nav>
 
         <div className="admin-sidebar-footer">
