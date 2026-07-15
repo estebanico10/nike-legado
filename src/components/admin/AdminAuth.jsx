@@ -1,26 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function AdminAuth({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return sessionStorage.getItem("adminAuth") === "true";
-  });
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (password === "JesusesVida.10") {
-      sessionStorage.setItem("adminAuth", "true");
-      setIsAuthenticated(true);
-      setError(false);
-    } else {
-      setError(true);
-      setPassword("");
-    }
+  const { user, login } = useAuthStore();
+  
+  const handleLogin = (role) => {
+    login({ name: `Demo ${role}` }, role);
+    sessionStorage.setItem("adminAuth", "true");
   };
 
-  if (isAuthenticated) {
+  if (user) {
     return <>{children}</>;
   }
 
@@ -62,47 +52,20 @@ export default function AdminAuth({ children }) {
               </svg>
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", color: "#F5F5F5", textTransform: "uppercase" }}>Acceso Restringido</h1>
-            <p style={{ color: "#757575", fontSize: "var(--type-body-sm)", marginTop: "var(--space-xs)" }}>Ingresa la contraseña para continuar</p>
+            <p style={{ color: "#757575", fontSize: "var(--type-body-sm)", marginTop: "var(--space-xs)" }}>Selecciona un rol para ingresar</p>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-            <div>
-              <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(false); }}
-                autoFocus
-                style={{
-                  width: "100%",
-                  padding: "14px 16px",
-                  borderRadius: "var(--radius-sm)",
-                  border: error ? "1px solid var(--color-error, #ff3333)" : "1px solid #333",
-                  backgroundColor: "#1A1A1A",
-                  color: "#F5F5F5",
-                  outline: "none",
-                  fontSize: "var(--type-body)",
-                  fontFamily: "monospace"
-                }}
-              />
-              <AnimatePresence>
-                {error && (
-                  <motion.p 
-                    initial={{ opacity: 0, y: -10 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    exit={{ opacity: 0 }}
-                    style={{ color: "var(--color-error, #ff3333)", fontSize: "var(--type-micro)", marginTop: "8px", fontWeight: 500 }}
-                  >
-                    Contraseña incorrecta
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-            
-            <button type="submit" className="btn btn--volt" style={{ padding: "14px", width: "100%" }}>
-              Entrar
+          <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <button onClick={() => handleLogin('Super Admin')} className="btn btn--volt" style={{ padding: "14px", width: "100%" }}>
+              ⚡ Demo Login: Super Admin
             </button>
-          </form>
+            <button onClick={() => handleLogin('Analista')} className="btn" style={{ padding: "14px", width: "100%", backgroundColor: "#333", color: "#fff", border: "none" }}>
+              ⚡ Demo Login: Analista
+            </button>
+            <button onClick={() => handleLogin('Moderador')} className="btn" style={{ padding: "14px", width: "100%", backgroundColor: "#333", color: "#fff", border: "none" }}>
+              ⚡ Demo Login: Moderador
+            </button>
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>

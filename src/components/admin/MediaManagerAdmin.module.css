@@ -1,0 +1,60 @@
+.mediaManagerContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  color: #333;
+}
+
+.dropZone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+.dropZone.dragging {
+  border-color: #007bff;
+  background-color: #e9f5ff;
+}
+
+.fileInput {
+  margin-top: 10px;
+}
+
+.resultContainer {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.imagePreview {
+  margin-bottom: 20px;
+}
+
+.stats {
+  margin-bottom: 20px;
+}
+
+.copyButton {
+  padding: 10px 15px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.copyButton:hover {
+  background-color: #218838;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
+}

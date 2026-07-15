@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImage } from "../../utils/imageOptimizer";
 
 const emptyProduct = {
   nombre: "",
@@ -35,6 +36,18 @@ export default function ProductForm({ initial, categorias, tiposProducto, onSave
     if (newImage.trim()) {
       set("imagenes", [...form.imagenes, newImage.trim()]);
       setNewImage("");
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const optimizedUrl = await optimizeImage(file);
+      set("imagenes", [...form.imagenes, optimizedUrl]);
+    } catch (err) {
+      console.error(err);
+      alert('Error al optimizar la imagen local');
     }
   };
 
@@ -171,7 +184,11 @@ export default function ProductForm({ initial, categorias, tiposProducto, onSave
         </div>
         <div style={{ display: "flex", gap: "var(--space-xs)" }}>
           <input className="admin-input" type="text" value={newImage} onChange={(e) => setNewImage(e.target.value)} placeholder="/assets/products/nombre-imagen.webp" />
-          <button type="button" className="btn btn--secondary btn--sm" onClick={addImage} style={{ color: "#F5F5F5", borderColor: "#555", whiteSpace: "nowrap" }}>+ Imagen</button>
+          <button type="button" className="btn btn--secondary btn--sm" onClick={addImage} style={{ color: "#F5F5F5", borderColor: "#555", whiteSpace: "nowrap" }}>+ URL</button>
+          <input type="file" accept="image/*" onChange={handleFileChange} style={{ display: "none" }} id="local-image-upload" />
+          <label htmlFor="local-image-upload" className="btn btn--secondary btn--sm" style={{ color: "#F5F5F5", borderColor: "#555", whiteSpace: "nowrap", cursor: "pointer", display: "inline-flex", alignItems: "center" }}>
+            + Archivo
+          </label>
         </div>
       </div>
 

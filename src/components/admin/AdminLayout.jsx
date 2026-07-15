@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import "../../admin.css";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function AdminLayout({ activeTab, setActiveTab, children }) {
   const navigate = useNavigate();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { user, role, canAccess, logout } = useAuthStore();
   
   const TABS = [
     { id: "inventario", label: "Inventario", icon: "box" },
@@ -26,8 +28,17 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
     { id: "equipo", label: "Equipo", icon: "user-check" },
   ];
 
+  const filteredTabs = TABS.filter(tab => canAccess(tab.id));
+
+  useEffect(() => {
+    if (filteredTabs.length > 0 && !filteredTabs.some(t => t.id === activeTab)) {
+      setActiveTab(filteredTabs[0].id);
+    }
+  }, [role, activeTab, setActiveTab]);
+
   const handleLogout = () => {
     sessionStorage.removeItem("adminAuth");
+    logout();
     navigate("/");
   };
 
@@ -75,7 +86,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
         </div>
 
         <nav className="admin-nav">
-          {TABS.map((tab) => (
+          {filteredTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab.id)}
@@ -114,8 +125,10 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
             <div>
-              <h1 className="admin-header-title">Hola, Esteban</h1>
-              <p className="admin-header-subtitle">Bienvenido al Panel de Administración</p>
+              <h1 className="admin-header-title">Hola, {user?.name || "Esteban"}</h1>
+              <p className="admin-header-subtitle">
+                Bienvenido al Panel de Administración - <strong>Rol: {role}</strong>
+              </p>
             </div>
           </div>
 
@@ -123,7 +136,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
             <button onClick={handleLogout} className="btn btn--secondary btn--sm">
               Cerrar Sesión
             </button>
-            <div className="admin-avatar">E</div>
+            <div className="admin-avatar">{user?.name ? user.name.charAt(0).toUpperCase() : "E"}</div>
           </div>
         </header>
 

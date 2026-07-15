@@ -18,6 +18,8 @@ import CustomerCRM from "../components/admin/CustomerCRM";
 import MarketingAdmin from "../components/admin/MarketingAdmin";
 import ReviewsModeration from "../components/admin/ReviewsModeration";
 import AnalyticsMetrics from "../components/admin/AnalyticsMetrics";
+import MediaManagerAdmin from "../components/admin/MediaManagerAdmin";
+import AuditLogsAdmin from "../components/admin/AuditLogsAdmin";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("ventas");
@@ -44,6 +46,10 @@ export default function AdminPage() {
         return <ReviewsModeration />;
       case "metricas":
         return <AnalyticsMetrics />;
+      case "media":
+        return <MediaManagerAdmin />;
+      case "auditoria":
+        return <AuditLogsAdmin />;
       case "social":
         return <SocialAdmin />;
       case "configuracion":

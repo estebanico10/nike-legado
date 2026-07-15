@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useProducts } from "../../context/ProductContext";
-import { useThemeStore } from "../../store/useStore";
+import { useThemeStore, useOrderStore } from "../../store/useStore";
 
 export default function StoreSettings() {
   const { categorias, addCategoria, removeCategoria, tiposProducto, addTipoProducto, removeTipoProducto } = useProducts();
   const { accentColor, setAccentColor } = useThemeStore();
+  const { addOrder } = useOrderStore();
   const [newCat, setNewCat] = useState("");
   const [newTipo, setNewTipo] = useState("");
 
@@ -22,6 +23,19 @@ export default function StoreSettings() {
       addTipoProducto(newTipo.trim());
       setNewTipo("");
     }
+  };
+
+  const handleInjectDemoData = () => {
+    for (let i = 0; i < 15; i++) {
+      addOrder({
+        id: `DEMO-${Math.floor(Math.random() * 10000)}`,
+        date: new Date().toISOString(),
+        total: Math.floor(Math.random() * 500) + 50,
+        status: "completado",
+        customer: `Demo User ${i + 1}`
+      });
+    }
+    alert("¡15 órdenes simuladas inyectadas exitosamente!");
   };
 
   return (
@@ -135,6 +149,17 @@ export default function StoreSettings() {
           
           <button className="btn btn--secondary btn--sm" style={{ width: "100%", marginTop: "var(--space-md)", borderColor: "#333", color: "#F5F5F5" }}>
             Editar Premios
+          </button>
+        </div>
+
+        {/* Herramientas de Administrador */}
+        <div style={{ backgroundColor: "#111111", border: "1px solid #222", borderRadius: "var(--radius-md)", padding: "var(--space-md)" }}>
+          <h3 style={{ fontSize: "var(--type-body)", color: "var(--color-volt)", marginBottom: "var(--space-sm)" }}>Herramientas Demo</h3>
+          <p style={{ fontSize: "var(--type-caption)", color: "#A0A0A0", marginBottom: "var(--space-md)" }}>
+            Inyecta datos falsos para visualizaciones y pruebas de rendimiento.
+          </p>
+          <button onClick={handleInjectDemoData} className="btn btn--primary btn--sm" style={{ width: "100%", fontWeight: "bold", backgroundColor: "var(--color-volt)", color: "#000", cursor: "pointer" }}>
+            ⚡ Inyectar Datos Demo
           </button>
         </div>
       </div>
