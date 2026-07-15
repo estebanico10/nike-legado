@@ -140,44 +140,70 @@ export default function CommunityPage() {
             </div>
           </div>
 
-          {/* Grid de Outfits */}
-          <AnimatePresence mode="wait">
-            {filteredPosts.length === 0 ? (
-              <motion.div
-                key="empty-state"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-[#121212]/60 backdrop-blur-md border border-dashed border-white/15 rounded-3xl p-16 text-center max-w-[600px] mx-auto my-10"
-              >
-                <div className="w-16 h-16 rounded-full bg-[rgba(212,255,0,0.1)] text-[var(--color-volt-text)] flex items-center justify-center mx-auto mb-6">
-                  <Sparkles size={30} />
-                </div>
-                <h3 className="font-display text-[22px] font-extrabold uppercase text-white m-0 mb-2.5">
-                  No hay looks en "{activeTab}" aún
-                </h3>
-                <p className="text-[#999] text-sm m-0 mb-8">
-                  ¡Sé el pionero del barrio en esta categoría y sé destacado en la cabecera del Muro!
-                </p>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition-colors"
+          {/* Grid de Outfits -> Transformado a Swipeable Stack */}
+          <div className="relative w-full max-w-sm mx-auto h-[650px] mt-12 flex justify-center perspective-[1000px]">
+            <AnimatePresence mode="popLayout">
+              {filteredPosts.length === 0 ? (
+                <motion.div
+                  key="empty-state"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="absolute inset-0 bg-[#121212]/60 backdrop-blur-md border border-dashed border-white/15 rounded-3xl p-8 flex flex-col items-center justify-center text-center"
                 >
-                  <PlusCircle size={18} /> Subir el primer outfit
-                </button>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="grid-layout"
-                layout
-                className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 items-start"
-              >
-                {filteredPosts.map((post) => (
-                  <OutfitCard key={post.id} post={post} />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <div className="w-16 h-16 rounded-full bg-[rgba(212,255,0,0.1)] text-[var(--color-volt-text)] flex items-center justify-center mx-auto mb-6">
+                    <Sparkles size={30} />
+                  </div>
+                  <h3 className="font-display text-[22px] font-extrabold uppercase text-white m-0 mb-2.5">
+                    No hay looks en "{activeTab}" aún
+                  </h3>
+                  <p className="text-[#999] text-sm m-0 mb-8">
+                    ¡Sé el pionero del barrio en esta categoría!
+                  </p>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition-colors"
+                  >
+                    <PlusCircle size={18} /> Subir outfit
+                  </button>
+                </motion.div>
+              ) : (
+                filteredPosts.slice(0, 5).reverse().map((post, i) => {
+                  const isTop = i === filteredPosts.slice(0, 5).length - 1;
+                  return (
+                    <motion.div
+                      key={post.id}
+                      className="absolute top-0 w-full"
+                      drag={isTop ? "x" : false}
+                      dragConstraints={{ left: 0, right: 0 }}
+                      onDragEnd={(e, info) => {
+                        if (Math.abs(info.offset.x) > 100) {
+                          // Simular swipe action
+                          const swipeDirection = info.offset.x > 0 ? "right" : "left";
+                          if (swipeDirection === "right") {
+                            useLoyaltyStore.getState().addPoints(5, "Swipe Like");
+                          }
+                          // En un entorno real, actualizaríamos el estado para quitar este post del array
+                        }
+                      }}
+                      initial={{ scale: 0.8, y: 100, opacity: 0 }}
+                      animate={{ 
+                        scale: 1 - ((filteredPosts.slice(0, 5).length - 1 - i) * 0.05),
+                        y: (filteredPosts.slice(0, 5).length - 1 - i) * 20,
+                        opacity: 1,
+                        zIndex: i
+                      }}
+                      exit={{ x: 300, opacity: 0, scale: 0.5 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      whileDrag={{ scale: 1.05, rotate: 5 }}
+                    >
+                      <OutfitCard post={post} />
+                    </motion.div>
+                  );
+                })
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </section>
 

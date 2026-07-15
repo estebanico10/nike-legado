@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import SEO from "../components/SEO";
 import AnimatedBackground from "../components/AnimatedBackground";
 import DropCard from "../components/drops/DropCard";
+import { Suspense, lazy } from "react";
+const DropsGlobe = lazy(() => import("../components/3d/DropsGlobe"));
 
 const INITIAL_DROPS = [
   {
@@ -86,9 +88,15 @@ export default function DropsPage() {
           borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
           background: "radial-gradient(circle at 50% 0%, rgba(206, 255, 0, 0.12) 0%, rgba(12, 12, 12, 0) 70%)",
           textAlign: "center",
+          overflow: "hidden"
         }}
       >
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        {/* Render 3D Globe Background */}
+        <Suspense fallback={<div style={{ position: 'absolute', inset: 0, background: 'rgba(206, 255, 0, 0.05)' }} />}>
+          <DropsGlobe />
+        </Suspense>
+        
+        <div style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 10 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

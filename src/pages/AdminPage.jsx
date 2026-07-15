@@ -20,6 +20,7 @@ import ReviewsModeration from "../components/admin/ReviewsModeration";
 import AnalyticsMetrics from "../components/admin/AnalyticsMetrics";
 import MediaManagerAdmin from "../components/admin/MediaManagerAdmin";
 import AuditLogsAdmin from "../components/admin/AuditLogsAdmin";
+import AIStylist from "../components/admin/AIStylist";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("ventas");
@@ -40,6 +41,8 @@ export default function AdminPage() {
         return <OrderManagement />;
       case "clientes":
         return <CustomerCRM />;
+      case "ai-stylist":
+        return <AIStylist />;
       case "marketing":
         return <MarketingAdmin />;
       case "resenas":

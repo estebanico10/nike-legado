@@ -1,12 +1,12 @@
+import { lazy, Suspense, useEffect, useState } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
-import { ToastProvider } from "./context/ToastContext";
+import { ToastProvider, useToast } from "./context/ToastContext";
 import Navbar from "./components/Navbar";
-import { lazy, Suspense, useEffect } from "react";
-import LoadingScreen from "./components/LoadingScreen";
+import CinematicLoader from "./components/ui/CinematicLoader";
 import PageTransition from "./components/PageTransition";
 import PageLoadingIndicator from "./components/PageLoadingIndicator";
 
@@ -27,10 +27,10 @@ const CustomizerPage = lazy(() => import("./pages/CustomizerPage"));
 const DropsPage = lazy(() => import("./pages/DropsPage"));
 const CommunityPage = lazy(() => import("./pages/CommunityPage"));
 const ClubPage = lazy(() => import("./pages/ClubPage"));
+
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
 import Footer from "./components/Footer";
-import { useState } from "react";
 import WhatsAppFAB from "./components/WhatsAppFAB";
 import CustomCursor from "./components/CustomCursor";
 import ExitIntentPopup from "./components/ExitIntentPopup";
@@ -38,7 +38,8 @@ import LuckyWheel from "./components/LuckyWheel";
 import CartDrawer from "./components/CartDrawer";
 import AIPersonalShopper from "./components/AIPersonalShopper";
 import { useUIStore, useThemeStore } from "./store/useStore";
-import { useToast } from "./context/ToastContext";
+import SmoothScroll from "./components/layout/SmoothScroll";
+
 
 function AppRoutes() {
   const location = useLocation();
@@ -129,7 +130,7 @@ function App() {
 
       <AnimatePresence mode="wait">
         {loading ? (
-          <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
+          <CinematicLoader key="loading" onComplete={() => setLoading(false)} />
         ) : (
           <motion.div id="main-content" tabIndex="-1" key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} style={{ outline: 'none' }}>
             <AppRoutes />
@@ -151,13 +152,15 @@ export default function AppWrapper() {
   return (
     <HelmetProvider>
       <HashRouter>
-        <ProductProvider>
-          <SiteProvider>
-            <ToastProvider>
-              <App />
-            </ToastProvider>
-          </SiteProvider>
-        </ProductProvider>
+        <SmoothScroll>
+          <ProductProvider>
+            <SiteProvider>
+              <ToastProvider>
+                <App />
+              </ToastProvider>
+            </SiteProvider>
+          </ProductProvider>
+        </SmoothScroll>
       </HashRouter>
     </HelmetProvider>
   );

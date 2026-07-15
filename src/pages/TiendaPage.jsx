@@ -74,7 +74,7 @@ export default function TiendaPage() {
     <>
       <SEO title="Tienda" description="Explora nuestra colección de ropa, zapatos y accesorios con el estilo único del fútbol callejero ecuatoriano." />
       <AnimatedBackground />
-      <main className="pt-24 pb-32 relative z-10 bg-gray-50/50">
+      <main className="pt-24 pb-32 relative z-10" style={{ backgroundColor: "var(--color-ink)", color: "var(--color-canvas)" }}>
         <div className="max-w-global mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
@@ -105,10 +105,10 @@ export default function TiendaPage() {
                 </motion.span>
               ))}
             </motion.h1>
-            <p className="font-sans text-base text-gray-500 font-medium">
-              {query && <span className="block mb-1">Resultados para "{query}"</span>}
-              <CountUp value={productosFiltrados.length} />{" "}
-              {productosFiltrados.length === 1 ? "producto" : "productos"}
+            <p className="font-sans text-base text-gray-400 font-medium max-w-sm ml-auto text-right">
+              {query && <span className="block mb-1 text-white">Resultados para "{query}"</span>}
+              Mostrando <CountUp value={productosFiltrados.length} />{" "}
+              {productosFiltrados.length === 1 ? "producto" : "productos"} seleccionados para superar tus límites.
             </p>
           </motion.div>
 
@@ -120,7 +120,7 @@ export default function TiendaPage() {
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => setFiltroActivo(null)}
-                    className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroActivo === null ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
+                    className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroActivo === null ? "bg-white text-black" : "bg-transparent text-gray-400 hover:bg-[#111] hover:text-white"}`}
                   >
                     Todas las categorías
                   </button>
@@ -128,7 +128,7 @@ export default function TiendaPage() {
                     <button
                       key={cat}
                       onClick={() => setFiltroActivo(cat)}
-                      className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroActivo === cat ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
+                      className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroActivo === cat ? "bg-white text-black" : "bg-transparent text-gray-400 hover:bg-[#111] hover:text-white"}`}
                     >
                       {cat}
                     </button>
@@ -141,7 +141,7 @@ export default function TiendaPage() {
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => setFiltroTipo(null)}
-                    className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroTipo === null ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
+                    className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroTipo === null ? "bg-white text-black" : "bg-transparent text-gray-400 hover:bg-[#111] hover:text-white"}`}
                   >
                     Cualquier Tipo
                   </button>
@@ -149,7 +149,7 @@ export default function TiendaPage() {
                     <button
                       key={tipo}
                       onClick={() => setFiltroTipo(tipo)}
-                      className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroTipo === tipo ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
+                      className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroTipo === tipo ? "bg-white text-black" : "bg-transparent text-gray-400 hover:bg-[#111] hover:text-white"}`}
                     >
                       {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
                     </button>
@@ -160,7 +160,7 @@ export default function TiendaPage() {
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between">
                   <span>Precio Máx.</span>
-                  <span className="text-black">${maxPrecio}</span>
+                  <span className="text-white font-mono">${maxPrecio}</span>
                 </h3>
                 <input 
                   type="range" 
@@ -178,7 +178,7 @@ export default function TiendaPage() {
                 <div className="flex gap-3 flex-wrap">
                   <button
                     onClick={() => setFiltroColor(null)}
-                    className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-[10px] transition-all ${filtroColor === null ? "border-black font-bold" : "border-gray-200 text-gray-500"}`}
+                    className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-[10px] transition-all ${filtroColor === null ? "border-white text-white font-bold" : "border-gray-800 text-gray-500"}`}
                     title="Todos los colores"
                   >
                     ALL
@@ -190,7 +190,7 @@ export default function TiendaPage() {
                       className="w-10 h-10 rounded-full border border-gray-200 transition-all"
                       style={{
                         backgroundColor: c,
-                        boxShadow: filtroColor === c ? "0 0 0 2px white, 0 0 0 4px black" : "none",
+                        boxShadow: filtroColor === c ? "0 0 0 2px black, 0 0 0 4px white" : "none",
                       }}
                       title={c}
                     />
@@ -207,7 +207,7 @@ export default function TiendaPage() {
                   <select
                     value={orden}
                     onChange={(e) => setOrden(e.target.value)}
-                    className="bg-white border-2 border-gray-200 text-gray-900 py-3 px-6 rounded-full text-sm font-bold cursor-pointer outline-none shadow-sm focus:ring-2 focus:ring-black focus:border-black appearance-none"
+                    className="bg-[#111] border-2 border-gray-800 text-white py-3 px-6 rounded-full text-sm font-bold cursor-pointer outline-none shadow-sm focus:ring-2 focus:ring-white focus:border-white appearance-none"
                   >
                     <option value="default">Relevancia</option>
                     <option value="precio_asc">Precio: Menor a Mayor</option>
@@ -228,7 +228,7 @@ export default function TiendaPage() {
                       transition: { staggerChildren: 0.1 }
                     }
                   }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16"
                 >
                   {productosFiltrados.slice(0, visibleCount).map((producto, i) => (
                     <motion.div 
@@ -236,16 +236,18 @@ export default function TiendaPage() {
                       layout
                       variants={{
                         hidden: { opacity: 0, y: 30, scale: 0.95 },
-                        visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } }
+                        visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
                       }}
                       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                     >
-                      <ProductCard
-                        producto={producto}
-                        index={i}
-                        onQuickView={setQuickViewProduct}
-                        layoutMode="grid3"
-                      />
+                      <div style={{ transform: `translateY(${i % 2 !== 0 ? '40px' : '0'})` }}>
+                        <ProductCard
+                          producto={producto}
+                          index={i}
+                          onQuickView={setQuickViewProduct}
+                          layoutMode="grid3"
+                        />
+                      </div>
                     </motion.div>
                   ))}
                 </motion.div>
@@ -255,7 +257,7 @@ export default function TiendaPage() {
                 <div className="flex justify-center mt-16">
                   <button 
                     onClick={() => setVisibleCount(prev => prev + 12)}
-                    className="bg-black text-white font-bold uppercase tracking-wider py-4 px-12 rounded-full hover:bg-gray-800 transition-colors shadow-lg"
+                    className="bg-white text-black font-bold uppercase tracking-wider py-4 px-12 rounded-full hover:bg-gray-200 transition-colors shadow-lg"
                   >
                     Cargar Más
                   </button>
@@ -266,10 +268,10 @@ export default function TiendaPage() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-32 bg-white rounded-3xl shadow-sm border border-gray-100"
+                  className="text-center py-32 bg-[#111] rounded-3xl border border-gray-800"
                 >
-                  <p className="text-xl text-gray-500 font-medium">No hay productos que coincidan con los filtros.</p>
-                  <button onClick={() => { setFiltroActivo(null); setFiltroTipo(null); setFiltroColor(null); setMaxPrecio(200); }} className="mt-6 text-black underline font-bold">Borrar filtros</button>
+                  <p className="text-xl text-gray-400 font-medium">No hay productos que coincidan con los filtros.</p>
+                  <button onClick={() => { setFiltroActivo(null); setFiltroTipo(null); setFiltroColor(null); setMaxPrecio(200); }} className="mt-6 text-white underline font-bold">Borrar filtros</button>
                 </motion.div>
               )}
             </div>

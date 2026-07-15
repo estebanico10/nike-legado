@@ -18,6 +18,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
     { id: "ventas", label: "Ventas y Dashboard", icon: "trending-up" },
     { id: "pedidos", label: "Gestión de Pedidos", icon: "shopping-bag" },
     { id: "clientes", label: "Clientes (CRM)", icon: "users" },
+    { id: "ai-stylist", label: "AI Stylist (Beta)", icon: "cpu" },
     { id: "marketing", label: "Marketing", icon: "tag" },
     { id: "resenas", label: "Reseñas", icon: "message-square" },
     { id: "metricas", label: "Métricas", icon: "pie-chart" },
@@ -59,6 +60,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
       case "equipo": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
       case "comunidad": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>;
       case "fidelidad": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>;
+      case "ai-stylist": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>;
       default: return null;
     }
   };

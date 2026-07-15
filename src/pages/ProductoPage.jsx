@@ -9,8 +9,9 @@ import CustomerReviews from "../components/CustomerReviews";
 import { resolveAsset } from "../utils/resolveAsset";
 import ProductCard from "../components/ProductCard";
 import SizeGuideModal from "../components/SizeGuideModal";
-import InteractiveShoe3D from "../components/InteractiveShoe3D";
 import SizeRecommender from "../components/SizeRecommender";
+import { Suspense, lazy } from "react";
+const ProductConfigurator3D = lazy(() => import("../components/3d/ProductConfigurator3D"));
 import CountdownTimer from "../components/CountdownTimer";
 import RelatedProducts from "../components/RelatedProducts";
 import BundleBuilder from "../components/BundleBuilder";
@@ -131,15 +132,15 @@ export default function ProductoPage() {
                   ))}
                 </div>
 
-                {/* Main Image */}
-                <div style={{ flex: 1, backgroundColor: "var(--color-canvas-alt)", aspectRatio: "3/4", position: "relative", overflow: "hidden" }}>
+              {/* Main Image - Cinematic Large view */}
+                <div style={{ flex: 1, backgroundColor: "var(--color-canvas-alt)", aspectRatio: "4/5", position: "relative", overflow: "hidden", borderRadius: "16px" }}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeImage}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
                       layoutId={activeImage === 0 ? `product-image-${producto.id}` : undefined}
                       style={{ position: "absolute", inset: 0 }}
                     >
@@ -148,7 +149,7 @@ export default function ProductoPage() {
                   </AnimatePresence>
                   
                   {/* Badges */}
-                  <div style={{ position: "absolute", top: "16px", left: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <div style={{ position: "absolute", top: "24px", left: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
                     {producto.esNuevo && (
                       <span className="badge-indoor" style={{ backgroundColor: "var(--color-ink)" }}>NUEVO</span>
                     )}
@@ -342,12 +343,17 @@ export default function ProductoPage() {
           </div>
 
           {/* 3D Experience Section */}
-          <div style={{ marginTop: "var(--space-4xl)", marginBottom: "var(--space-4xl)" }}>
-            <div style={{ textAlign: "center", marginBottom: "var(--space-2xl)" }}>
-              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", textTransform: "uppercase" }}>Vista 360°</h2>
-              <p style={{ color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>Interactúa con el modelo 3D</p>
-            </div>
-            <InteractiveShoe3D />
+          <div style={{ marginTop: "var(--space-5xl)", marginBottom: "var(--space-5xl)" }}>
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <Suspense fallback={<div style={{ height: "400px", display: "flex", alignItems: "center", justifyContent: "center" }}>Cargando experiencia 3D...</div>}>
+                <ProductConfigurator3D initialColor={producto.colores?.[0] || '#CEFF00'} />
+              </Suspense>
+            </motion.div>
           </div>
 
       {/* HOW IT'S MADE SECTION */}

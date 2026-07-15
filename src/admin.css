@@ -1,17 +1,17 @@
-/* ─── Admin Layout Styles (Nike Premium) ─── */
+/* ─── Admin Layout Styles (Vercel/Linear Aesthetic) ─── */
 
 .admin-wrapper {
   display: flex;
   min-height: 100vh;
-  background-color: #0A0A0A;
-  color: #F5F5F5;
-  font-family: var(--font-body);
+  background-color: #000000;
+  color: #EDEDED;
+  font-family: 'Inter', var(--font-body);
   overflow-x: hidden;
 }
 
 /* Sidebar Options */
 .admin-sidebar {
-  background-color: #111111;
+  background-color: #000000;
   border-right: 1px solid #222;
   display: flex;
   flex-direction: column;
@@ -320,6 +320,34 @@
 .badge.danger { background-color: rgba(211, 0, 5, 0.2); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.3); }
 .badge.info { background-color: rgba(0, 102, 204, 0.2); color: #70a1ff; border: 1px solid rgba(112, 161, 255, 0.3); }
 .badge.volt { background-color: rgba(206, 255, 0, 0.1); color: var(--color-volt); border: 1px solid rgba(206, 255, 0, 0.3); }
+
+/* Vercel/Linear Extras */
+.admin-glass-panel {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.admin-input {
+  background-color: #111;
+  border: 1px solid #333;
+  color: #ededed;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #666;
+  background-color: #1a1a1a;
+}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
