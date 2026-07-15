@@ -1,16 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SEO from "../components/SEO";
-import AnimatedBackground from "../components/AnimatedBackground";
-import SneakerCustomizer, {
-  COLOR_PALETTE,
-  LAYERS,
-  calculatePriceDetails
-} from "../components/customizer/SneakerCustomizer";
+import SneakerCustomizer from "../components/customizer/SneakerCustomizer";
+import { COLOR_PALETTE, calculatePriceDetails } from "../components/customizer/customizerData";
 import { useCartStore, useLoyaltyStore } from "../store/useStore";
 import { useToast } from "../context/ToastContext";
-
-const SIZES_MX = ["24", "24.5", "25", "25.5", "26", "26.5", "27", "27.5", "28", "28.5", "29", "29.5", "30"];
 
 const generateId = () => Date.now().toString();
 
@@ -117,184 +111,117 @@ export default function CustomizerPage() {
         title="Nike By You"
         description="Diseña tus propias zapatillas Nike Legado personalizadas por capas y estilo callejero."
       />
-      <AnimatedBackground />
 
-      <main className="min-h-screen py-16 pb-32">
-        <div className="container max-w-[1400px] mx-auto px-6">
+      <main className="h-screen w-full relative overflow-hidden bg-black text-white" style={{ fontFamily: "var(--font-body)" }}>
+        
+        {/* 3D Canvas Background */}
+        <div className="absolute inset-0 z-0">
+          <SneakerCustomizer
+            mode="preview"
+            activeColors={activeColors}
+            onColorChange={handleColorChange}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            customText={customText}
+            onTextChange={setCustomText}
+          />
+        </div>
+
+        {/* Top Navbar overlay for 3D view */}
+        <div className="absolute top-0 left-0 w-full p-6 z-10 flex justify-between items-start pointer-events-none">
+          <div className="pointer-events-auto backdrop-blur-xl bg-black/40 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display font-bold text-[10px] px-2.5 py-1 rounded-sm uppercase tracking-wider">
+                EXCLUSIVO ONLINE
+              </span>
+            </div>
+            <h1 className="font-display text-4xl font-extrabold uppercase tracking-tight text-white m-0 leading-none">
+              NIKE BY YOU
+            </h1>
+            <h2 className="font-display text-2xl font-bold uppercase text-[var(--color-volt-text)] m-0 mt-1">
+              LEGADO
+            </h2>
+            <p className="text-neutral-400 text-xs mt-3 leading-relaxed">
+              Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma en el talón.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setShowSavedModal(true)}
+            className="pointer-events-auto backdrop-blur-md bg-black/50 border border-white/20 text-white px-5 py-3 rounded-full font-display text-xs font-semibold uppercase tracking-wider flex items-center gap-2 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] transition-all cursor-pointer"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+            Mis Diseños ({savedDesigns.length})
+          </button>
+        </div>
+
+        {/* Bottom UI Area */}
+        <div className="absolute bottom-0 left-0 w-full p-6 z-10 flex flex-col md:flex-row justify-between items-end gap-6 pointer-events-none">
           
-          {/* Studio Header */}
-          <header className="mb-12 flex flex-wrap justify-between items-end gap-6 border-b border-neutral-800 pb-8">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">
-                  EXCLUSIVO ONLINE
-                </span>
-                <span className="text-neutral-400 text-xs uppercase tracking-wider">
-                  ESTUDIO 3D DIGITAL
-                </span>
+          {/* Left: Size & Price */}
+          <div className="pointer-events-auto backdrop-blur-xl bg-black/60 border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="flex justify-between items-end border-b border-white/10 pb-4 mb-4">
+              <div>
+                <span className="text-neutral-500 text-xs uppercase tracking-wider block mb-1">Precio Total</span>
+                <span className="font-display text-3xl font-bold text-white">${priceDetails.totalPrice.toFixed(2)}</span>
               </div>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-neutral-100 m-0 leading-tight">
-                NIKE BY YOU <span className="text-[var(--color-volt-text)]">— LEGADO</span>
-              </h1>
-              <p className="text-neutral-400 text-sm mt-2 max-w-2xl">
-                Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma exclusiva en el talón.
-              </p>
+              <div className="text-right text-[10px] text-neutral-400">
+                {priceDetails.premiumColorCost > 0 && <div className="text-[var(--color-volt-text)]">+ Color Premium</div>}
+                {priceDetails.customTextCost > 0 && <div className="text-[var(--color-volt-text)]">+ Grabado Láser</div>}
+              </div>
             </div>
 
-            <button
-              onClick={() => setShowSavedModal(true)}
-              className="bg-neutral-900 border border-neutral-700 text-neutral-100 px-5 py-3 rounded-full font-display text-sm font-semibold uppercase tracking-wider flex items-center gap-2 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] cursor-pointer"
+            <div className="mb-5">
+              <div className="flex justify-between text-xs mb-2">
+                <span className="text-neutral-400 uppercase tracking-wider">Talla (US/MX)</span>
+                <span className="text-[var(--color-volt-text)] underline cursor-pointer">Guía</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {["26", "26.5", "27", "27.5", "28", "28.5"].map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`flex-1 min-w-[45px] py-2 rounded-lg text-sm font-semibold transition-all ${selectedSize === size ? "bg-[var(--color-volt)] text-black" : "bg-white/5 text-white hover:bg-white/10 border border-white/5"}`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleAddToCart}
+              className="w-full bg-[var(--color-volt)] text-black font-display font-bold uppercase text-sm py-4 rounded-xl shadow-[0_0_20px_rgba(206,255,0,0.3)] hover:shadow-[0_0_30px_rgba(206,255,0,0.5)] transition-all"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-              </svg>
-              Mis Diseños ({savedDesigns.length})
-            </button>
-          </header>
+              Añadir al Carrito
+            </motion.button>
+          </div>
 
-          {/* Desktop Split View Layout */}
-          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(380px,1.05fr)_minmax(420px,1.35fr)] gap-12 items-start">
-            
-            {/* LEFT COLUMN: Sticky Sneaker SVG Preview + Price Breakdown Card */}
-            <div className="flex flex-col gap-8 lg:sticky lg:top-[100px]">
-              
-              <SneakerCustomizer
-                mode="preview"
-                activeColors={activeColors}
-                onColorChange={handleColorChange}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                customText={customText}
-                onTextChange={setCustomText}
-              />
-
-              {/* Price Breakdown Card */}
-              <div className="bg-[#111] border border-neutral-800 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                <h3 className="font-display text-lg uppercase text-neutral-100 m-0 mb-4 border-b border-neutral-800 pb-2 flex justify-between items-center">
-                  <span>Desglose de Precio</span>
-                  <span className="text-[var(--color-volt-text)]">${priceDetails.totalPrice.toFixed(2)}</span>
-                </h3>
-
-                <div className="flex flex-col gap-3 text-sm">
-                  <div className="flex justify-between text-neutral-300">
-                    <span>Zapatilla Base Nike By You</span>
-                    <span className="font-semibold text-white">$149.99</span>
-                  </div>
-
-                  <div className={`flex justify-between ${priceDetails.premiumColorCost > 0 ? 'text-[var(--color-volt-text)]' : 'text-neutral-500'}`}>
-                    <span className="flex items-center gap-2">
-                      Acabado Color Premium
-                      {priceDetails.premiumColorCost > 0 && (
-                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt-text)] px-1.5 py-0.5 rounded">ACTIVO</span>
-                      )}
-                    </span>
-                    <span className="font-semibold">+${priceDetails.premiumColorCost.toFixed(2)}</span>
-                  </div>
-
-                  <div className={`flex justify-between ${priceDetails.customTextCost > 0 ? 'text-[var(--color-volt-text)]' : 'text-neutral-500'}`}>
-                    <span className="flex items-center gap-2">
-                      Grabado Láser en Talón ({customText || "Sin texto"})
-                      {priceDetails.customTextCost > 0 && (
-                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt-text)] px-1.5 py-0.5 rounded">CUSTOM</span>
-                      )}
-                    </span>
-                    <span className="font-semibold">+${priceDetails.customTextCost.toFixed(2)}</span>
-                  </div>
-
-                  <div className="border-t border-dashed border-neutral-700 mt-2 pt-3 flex justify-between items-baseline">
-                    <span className="font-display text-lg text-white uppercase">
-                      Total Inversión
-                    </span>
-                    <span className="font-display text-2xl text-[var(--color-volt-text)] font-bold">
-                      ${priceDetails.totalPrice.toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
+          {/* Center/Right: Customization Controls */}
+          <div className="pointer-events-auto flex-1 w-full max-w-2xl">
+            <SneakerCustomizer
+              mode="controls"
+              activeColors={activeColors}
+              onColorChange={handleColorChange}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              customText={customText}
+              onTextChange={setCustomText}
+            />
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={handleSaveDesign}
+                className="text-xs uppercase tracking-wider text-neutral-400 hover:text-white flex items-center gap-2 transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+                Guardar Progreso
+              </button>
             </div>
-
-            {/* RIGHT COLUMN: Customization Tabs, Color Palette, Size Selector & Action Buttons */}
-            <div className="flex flex-col gap-10">
-              
-              {/* Controls mode of SneakerCustomizer */}
-              <SneakerCustomizer
-                mode="controls"
-                activeColors={activeColors}
-                onColorChange={handleColorChange}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                customText={customText}
-                onTextChange={setCustomText}
-              />
-
-              {/* Size Selector from 24 to 30 */}
-              <div className="bg-[#111] border border-neutral-800 rounded-2xl p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-display text-lg uppercase text-neutral-100 m-0">
-                    Selecciona Tu Talla <span className="text-neutral-500 text-sm font-normal">(CM / MX)</span>
-                  </h3>
-                  <span className="text-xs text-[var(--color-volt-text)] font-semibold cursor-pointer underline">
-                    Guía de Tallas
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(64px,1fr))] gap-2.5">
-                  {SIZES_MX.map((size) => (
-                    <button
-                      key={size}
-                      type="button"
-                      onClick={() => setSelectedSize(size)}
-                      className={`bg-[#141414] border border-[#292929] text-neutral-300 font-display text-base font-semibold py-3 px-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[var(--color-volt)] hover:text-white hover:-translate-y-0.5 ${selectedSize === size ? "bg-[var(--color-volt)] border-[var(--color-volt)] text-[var(--color-ink)] font-extrabold shadow-[0_4px_15px_rgba(206,255,0,0.4)]" : ""}`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-
-                <p className="text-xs text-neutral-500 mt-3 mb-0">
-                  📏 Ajuste fiel a la talla. Recomendamos pedir media talla más si prefieres ajuste holgado para básquetbol o uso urbano.
-                </p>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-4 bg-[#141414] border border-[#2a2a2a] rounded-2xl p-6 sticky bottom-4 z-10 lg:static">
-                <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={handleAddToCart}
-                  className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display text-xl font-bold uppercase tracking-wider border-none rounded-xl py-4 px-6 cursor-pointer flex items-center justify-center gap-3 shadow-[0_8px_25px_rgba(206,255,0,0.3)] transition-all duration-200 w-full"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="9" cy="21" r="1" />
-                    <circle cx="20" cy="21" r="1" />
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                  </svg>
-                  AÑADIR AL CARRITO — ${priceDetails.totalPrice.toFixed(2)}
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={handleSaveDesign}
-                  className="bg-transparent text-neutral-100 font-display text-lg font-semibold uppercase tracking-wider border-2 border-neutral-800 rounded-xl py-3.5 px-6 cursor-pointer flex items-center justify-center gap-2.5 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] w-full"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                  </svg>
-                  GUARDAR EN MIS DISEÑOS
-                </motion.button>
-
-                <div className="flex justify-between items-center pt-2 border-t border-neutral-800 text-[10px] sm:text-xs text-neutral-500 w-full">
-                  <span>🔒 Garantía de fabricación artesanal 3-4 semanas</span>
-                  <span>⚡ Envío gratis en Ecuador & MX</span>
-                </div>
-              </div>
-
-            </div>
-
           </div>
         </div>
+
       </main>
 
       {/* Saved Designs Modal */}
