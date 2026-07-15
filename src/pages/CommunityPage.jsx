@@ -149,20 +149,20 @@ export default function CommunityPage() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="absolute inset-0 bg-[#121212]/60 backdrop-blur-md border border-dashed border-white/15 rounded-3xl p-8 flex flex-col items-center justify-center text-center"
+                  className="absolute inset-0 bg-white/60 backdrop-blur-md border border-dashed border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center"
                 >
-                  <div className="w-16 h-16 rounded-full bg-[rgba(212,255,0,0.1)] text-[var(--color-volt-text)] flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 rounded-full bg-gray-100 text-black flex items-center justify-center mx-auto mb-6">
                     <Sparkles size={30} />
                   </div>
-                  <h3 className="font-display text-[22px] font-extrabold uppercase text-white m-0 mb-2.5">
+                  <h3 className="font-display text-[22px] font-extrabold uppercase text-black m-0 mb-2.5">
                     No hay looks en "{activeTab}" aún
                   </h3>
-                  <p className="text-[#999] text-sm m-0 mb-8">
+                  <p className="text-gray-500 text-sm m-0 mb-8">
                     ¡Sé el pionero del barrio en esta categoría!
                   </p>
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition-colors"
+                    className="inline-flex items-center gap-2 bg-black text-white font-semibold px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
                   >
                     <PlusCircle size={18} /> Subir outfit
                   </button>
@@ -178,12 +178,10 @@ export default function CommunityPage() {
                       dragConstraints={{ left: 0, right: 0 }}
                       onDragEnd={(e, info) => {
                         if (Math.abs(info.offset.x) > 100) {
-                          // Simular swipe action
                           const swipeDirection = info.offset.x > 0 ? "right" : "left";
                           if (swipeDirection === "right") {
                             useLoyaltyStore.getState().addPoints(5, "Swipe Like");
                           }
-                          // En un entorno real, actualizaríamos el estado para quitar este post del array
                         }
                       }}
                       initial={{ scale: 0.8, y: 100, opacity: 0 }}

@@ -132,15 +132,15 @@ export default function ProductoPage() {
                   ))}
                 </div>
 
-              {/* Main Image - Cinematic Large view */}
-                <div style={{ flex: 1, backgroundColor: "var(--color-canvas-alt)", aspectRatio: "4/5", position: "relative", overflow: "hidden", borderRadius: "16px" }}>
+                {/* Main Image */}
+                <div style={{ flex: 1, backgroundColor: "var(--color-canvas-alt)", aspectRatio: "3/4", position: "relative", overflow: "hidden" }}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeImage}
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+                      transition={{ duration: 0.3 }}
                       layoutId={activeImage === 0 ? `product-image-${producto.id}` : undefined}
                       style={{ position: "absolute", inset: 0 }}
                     >
@@ -149,7 +149,7 @@ export default function ProductoPage() {
                   </AnimatePresence>
                   
                   {/* Badges */}
-                  <div style={{ position: "absolute", top: "24px", left: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <div style={{ position: "absolute", top: "16px", left: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
                     {producto.esNuevo && (
                       <span className="badge-indoor" style={{ backgroundColor: "var(--color-ink)" }}>NUEVO</span>
                     )}
