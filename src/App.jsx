@@ -113,7 +113,6 @@ function App() {
   return (
     <>
       <ScrollProgress />
-      <CustomCursor />
       
       {/* Skip Navigation Link (a11y) */}
       <a 
@@ -143,6 +142,8 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      <CustomCursor />
     </>
   );
 }
