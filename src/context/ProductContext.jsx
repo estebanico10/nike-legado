@@ -29,9 +29,16 @@ export const tiposProducto = [
 ];
 
 export function ProductProvider({ children }) {
-  const [productos, setProductos] = useState([]);
+  const [productos, setProductos] = useState(() => {
+    return import.meta.env.PROD ? (dbData.productos || []) : [];
+  });
 
   useEffect(() => {
+    // Si estamos en producción (GitHub Pages), no intentamos conectar al servidor local
+    if (import.meta.env.PROD) {
+      return;
+    }
+
     fetch("http://localhost:3001/productos")
       .then(res => res.json())
       .then(data => {
@@ -41,8 +48,8 @@ export function ProductProvider({ children }) {
           setProductos(dbData.productos || []);
         }
       })
-      .catch(err => {
-        console.warn("json-server offline, usando catálogo local de respaldo.", err);
+      .catch(() => {
+        // Silenciamos el error para no asustar con mensajes en consola si no hay json-server
         setProductos(dbData.productos || []);
       });
   }, []);
@@ -74,6 +81,9 @@ export function ProductProvider({ children }) {
   const addProducto = useCallback((producto) => {
     const newProducto = { ...producto, id: producto.id || crypto.randomUUID() };
     setProductos((prev) => [...prev, newProducto]);
+    
+    if (import.meta.env.PROD) return;
+
     fetch("http://localhost:3001/productos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,6 +95,9 @@ export function ProductProvider({ children }) {
     setProductos((prev) =>
       prev.map((p) => (p.id === id ? { ...p, ...updates } : p))
     );
+
+    if (import.meta.env.PROD) return;
+
     fetch(`http://localhost:3001/productos/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -94,6 +107,9 @@ export function ProductProvider({ children }) {
 
   const removeProducto = useCallback((id) => {
     setProductos((prev) => prev.filter((p) => p.id !== id));
+    
+    if (import.meta.env.PROD) return;
+
     fetch(`http://localhost:3001/productos/${id}`, {
       method: "DELETE"
     }).catch(e => console.warn("Error deleting from db", e));
