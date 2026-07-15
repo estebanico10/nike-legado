@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useI18nStore } from "../store/useI18nStore";
+import { useState } from "react";
+import NewsletterModal from "./NewsletterModal";
 
 export default function Footer() {
-  const { currency, setCurrency, lang, setLang } = useI18nStore();
+  const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
 
   return (
     <motion.footer
@@ -11,91 +12,179 @@ export default function Footer() {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="bg-[var(--color-ink)] text-[var(--color-canvas)] py-16 mt-auto relative overflow-hidden"
+      style={{
+        backgroundColor: "var(--color-ink)",
+        color: "var(--color-canvas)",
+        paddingTop: "var(--space-4xl)",
+        marginTop: "auto",
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column"
+      }}
     >
-      <div className="max-w-global mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+      <div className="container" style={{ position: "relative", zIndex: 2, paddingBottom: "var(--space-2xl)" }}>
+        
+        {/* Superior Area */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "var(--space-3xl)", marginBottom: "var(--space-4xl)" }}>
           
-          {/* Brand Column */}
-          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
-            <h4 className="font-display text-2xl mb-4 uppercase tracking-wider font-bold">Legado</h4>
-            <p className="text-[var(--color-canvas-alt)] text-sm font-sans max-w-xs leading-relaxed opacity-70">
-              Diseñado en los Andes.<br />
-              Hecho para el mundo.
+          {/* Newsletter / Brand */}
+          <div style={{ gridColumn: "1 / -1", maxWidth: "500px", marginBottom: "var(--space-xl)" }}>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h2)", marginBottom: "var(--space-sm)", textTransform: "uppercase", lineHeight: 1.1 }}>
+              Unete al Legado.
+            </h3>
+            <p style={{ color: "var(--color-canvas)", opacity: 0.7, fontSize: "var(--type-body)", marginBottom: "var(--space-xl)" }}>
+              Recibe acceso anticipado a los últimos lanzamientos, colaboraciones exclusivas y eventos.
             </p>
-            
-            <div className="flex gap-4 mt-8">
-              <select 
-                value={currency} 
-                onChange={(e) => setCurrency(e.target.value)}
-                className="bg-transparent border border-[var(--color-ink-muted)] text-[var(--color-canvas)] py-1.5 px-3 rounded font-sans text-xs cursor-pointer focus:outline-none focus:border-[var(--color-volt)] transition-colors hover:border-[var(--color-canvas)]"
+            <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.3)", paddingBottom: "var(--space-xs)" }}>
+              <button 
+                onClick={() => setIsNewsletterOpen(true)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: "var(--color-canvas)",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "var(--type-body-sm)",
+                  letterSpacing: "0.05em",
+                  flex: 1,
+                  padding: "var(--space-xs) 0",
+                  textAlign: "left",
+                  cursor: "text"
+                }}
               >
-                <option value="USD" className="text-black bg-white">USD</option>
-                <option value="MXN" className="text-black bg-white">MXN</option>
-                <option value="EUR" className="text-black bg-white">EUR</option>
-              </select>
-
-              <select 
-                value={lang} 
-                onChange={(e) => setLang(e.target.value)}
-                className="bg-transparent border border-[var(--color-ink-muted)] text-[var(--color-canvas)] py-1.5 px-3 rounded font-sans text-xs cursor-pointer focus:outline-none focus:border-[var(--color-volt)] transition-colors hover:border-[var(--color-canvas)]"
+                TU CORREO ELECTRÓNICO
+              </button>
+              <motion.button 
+                whileHover={{ x: 5 }}
+                onClick={() => setIsNewsletterOpen(true)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--color-canvas)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 var(--space-sm)"
+                }}
               >
-                <option value="es" className="text-black bg-white">ES</option>
-                <option value="en" className="text-black bg-white">EN</option>
-              </select>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </motion.button>
             </div>
           </div>
           
-          {/* Navigation Column */}
+          {/* Navigation */}
           <div>
-            <h4 className="font-display text-sm mb-6 uppercase tracking-widest font-bold">Navegación</h4>
-            <ul className="flex flex-col gap-3 font-sans text-sm">
-              <li><Link to="/inicio" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Inicio</Link></li>
-              <li><Link to="/tienda" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Tienda</Link></li>
-              <li><Link to="/nosotros" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Nuestra Historia</Link></li>
-            </ul>
-          </div>
-
-          {/* Subpages / Features Column */}
-          <div>
-            <h4 className="font-display text-sm mb-6 uppercase tracking-widest font-bold">Explora</h4>
-            <ul className="flex flex-col gap-3 font-sans text-sm">
-              <li><Link to="/customizer" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Nike By You</Link></li>
-              <li><Link to="/drops" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">SNKRS Drops</Link></li>
-              <li><Link to="/comunidad" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Comunidad OOTD</Link></li>
-              <li><Link to="/club" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Nike Club</Link></li>
+            <h4 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-body-sm)", marginBottom: "var(--space-lg)", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5 }}>Navegación</h4>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
+              {["Inicio", "Tienda", "Nosotros", "Contacto"].map((item) => (
+                <motion.li key={item} whileHover={{ x: 5 }}>
+                  <Link to={`/${item.toLowerCase()}`} style={{ color: "var(--color-canvas)", textDecoration: "none", fontSize: "var(--type-body-lg)", fontFamily: "var(--font-display)", textTransform: "uppercase", transition: "opacity 0.2s" }} onMouseOver={e=>e.target.style.opacity=1} onMouseOut={e=>e.target.style.opacity=0.7}>
+                    {item}
+                  </Link>
+                </motion.li>
+              ))}
             </ul>
           </div>
           
-          {/* Legal Column */}
+          {/* Legal */}
           <div>
-            <h4 className="font-display text-sm mb-6 uppercase tracking-widest font-bold">Legal</h4>
-            <ul className="flex flex-col gap-3 font-sans text-sm">
-              <li><Link to="/contacto" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Contacto y Soporte</Link></li>
-              <li><a href="#" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Términos y Condiciones</a></li>
-              <li><a href="#" className="text-[var(--color-canvas)] opacity-60 hover:opacity-100 hover:text-[var(--color-volt)] transition-all">Política de Privacidad</a></li>
+            <h4 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-body-sm)", marginBottom: "var(--space-lg)", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5 }}>Legal</h4>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
+              {["Términos y Condiciones", "Política de Privacidad", "Devoluciones"].map((item) => (
+                <motion.li key={item} whileHover={{ x: 5 }}>
+                  <a href="#" style={{ color: "var(--color-canvas)", textDecoration: "none", fontSize: "var(--type-body)", opacity: 0.7, transition: "opacity 0.2s" }} onMouseOver={e=>e.target.style.opacity=1} onMouseOut={e=>e.target.style.opacity=0.7}>
+                    {item}
+                  </a>
+                </motion.li>
+              ))}
             </ul>
+          </div>
+
+          {/* Socials */}
+          <div>
+            <h4 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-body-sm)", marginBottom: "var(--space-lg)", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5 }}>Social</h4>
+            <div style={{ display: "flex", gap: "var(--space-md)" }}>
+              {/* Instagram */}
+              <motion.a target="_blank" rel="noopener noreferrer" whileHover={{ y: -3, opacity: 1 }} href="https://www.instagram.com/adnp.asion?igsh=NWhicWUwbmptZnE1&utm" style={{ color: "var(--color-canvas)", opacity: 0.7 }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </motion.a>
+              {/* Twitter/X */}
+              <motion.a whileHover={{ y: -3, opacity: 1 }} href="#" style={{ color: "var(--color-canvas)", opacity: 0.7 }}>
+                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg>
+              </motion.a>
+              {/* YouTube */}
+              <motion.a whileHover={{ y: -3, opacity: 1 }} href="#" style={{ color: "var(--color-canvas)", opacity: 0.7 }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+              </motion.a>
+            </div>
           </div>
 
         </div>
         
         {/* Bottom Bar */}
-        <div className="border-t border-[var(--color-ink-muted)] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-[var(--color-canvas)] opacity-50 font-sans">
-          <p>&copy; {new Date().getFullYear()} Nike Legado. Todos los derechos reservados.</p>
-          <p className="flex items-center gap-2">
-            <span>Quito, Ecuador</span>
-            <span role="img" aria-label="Ecuador">🇪🇨</span>
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "var(--space-lg)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "var(--space-md)", fontSize: "var(--type-caption)", opacity: 0.5 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
+            <p>&copy; {new Date().getFullYear()} Nike Legado. Todos los derechos reservados.</p>
+            <div style={{ display: "flex", gap: "var(--space-xs)", alignItems: "center", marginLeft: "var(--space-md)" }}>
+              <button style={{ background: "none", border: "none", color: "var(--color-canvas)", fontSize: "var(--type-micro)", fontWeight: 700, cursor: "pointer", textDecoration: "underline" }}>ES</button>
+              <span style={{ color: "var(--color-canvas)", fontSize: "var(--type-micro)" }}>|</span>
+              <button style={{ background: "none", border: "none", color: "var(--color-canvas)", opacity: 0.6, fontSize: "var(--type-micro)", cursor: "pointer" }}>EN</button>
+            </div>
+          </div>
+          <p style={{ display: "flex", gap: "var(--space-sm)", alignItems: "center" }}>
+            Quito, Ecuador 
+            <svg width="16" height="12" viewBox="0 0 3 2">
+              <rect width="3" height="2" fill="#ef3340"/>
+              <rect width="3" height="1" y="0.5" fill="#0033a0"/>
+              <rect width="3" height="0.5" fill="#ffcd00"/>
+              <g transform="translate(1.5,1) scale(0.15)">
+                <circle r="1" fill="#fff" opacity="0.8"/>
+              </g>
+            </svg>
           </p>
         </div>
       </div>
       
+      {/* Giant Background Text */}
+      <div 
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(100px, 20vw, 300px)",
+          fontWeight: 900,
+          color: "var(--color-canvas)",
+          opacity: 0.03,
+          lineHeight: 0.75,
+          textAlign: "center",
+          whiteSpace: "nowrap",
+          userSelect: "none",
+          pointerEvents: "none",
+          overflow: "hidden",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center"
+        }}
+      >
+        LEGADO
+      </div>
+
       {/* Background decoration */}
       <div 
-        className="absolute -top-[20%] -right-[10%] w-[50%] h-[150%] pointer-events-none z-0 opacity-20"
         style={{
-          background: "radial-gradient(ellipse at center, var(--color-volt) 0%, transparent 70%)"
+          position: "absolute",
+          top: "-20%",
+          right: "-10%",
+          width: "50%",
+          height: "150%",
+          background: "radial-gradient(ellipse at center, rgba(206, 255, 0, 0.03) 0%, rgba(0,0,0,0) 70%)",
+          zIndex: 1,
+          pointerEvents: "none"
         }}
       />
+      <NewsletterModal isOpen={isNewsletterOpen} onClose={() => setIsNewsletterOpen(false)} />
     </motion.footer>
   );
 }
