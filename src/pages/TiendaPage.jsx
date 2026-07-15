@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, animate } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
-import { useWishlistStore, useRecentStore } from "../store/useStore";
+import { useWishlistStore } from "../store/useStore";
 import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import AnimatedBackground from "../components/AnimatedBackground";
@@ -26,7 +26,7 @@ function CountUp({ value }) {
 export default function TiendaPage() {
   const { productos, categorias, tiposProducto } = useProducts();
   const { items: wishlist } = useWishlistStore();
-  const { recentProducts } = useRecentStore();
+
   const [searchParams] = useSearchParams();
   const [filtroActivo, setFiltroActivo] = useState(null);
   const [filtroTipo, setFiltroTipo] = useState(null);

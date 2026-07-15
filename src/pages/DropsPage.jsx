@@ -37,7 +37,22 @@ const INITIAL_DROPS = [
 ];
 
 export default function DropsPage() {
-  const [drops, setDrops] = useState([]);
+  const [drops, setDrops] = useState(() => {
+    try {
+      const stored = localStorage.getItem("site_drops");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+      localStorage.setItem("site_drops", JSON.stringify(INITIAL_DROPS));
+      return INITIAL_DROPS;
+    } catch (err) {
+      console.error("Error loading drops from localStorage:", err);
+      return INITIAL_DROPS;
+    }
+  });
 
   const loadDrops = () => {
     try {
@@ -59,8 +74,6 @@ export default function DropsPage() {
   };
 
   useEffect(() => {
-    loadDrops();
-
     // Listen for custom events or cross-tab storage changes
     const handleDropsUpdate = () => loadDrops();
     window.addEventListener("site_drops_updated", handleDropsUpdate);

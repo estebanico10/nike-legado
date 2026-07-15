@@ -12,6 +12,8 @@ import { useToast } from "../context/ToastContext";
 
 const SIZES_MX = ["24", "24.5", "25", "25.5", "26", "26.5", "27", "27.5", "28", "28.5", "29", "29.5", "30"];
 
+const generateId = () => Date.now().toString();
+
 export default function CustomizerPage() {
   const addToCart = useCartStore((state) => state.addToCart);
   const { addToast } = useToast();
@@ -27,19 +29,16 @@ export default function CustomizerPage() {
   const [activeTab, setActiveTab] = useState("swoosh");
   const [customText, setCustomText] = useState("LEGADO");
   const [selectedSize, setSelectedSize] = useState("28");
-  const [savedDesigns, setSavedDesigns] = useState([]);
-  const [showSavedModal, setShowSavedModal] = useState(false);
-
-  useEffect(() => {
+  const [savedDesigns, setSavedDesigns] = useState(() => {
     try {
       const stored = localStorage.getItem("nike_saved_designs");
-      if (stored) {
-        setSavedDesigns(JSON.parse(stored));
-      }
+      return stored ? JSON.parse(stored) : [];
     } catch (e) {
       console.error("Error loading saved designs:", e);
+      return [];
     }
-  }, []);
+  });
+  const [showSavedModal, setShowSavedModal] = useState(false);
 
   const priceDetails = calculatePriceDetails(activeColors, customText);
 
@@ -54,7 +53,7 @@ export default function CustomizerPage() {
     const colorSummary = `Swoosh: ${activeColors.swoosh.name} | Upper: ${activeColors.upper.name} | Suela: ${activeColors.sole.name} | Cordones: ${activeColors.laces.name}`;
     
     const customItem = {
-      id: Date.now().toString(),
+      id: generateId(),
       nombre: `Nike By You — Custom Edition${customText && customText !== "LEGADO" ? ` "${customText}"` : ""}`,
       precio: priceDetails.totalPrice,
       precioOferta: priceDetails.totalPrice,
@@ -74,7 +73,7 @@ export default function CustomizerPage() {
 
   const handleSaveDesign = () => {
     const newDesign = {
-      id: Date.now().toString(),
+      id: generateId(),
       nombre: `Diseño ${savedDesigns.length + 1} (${customText || "LEGADO"})`,
       date: new Date().toLocaleDateString("es-MX", { day: "2-digit", month: "short", year: "numeric" }),
       colors: activeColors,

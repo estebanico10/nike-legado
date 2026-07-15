@@ -18,9 +18,10 @@ export default function ProfilePage() {
     navigate("/login");
   };
 
+  const { orders } = useOrderStore();
+  
   if (!user) return null;
 
-  const { orders } = useOrderStore();
   const orderHistory = orders.filter(o => o.customerEmail === user.email);
 
   return (
@@ -79,7 +80,7 @@ export default function ProfilePage() {
                 <div style={{ position: "absolute", left: "11px", top: "8px", bottom: "8px", width: "2px", backgroundColor: "#222" }}></div>
                 
                 <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-                  {orderHistory.map((order, index) => {
+                  {orderHistory.map((order) => {
                     const isDelivered = order.status === "Entregado";
                     const isProcessing = order.status === "Procesando";
                     
