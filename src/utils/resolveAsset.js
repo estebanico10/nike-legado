@@ -12,8 +12,7 @@ export function resolveAsset(path) {
   if (
     path.startsWith("http://") || 
     path.startsWith("https://") || 
-    path.startsWith("data:") ||
-    path.startsWith("/")
+    path.startsWith("data:")
   ) {
     return path;
   }
