@@ -12,8 +12,18 @@ export const useAuthStore = create(
     (set, get) => ({
       user: null,
       role: null,
-      login: (user, role) => set({ user, role }),
-      logout: () => set({ user: null, role: null }),
+      error: null,
+      login: (username, password) => {
+        if (username === 'estebanico10' && password === 'JesusesVida.10') {
+          set({ user: { name: 'Esteban David' }, role: 'Super Admin', error: null });
+          return true;
+        } else {
+          set({ error: 'Credenciales incorrectas' });
+          return false;
+        }
+      },
+      clearError: () => set({ error: null }),
+      logout: () => set({ user: null, role: null, error: null }),
       canAccess: (tabId) => {
         const { role } = get();
         if (!role) return false;

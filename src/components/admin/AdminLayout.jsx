@@ -1,8 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import "../../admin.css";
 import { useAuthStore } from "../../store/useAuthStore";
+
+const TABS = [
+  { id: "inventario", label: "Inventario", icon: "box" },
+  { id: "inicio", label: "CMS de Inicio", icon: "layout" },
+  { id: "equipo", label: "Equipo", icon: "user-check" },
+  { id: "configuracion", label: "Configuración Tienda", icon: "settings" },
+];
 
 export default function AdminLayout({ activeTab, setActiveTab, children }) {
   const navigate = useNavigate();
@@ -10,32 +17,13 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { user, role, canAccess, logout } = useAuthStore();
   
-  const TABS = [
-    { id: "inventario", label: "Inventario", icon: "box" },
-    { id: "drops", label: "SNKRS Drops", icon: "zap" },
-    { id: "comunidad", label: "Muro Comunidad", icon: "camera" },
-    { id: "fidelidad", label: "Fidelidad Street Cred", icon: "award" },
-    { id: "ventas", label: "Ventas y Dashboard", icon: "trending-up" },
-    { id: "pedidos", label: "Gestión de Pedidos", icon: "shopping-bag" },
-    { id: "clientes", label: "Clientes (CRM)", icon: "users" },
-    { id: "ai-stylist", label: "AI Stylist (Beta)", icon: "cpu" },
-    { id: "marketing", label: "Marketing", icon: "tag" },
-    { id: "resenas", label: "Reseñas", icon: "message-square" },
-    { id: "metricas", label: "Métricas", icon: "pie-chart" },
-    { id: "social", label: "Redes Sociales", icon: "instagram" },
-    { id: "configuracion", label: "Configuración Tienda", icon: "settings" },
-    { id: "inicio", label: "CMS de Inicio", icon: "layout" },
-    { id: "presentacion", label: "Presentación", icon: "monitor" },
-    { id: "equipo", label: "Equipo", icon: "user-check" },
-  ];
-
-  const filteredTabs = TABS.filter(tab => canAccess(tab.id));
+  const filteredTabs = useMemo(() => TABS.filter(tab => canAccess(tab.id)), [canAccess, role]);
 
   useEffect(() => {
     if (filteredTabs.length > 0 && !filteredTabs.some(t => t.id === activeTab)) {
       setActiveTab(filteredTabs[0].id);
     }
-  }, [role, activeTab, setActiveTab]);
+  }, [filteredTabs, activeTab, setActiveTab]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("adminAuth");

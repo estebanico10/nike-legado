@@ -1,13 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../../store/useAuthStore";
 
 export default function AdminAuth({ children }) {
-  const { user, login } = useAuthStore();
-  
-  const handleLogin = (role) => {
-    login({ name: `Demo ${role}` }, role);
-    sessionStorage.setItem("adminAuth", "true");
+  const { user, login, error, clearError } = useAuthStore();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    // Simular un pequeño delay de red para efecto UX
+    await new Promise(r => setTimeout(r, 600));
+    
+    const success = login(username, password);
+    setLoading(false);
+    
+    if (success) {
+      sessionStorage.setItem("adminAuth", "true");
+    }
   };
 
   if (user) {
@@ -52,20 +69,46 @@ export default function AdminAuth({ children }) {
               </svg>
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", color: "#F5F5F5", textTransform: "uppercase" }}>Acceso Restringido</h1>
-            <p style={{ color: "#757575", fontSize: "var(--type-body-sm)", marginTop: "var(--space-xs)" }}>Selecciona un rol para ingresar</p>
+            <p style={{ color: "#757575", fontSize: "var(--type-body-sm)", marginTop: "var(--space-xs)" }}>Ingresa tus credenciales de administrador</p>
           </div>
 
-          <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-            <button onClick={() => handleLogin('Super Admin')} className="btn btn--volt" style={{ padding: "14px", width: "100%" }}>
-              ⚡ Demo Login: Super Admin
+          <form onSubmit={handleSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            {error && (
+              <div style={{ padding: "var(--space-sm)", backgroundColor: "rgba(211, 0, 5, 0.1)", border: "1px solid #D30005", borderRadius: "var(--radius-sm)", color: "#D30005", fontSize: "var(--type-body-sm)", textAlign: "center" }}>
+                {error}
+              </div>
+            )}
+            
+            <div>
+              <label className="admin-label" style={{ color: "#A0A0A0", fontSize: "var(--type-caption)", marginBottom: "var(--space-xs)", display: "block" }}>Usuario</label>
+              <input 
+                type="text" 
+                className="admin-input" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                style={{ width: "100%", padding: "12px", backgroundColor: "#1A1A1A", border: "1px solid #333", color: "#F5F5F5", borderRadius: "var(--radius-sm)" }}
+                placeholder="Ej. estebanico10"
+              />
+            </div>
+
+            <div>
+              <label className="admin-label" style={{ color: "#A0A0A0", fontSize: "var(--type-caption)", marginBottom: "var(--space-xs)", display: "block" }}>Contraseña</label>
+              <input 
+                type="password" 
+                className="admin-input" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{ width: "100%", padding: "12px", backgroundColor: "#1A1A1A", border: "1px solid #333", color: "#F5F5F5", borderRadius: "var(--radius-sm)" }}
+                placeholder="••••••••••••"
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="btn btn--volt" style={{ padding: "14px", width: "100%", marginTop: "var(--space-sm)", opacity: loading ? 0.7 : 1 }}>
+              {loading ? "Verificando..." : "Iniciar Sesión ⚡"}
             </button>
-            <button onClick={() => handleLogin('Analista')} className="btn" style={{ padding: "14px", width: "100%", backgroundColor: "#333", color: "#fff", border: "none" }}>
-              ⚡ Demo Login: Analista
-            </button>
-            <button onClick={() => handleLogin('Moderador')} className="btn" style={{ padding: "14px", width: "100%", backgroundColor: "#333", color: "#fff", border: "none" }}>
-              ⚡ Demo Login: Moderador
-            </button>
-          </div>
+          </form>
         </motion.div>
       </AnimatePresence>
     </div>
