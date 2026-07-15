@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, MessageCircle, Share2, MapPin, Flame, Send, Sparkles, Tag } from "./CommunityIcons";
+import { MessageCircle, Share2, MapPin, Flame, Send, Sparkles, Tag } from "./CommunityIcons";
 import { useCommunityStore, useLoyaltyStore } from "../../store/useStore";
 import { resolveAsset } from "../../utils/resolveAsset";
 import { useToast } from "../../context/ToastContext";
@@ -67,77 +67,28 @@ export default function OutfitCard({ post }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      style={{
-        backgroundColor: "rgba(18, 18, 18, 0.85)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        border: post.featured ? "1px solid rgba(212, 255, 0, 0.4)" : "1px solid rgba(255, 255, 255, 0.08)",
-        borderRadius: "var(--radius-lg)",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        boxShadow: post.featured 
-          ? "0 12px 36px rgba(212, 255, 0, 0.08), 0 4px 12px rgba(0,0,0,0.4)" 
-          : "0 10px 30px rgba(0,0,0,0.3)",
-        position: "relative",
-        transition: "border-color 0.3s ease, box-shadow 0.3s ease"
-      }}
-      whileHover={{
-        y: -4,
-        borderColor: post.featured ? "rgba(212, 255, 0, 0.7)" : "rgba(255, 255, 255, 0.2)"
-      }}
+      className={`bg-[#121212]/85 backdrop-blur-md rounded-2xl overflow-hidden flex flex-col relative transition-all duration-300 group hover:-translate-y-1 ${post.featured ? 'border border-[rgba(212,255,0,0.4)] shadow-[0_12px_36px_rgba(212,255,0,0.08),0_4px_12px_rgba(0,0,0,0.4)] hover:border-[rgba(212,255,0,0.7)]' : 'border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:border-white/20'}`}
     >
       {/* Header del Post */}
-      <div style={{
-        padding: "var(--space-md) var(--space-lg)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.05)"
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{
-            width: "38px",
-            height: "38px",
-            borderRadius: "50%",
-            background: post.featured 
-              ? "linear-gradient(135deg, var(--color-volt), #111)" 
-              : "linear-gradient(135deg, #333, #1a1a1a)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: post.featured ? "#000" : "#fff",
-            fontWeight: 800,
-            fontSize: "14px",
-            border: post.featured ? "2px solid var(--color-volt)" : "1px solid rgba(255,255,255,0.15)"
-          }}>
+      <div className="p-4 px-5 flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-extrabold text-sm ${post.featured ? 'bg-gradient-to-br from-[var(--color-volt)] to-[#111] text-black border-2 border-[var(--color-volt)]' : 'bg-gradient-to-br from-[#333] to-[#1a1a1a] text-white border border-white/15'}`}>
             {authorName.replace("@", "").charAt(0).toUpperCase()}
           </div>
           <div>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px"
-            }}>
-              <span style={{ fontWeight: 700, color: "#fff", fontSize: "14px", letterSpacing: "0.3px" }}>
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-white text-sm tracking-[0.3px]">
                 {authorName}
               </span>
               {post.featured && (
-                <span title="Destacado por Nike Legado" style={{ color: "var(--color-volt)", display: "flex" }}>
+                <span title="Destacado por Nike Legado" className="text-[var(--color-volt)] flex">
                   <Sparkles size={14} />
                 </span>
               )}
             </div>
             {post.location && (
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                color: "#999",
-                fontSize: "12px",
-                marginTop: "2px"
-              }}>
-                <MapPin size={12} style={{ color: "var(--color-volt)" }} />
+              <div className="flex items-center gap-1 text-[#999] text-xs mt-0.5">
+                <MapPin size={12} className="text-[var(--color-volt)]" />
                 <span>{post.location}</span>
               </div>
             )}
@@ -146,158 +97,63 @@ export default function OutfitCard({ post }) {
 
         {/* Badge Destacado */}
         {post.featured && (
-          <span style={{
-            backgroundColor: "rgba(212, 255, 0, 0.15)",
-            color: "var(--color-volt)",
-            border: "1px solid var(--color-volt)",
-            padding: "4px 10px",
-            borderRadius: "20px",
-            fontSize: "10px",
-            fontWeight: 800,
-            textTransform: "uppercase",
-            letterSpacing: "1px",
-            display: "flex",
-            alignItems: "center",
-            gap: "4px"
-          }}>
+          <span className="bg-[rgba(212,255,0,0.15)] text-[var(--color-volt)] border border-[var(--color-volt)] px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[1px] flex items-center gap-1">
             <Flame size={12} fill="var(--color-volt)" /> Destacado
           </span>
         )}
       </div>
 
       {/* Imagen del Look */}
-      <div style={{
-        position: "relative",
-        width: "100%",
-        paddingTop: "115%",
-        backgroundColor: "#0d0d0d",
-        overflow: "hidden"
-      }}>
+      <div className="relative w-full pt-[115%] bg-[#0d0d0d] overflow-hidden">
         <motion.img
           src={resolveAsset(imageSrc)}
           alt={`Look de ${authorName} - ${post.shoe || "Nike Style"}`}
           loading="lazy"
           whileHover={{ scale: 1.04 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block"
-          }}
+          className="absolute inset-0 w-full h-full object-cover block"
         />
 
         {/* Gradiente inferior en imagen */}
-        <div style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "40%",
-          background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)",
-          pointerEvents: "none"
-        }} />
+        <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-black/85 to-transparent pointer-events-none" />
 
         {/* Zapatilla Nike Llevada Tag */}
         {post.shoe && (
-          <div style={{
-            position: "absolute",
-            bottom: "14px",
-            left: "14px",
-            right: "14px",
-            display: "flex",
-            alignItems: "center"
-          }}>
-            <div style={{
-              backgroundColor: "rgba(10, 10, 10, 0.85)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              padding: "6px 12px",
-              borderRadius: "30px",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              color: "#fff",
-              fontSize: "12px",
-              fontWeight: 600,
-              boxShadow: "0 4px 12px rgba(0,0,0,0.5)"
-            }}>
-              <Tag size={12} style={{ color: "var(--color-volt)" }} />
-              <span style={{ color: "#ccc", fontWeight: 400 }}>Zapa:</span>
-              <span style={{ color: "var(--color-volt)", fontWeight: 700 }}>{post.shoe}</span>
+          <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center">
+            <div className="bg-[#0a0a0a]/85 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full inline-flex items-center gap-2 text-white text-xs font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+              <Tag size={12} className="text-[var(--color-volt)]" />
+              <span className="text-[#ccc] font-normal">Zapa:</span>
+              <span className="text-[var(--color-volt)] font-bold">{post.shoe}</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Contenido / Descripción */}
-      <div style={{ padding: "var(--space-lg)", flex: 1, display: "flex", flexDirection: "column" }}>
-        <p style={{
-          color: "#ddd",
-          fontSize: "14px",
-          lineHeight: "1.5",
-          margin: "0 0 var(--space-md) 0",
-          fontFamily: "var(--font-body)"
-        }}>
+      <div className="p-5 flex-1 flex flex-col">
+        <p className="text-[#ddd] text-sm leading-relaxed m-0 mb-4 font-body">
           {post.description}
         </p>
 
         {/* Action Bar (Likes, Comentarios, Compartir) */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingTop: "var(--space-sm)",
-          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-          marginTop: "auto"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-auto">
+          <div className="flex items-center gap-4">
             {/* Botón Like */}
             <motion.button
               whileTap={{ scale: 0.88 }}
               onClick={handleLikeClick}
-              style={{
-                background: isLiked ? "rgba(212, 255, 0, 0.15)" : "rgba(255, 255, 255, 0.04)",
-                border: isLiked ? "1px solid var(--color-volt)" : "1px solid rgba(255, 255, 255, 0.1)",
-                color: isLiked ? "var(--color-volt)" : "#ccc",
-                padding: "8px 14px",
-                borderRadius: "20px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                cursor: "pointer",
-                fontWeight: 700,
-                fontSize: "13px",
-                transition: "all 0.2s ease"
-              }}
+              className={`px-3.5 py-2 rounded-full flex items-center gap-2 cursor-pointer font-bold text-[13px] transition-all duration-200 ${isLiked ? 'bg-[rgba(212,255,0,0.15)] border border-[var(--color-volt)] text-[var(--color-volt)]' : 'bg-white/5 border border-white/10 text-[#ccc] hover:bg-white/10'}`}
             >
               <Flame size={16} fill={isLiked ? "var(--color-volt)" : "none"} />
               <span>{likesCount}</span>
-              <span style={{ fontSize: "11px", opacity: 0.8 }}>🔥</span>
+              <span className="text-[11px] opacity-80">🔥</span>
             </motion.button>
 
             {/* Botón Comentarios */}
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={() => setShowComments(!showComments)}
-              style={{
-                background: showComments ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.04)",
-                border: showComments ? "1px solid rgba(255, 255, 255, 0.3)" : "1px solid rgba(255, 255, 255, 0.1)",
-                color: showComments ? "#fff" : "#ccc",
-                padding: "8px 14px",
-                borderRadius: "20px",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                cursor: "pointer",
-                fontWeight: 600,
-                fontSize: "13px",
-                transition: "all 0.2s ease"
-              }}
+              className={`px-3.5 py-2 rounded-full flex items-center gap-1.5 cursor-pointer font-semibold text-[13px] transition-all duration-200 ${showComments ? 'bg-white/10 border border-white/30 text-white' : 'bg-white/5 border border-white/10 text-[#ccc] hover:bg-white/10'}`}
             >
               <MessageCircle size={16} />
               <span>{commentsList.length}</span>
@@ -309,19 +165,7 @@ export default function OutfitCard({ post }) {
             whileTap={{ scale: 0.9 }}
             onClick={handleShare}
             title="Compartir look"
-            style={{
-              background: "transparent",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              color: "#999",
-              width: "36px",
-              height: "36px",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              transition: "all 0.2s ease"
-            }}
+            className="bg-transparent border border-white/10 text-[#999] w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200 hover:text-white hover:border-white/30 hover:bg-white/5"
           >
             <Share2 size={15} />
           </motion.button>
@@ -335,61 +179,31 @@ export default function OutfitCard({ post }) {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              style={{ overflow: "hidden" }}
+              className="overflow-hidden"
             >
-              <div style={{
-                marginTop: "16px",
-                paddingTop: "16px",
-                borderTop: "1px dashed rgba(255, 255, 255, 0.1)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px"
-              }}>
-                <h5 style={{
-                  margin: 0,
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  color: "#aaa",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px"
-                }}>
+              <div className="mt-4 pt-4 border-t border-dashed border-white/10 flex flex-col gap-3">
+                <h5 className="m-0 text-xs font-bold text-[#aaa] uppercase tracking-[0.5px]">
                   Comentarios del Barrio ({commentsList.length})
                 </h5>
 
                 {/* Lista de comentarios */}
-                <div style={{
-                  maxHeight: "180px",
-                  overflowY: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                  paddingRight: "4px"
-                }}>
+                <div className="max-h-[180px] overflow-y-auto flex flex-col gap-2.5 pr-1 custom-scrollbar">
                   {commentsList.length === 0 ? (
-                    <p style={{ margin: 0, fontSize: "12px", color: "#666", fontStyle: "italic" }}>
+                    <p className="m-0 text-xs text-[#666] italic">
                       Sé el primero en comentar sobre este outfit 🔥
                     </p>
                   ) : (
                     commentsList.map((c) => (
-                      <div key={c.id} style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.03)",
-                        padding: "8px 12px",
-                        borderRadius: "6px",
-                        borderLeft: c.author === "Tú" ? "2px solid var(--color-volt)" : "2px solid rgba(255,255,255,0.2)"
-                      }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "3px" }}>
-                          <span style={{
-                            fontWeight: 700,
-                            fontSize: "12px",
-                            color: c.author === "Tú" ? "var(--color-volt)" : "#fff"
-                          }}>
+                      <div key={c.id} className={`bg-white/5 p-2 px-3 rounded-md border-l-2 ${c.author === "Tú" ? 'border-l-[var(--color-volt)]' : 'border-l-white/20'}`}>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className={`font-bold text-xs ${c.author === "Tú" ? 'text-[var(--color-volt)]' : 'text-white'}`}>
                             {c.author}
                           </span>
-                          <span style={{ fontSize: "10px", color: "#777" }}>
+                          <span className="text-[10px] text-[#777]">
                             {c.date || "Ahora"}
                           </span>
                         </div>
-                        <p style={{ margin: 0, fontSize: "13px", color: "#ddd", lineHeight: "1.4" }}>
+                        <p className="m-0 text-[13px] text-[#ddd] leading-snug">
                           {c.text}
                         </p>
                       </div>
@@ -398,40 +212,19 @@ export default function OutfitCard({ post }) {
                 </div>
 
                 {/* Input de Comentario */}
-                <form onSubmit={handleCommentSubmit} style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
+                <form onSubmit={handleCommentSubmit} className="flex gap-2 mt-1">
                   <input
                     type="text"
                     placeholder="Escribe tu comentario en el barrio..."
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    style={{
-                      flex: 1,
-                      backgroundColor: "#161616",
-                      border: "1px solid rgba(255, 255, 255, 0.15)",
-                      borderRadius: "20px",
-                      padding: "8px 14px",
-                      color: "#fff",
-                      fontSize: "13px",
-                      outline: "none"
-                    }}
+                    className="flex-1 bg-[#161616] border border-white/15 rounded-full px-3.5 py-2 text-white text-[13px] outline-none focus:border-[var(--color-volt)] transition-colors"
                   />
                   <motion.button
                     type="submit"
                     whileTap={{ scale: 0.9 }}
                     disabled={!commentText.trim()}
-                    style={{
-                      backgroundColor: commentText.trim() ? "var(--color-volt)" : "#333",
-                      color: commentText.trim() ? "#000" : "#666",
-                      border: "none",
-                      width: "36px",
-                      height: "36px",
-                      borderRadius: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: commentText.trim() ? "pointer" : "not-allowed",
-                      transition: "all 0.2s ease"
-                    }}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${commentText.trim() ? 'bg-[var(--color-volt)] text-black cursor-pointer' : 'bg-[#333] text-[#666] cursor-not-allowed'}`}
                   >
                     <Send size={15} />
                   </motion.button>

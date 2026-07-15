@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Sparkles, Flame, Award, MapPin, PlusCircle } from "../components/community/CommunityIcons";
+import { Upload, Sparkles, Award, PlusCircle } from "../components/community/CommunityIcons";
 import SEO from "../components/SEO";
 import AnimatedBackground from "../components/AnimatedBackground";
 import OutfitCard from "../components/community/OutfitCard";
@@ -39,7 +39,7 @@ export default function CommunityPage() {
   }, [posts, activeTab]);
 
   return (
-    <div style={{ position: "relative", minHeight: "100vh", paddingBottom: "var(--space-4xl)" }}>
+    <div className="relative min-h-screen pb-32">
       <SEO 
         title="Comunidad & Street Style" 
         description="Comparte cómo combinas tus zapatillas Nike Legado. Gana Street Cred e inspírate en el barrio." 
@@ -47,54 +47,17 @@ export default function CommunityPage() {
       <AnimatedBackground />
 
       {/* Hero Banner del Muro */}
-      <section style={{
-        position: "relative",
-        padding: "var(--space-4xl) 0 var(--space-2xl)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-        overflow: "hidden"
-      }}>
+      <section className="relative pt-32 pb-16 border-b border-white/10 overflow-hidden">
         {/* Luces decorativas de fondo */}
-        <div style={{
-          position: "absolute",
-          top: "-50%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "700px",
-          height: "400px",
-          background: "radial-gradient(circle, rgba(212, 255, 0, 0.08) 0%, rgba(0,0,0,0) 70%)",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-          zIndex: 0
-        }} />
+        <div className="absolute top-[-50%] left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[radial-gradient(circle,rgba(212,255,0,0.08)_0%,rgba(0,0,0,0)_70%)] blur-[60px] pointer-events-none z-0" />
 
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            maxWidth: "840px",
-            margin: "0 auto"
-          }}>
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="flex flex-col items-center text-center max-w-[840px] mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                backgroundColor: "rgba(212, 255, 0, 0.1)",
-                color: "var(--color-volt)",
-                border: "1px solid rgba(212, 255, 0, 0.4)",
-                padding: "6px 16px",
-                borderRadius: "30px",
-                fontSize: "12px",
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: "1.5px",
-                marginBottom: "var(--space-md)"
-              }}
+              className="inline-flex items-center gap-2 bg-[rgba(212,255,0,0.1)] text-[var(--color-volt)] border border-[rgba(212,255,0,0.4)] px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[1.5px] mb-6"
             >
               <Sparkles size={15} /> COMUNIDAD ECUADOR & LATAM
             </motion.div>
@@ -103,35 +66,18 @@ export default function CommunityPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2rem, 5vw, 3.8rem)",
-                fontWeight: 900,
-                textTransform: "uppercase",
-                letterSpacing: "-1px",
-                lineHeight: "1.05",
-                margin: "0 0 var(--space-md) 0",
-                color: "#fff",
-                textShadow: "0 10px 30px rgba(0,0,0,0.5)"
-              }}
+              className="font-display text-[clamp(2rem,5vw,3.8rem)] font-black uppercase tracking-[-1px] leading-[1.05] m-0 mb-6 text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
             >
-              EL MURO DEL BARRIO — <span style={{ color: "var(--color-volt)" }}>STREET STYLE OOTD</span>
+              EL MURO DEL BARRIO — <span className="text-[var(--color-volt)]">STREET STYLE OOTD</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              style={{
-                color: "#bbb",
-                fontSize: "clamp(1rem, 2vw, 1.2rem)",
-                lineHeight: "1.6",
-                margin: "0 0 var(--space-xl) 0",
-                maxWidth: "680px",
-                fontFamily: "var(--font-body)"
-              }}
+              className="text-[#bbb] text-[clamp(1rem,2vw,1.2rem)] leading-[1.6] m-0 mb-10 max-w-[680px] font-body"
             >
-              Aquí el estilo no se dicta en pasarelas, se construye en la calle. Comparte tu outfit, vota por los mejores looks y acumula <strong>Street Cred</strong> para canjear beneficios exclusivos en la tienda.
+              Aquí el estilo no se dicta en pasarelas, se construye en la calle. Comparte tu outfit, vota por los mejores looks y acumula <strong className="text-white">Street Cred</strong> para canjear beneficios exclusivos en la tienda.
             </motion.p>
 
             {/* CTA y Stats del Usuario */}
@@ -139,56 +85,24 @@ export default function CommunityPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexWrap: "wrap",
-                gap: "var(--space-lg)"
-              }}
+              className="flex items-center justify-center flex-wrap gap-6"
             >
               <motion.button
                 onClick={() => setIsModalOpen(true)}
                 whileHover={{ scale: 1.04, boxShadow: "0 12px 32px rgba(212, 255, 0, 0.4)" }}
                 whileTap={{ scale: 0.96 }}
-                style={{
-                  backgroundColor: "var(--color-volt)",
-                  color: "#000",
-                  border: "none",
-                  padding: "16px 32px",
-                  borderRadius: "35px",
-                  fontFamily: "var(--font-display)",
-                  fontSize: "16px",
-                  fontWeight: 900,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  boxShadow: "0 8px 24px rgba(212, 255, 0, 0.25)"
-                }}
+                className="bg-[var(--color-volt)] text-black border-none px-8 py-4 rounded-[35px] font-display text-base font-black uppercase tracking-[0.5px] cursor-pointer flex items-center gap-2.5 shadow-[0_8px_24px_rgba(212,255,0,0.25)]"
               >
                 <Upload size={20} strokeWidth={2.5} /> SUBIR MI OUTFIT (+150 PTS)
               </motion.button>
 
-              <div style={{
-                backgroundColor: "rgba(255, 255, 255, 0.04)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                padding: "12px 20px",
-                borderRadius: "30px",
-                display: "flex",
-                alignItems: "center",
-                gap: "12px"
-              }}>
-                <Award size={22} style={{ color: "var(--color-volt)" }} />
-                <div style={{ textAlign: "left" }}>
-                  <div style={{ fontSize: "11px", color: "#888", textTransform: "uppercase", fontWeight: 700 }}>
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-[30px] flex items-center gap-3">
+                <Award size={22} className="text-[var(--color-volt)]" />
+                <div className="text-left">
+                  <div className="text-[11px] text-[#888] uppercase font-bold">
                     Tu Street Cred actual
                   </div>
-                  <div style={{ fontSize: "16px", fontWeight: 800, color: "#fff" }}>
+                  <div className="text-base font-extrabold text-white">
                     {userPoints} PTS
                   </div>
                 </div>
@@ -199,23 +113,11 @@ export default function CommunityPage() {
       </section>
 
       {/* Navegación y Filtros de Categorías */}
-      <section style={{ padding: "var(--space-xl) 0" }}>
-        <div className="container">
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "16px",
-            marginBottom: "var(--space-xl)"
-          }}>
+      <section className="py-10">
+        <div className="container px-6 mx-auto">
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-10">
             {/* Tabs de Filtro */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              flexWrap: "wrap"
-            }}>
+            <div className="flex items-center gap-2.5 flex-wrap">
               {CATEGORY_TABS.map((tab) => {
                 const isActive = activeTab === tab;
                 return (
@@ -224,28 +126,7 @@ export default function CommunityPage() {
                     onClick={() => setActiveTab(tab)}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    style={{
-                      background: isActive 
-                        ? "var(--color-volt)" 
-                        : "rgba(255, 255, 255, 0.05)",
-                      color: isActive ? "#000" : "#ccc",
-                      border: isActive 
-                        ? "1px solid var(--color-volt)" 
-                        : "1px solid rgba(255, 255, 255, 0.1)",
-                      padding: "10px 20px",
-                      borderRadius: "30px",
-                      fontFamily: "var(--font-display)",
-                      fontSize: "14px",
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.5px",
-                      cursor: "pointer",
-                      transition: "all 0.25s ease",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      boxShadow: isActive ? "0 6px 20px rgba(212, 255, 0, 0.2)" : "none"
-                    }}
+                    className={`px-5 py-2.5 rounded-[30px] font-display text-sm font-extrabold uppercase tracking-[0.5px] cursor-pointer transition-all duration-250 flex items-center gap-1.5 ${isActive ? 'bg-[var(--color-volt)] text-black border border-[var(--color-volt)] shadow-[0_6px_20px_rgba(212,255,0,0.2)]' : 'bg-white/5 text-[#ccc] border border-white/10 hover:bg-white/10'}`}
                   >
                     {tab}
                   </motion.button>
@@ -254,8 +135,8 @@ export default function CommunityPage() {
             </div>
 
             {/* Info de resultados */}
-            <div style={{ color: "#888", fontSize: "13px", fontWeight: 600 }}>
-              Mostrando <strong style={{ color: "#fff" }}>{filteredPosts.length}</strong> looks en el muro
+            <div className="text-[#888] text-[13px] font-semibold">
+              Mostrando <strong className="text-white">{filteredPosts.length}</strong> looks en el muro
             </div>
           </div>
 
@@ -267,48 +148,20 @@ export default function CommunityPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                style={{
-                  backgroundColor: "rgba(18, 18, 18, 0.6)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  border: "1px dashed rgba(255, 255, 255, 0.15)",
-                  borderRadius: "var(--radius-xl)",
-                  padding: "var(--space-4xl) var(--space-xl)",
-                  textAlign: "center",
-                  maxWidth: "600px",
-                  margin: "40px auto"
-                }}
+                className="bg-[#121212]/60 backdrop-blur-md border border-dashed border-white/15 rounded-3xl p-16 text-center max-w-[600px] mx-auto my-10"
               >
-                <div style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "50%",
-                  backgroundColor: "rgba(212, 255, 0, 0.1)",
-                  color: "var(--color-volt)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto var(--space-md)"
-                }}>
+                <div className="w-16 h-16 rounded-full bg-[rgba(212,255,0,0.1)] text-[var(--color-volt)] flex items-center justify-center mx-auto mb-6">
                   <Sparkles size={30} />
                 </div>
-                <h3 style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "22px",
-                  fontWeight: 800,
-                  textTransform: "uppercase",
-                  color: "#fff",
-                  margin: "0 0 10px 0"
-                }}>
+                <h3 className="font-display text-[22px] font-extrabold uppercase text-white m-0 mb-2.5">
                   No hay looks en "{activeTab}" aún
                 </h3>
-                <p style={{ color: "#999", fontSize: "14px", margin: "0 0 var(--space-lg) 0" }}>
+                <p className="text-[#999] text-sm m-0 mb-8">
                   ¡Sé el pionero del barrio en esta categoría y sé destacado en la cabecera del Muro!
                 </p>
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="btn btn--primary"
-                  style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
+                  className="inline-flex items-center gap-2 bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-200 transition-colors"
                 >
                   <PlusCircle size={18} /> Subir el primer outfit
                 </button>
@@ -317,12 +170,7 @@ export default function CommunityPage() {
               <motion.div
                 key="grid-layout"
                 layout
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                  gap: "var(--space-xl)",
-                  alignItems: "start"
-                }}
+                className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 items-start"
               >
                 {filteredPosts.map((post) => (
                   <OutfitCard key={post.id} post={post} />

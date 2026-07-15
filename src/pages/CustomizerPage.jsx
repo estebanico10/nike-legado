@@ -120,112 +120,31 @@ export default function CustomizerPage() {
       />
       <AnimatedBackground />
 
-      <style>{`
-        .customizer-split-grid {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-2xl);
-        }
-        @media (min-width: 1024px) {
-          .customizer-split-grid {
-            display: grid;
-            grid-template-columns: minmax(380px, 1.05fr) minmax(420px, 1.35fr);
-            gap: var(--space-2xl);
-            align-items: start;
-          }
-          .customizer-sticky-left {
-            position: sticky;
-            top: 100px;
-          }
-        }
-        .size-btn {
-          background-color: #141414;
-          border: 1px solid #292929;
-          color: #CCC;
-          font-family: var(--font-display);
-          font-size: var(--type-body);
-          font-weight: 600;
-          padding: 12px 8px;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .size-btn:hover {
-          border-color: var(--color-volt);
-          color: #FFF;
-          transform: translateY(-2px);
-        }
-        .size-btn.active {
-          background-color: var(--color-volt);
-          border-color: var(--color-volt);
-          color: var(--color-ink);
-          font-weight: 800;
-          box-shadow: 0 4px 15px rgba(206, 255, 0, 0.4);
-        }
-      `}</style>
-
-      <main style={{ minHeight: "100vh", padding: "var(--space-3xl) 0 var(--space-5xl)" }}>
-        <div className="container" style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 var(--space-lg)" }}>
+      <main className="min-h-screen py-16 pb-32">
+        <div className="container max-w-[1400px] mx-auto px-6">
           
           {/* Studio Header */}
-          <header style={{ marginBottom: "var(--space-2xl)", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "var(--space-md)", borderBottom: "1px solid #222", paddingBottom: "var(--space-lg)" }}>
+          <header className="mb-12 flex flex-wrap justify-between items-end gap-6 border-b border-neutral-800 pb-8">
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-                <span style={{
-                  backgroundColor: "var(--color-volt)",
-                  color: "var(--color-ink)",
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 800,
-                  fontSize: "11px",
-                  padding: "4px 10px",
-                  borderRadius: "20px",
-                  textTransform: "uppercase",
-                  letterSpacing: "1px"
-                }}>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">
                   EXCLUSIVO ONLINE
                 </span>
-                <span style={{ color: "#888", fontSize: "var(--type-caption)", textTransform: "uppercase", letterSpacing: "1px" }}>
+                <span className="text-neutral-400 text-xs uppercase tracking-wider">
                   ESTUDIO 3D DIGITAL
                 </span>
               </div>
-              <h1 style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "var(--type-h1)",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "var(--tracking-tight)",
-                color: "#F5F5F5",
-                margin: 0,
-                lineHeight: 1.1
-              }}>
-                NIKE BY YOU <span style={{ color: "var(--color-volt)" }}>— LEGADO</span>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-neutral-100 m-0 leading-tight">
+                NIKE BY YOU <span className="text-[var(--color-volt)]">— LEGADO</span>
               </h1>
-              <p style={{ color: "#999", fontSize: "var(--type-body-sm)", margin: "8px 0 0 0", maxWidth: "600px" }}>
+              <p className="text-neutral-400 text-sm mt-2 max-w-2xl">
                 Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma exclusiva en el talón.
               </p>
             </div>
 
             <button
               onClick={() => setShowSavedModal(true)}
-              style={{
-                backgroundColor: "#161616",
-                border: "1px solid #333",
-                color: "#F5F5F5",
-                padding: "12px 20px",
-                borderRadius: "30px",
-                fontFamily: "var(--font-display)",
-                fontSize: "var(--type-body-sm)",
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-volt)"; e.currentTarget.style.color = "var(--color-volt)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333"; e.currentTarget.style.color = "#F5F5F5"; }}
+              className="bg-neutral-900 border border-neutral-700 text-neutral-100 px-5 py-3 rounded-full font-display text-sm font-semibold uppercase tracking-wider flex items-center gap-2 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt)] cursor-pointer"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
@@ -235,10 +154,10 @@ export default function CustomizerPage() {
           </header>
 
           {/* Desktop Split View Layout */}
-          <div className="customizer-split-grid">
+          <div className="flex flex-col lg:grid lg:grid-cols-[minmax(380px,1.05fr)_minmax(420px,1.35fr)] gap-12 items-start">
             
             {/* LEFT COLUMN: Sticky Sneaker SVG Preview + Price Breakdown Card */}
-            <div className="customizer-sticky-left" style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
+            <div className="flex flex-col gap-8 lg:sticky lg:top-[100px]">
               
               <SneakerCustomizer
                 mode="preview"
@@ -251,67 +170,43 @@ export default function CustomizerPage() {
               />
 
               {/* Price Breakdown Card */}
-              <div style={{
-                backgroundColor: "#111111",
-                border: "1px solid #222",
-                borderRadius: "16px",
-                padding: "var(--space-lg)",
-                boxShadow: "0 10px 30px rgba(0,0,0,0.5)"
-              }}>
-                <h3 style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "var(--type-h4)",
-                  textTransform: "uppercase",
-                  color: "#F5F5F5",
-                  margin: "0 0 var(--space-md) 0",
-                  borderBottom: "1px solid #222",
-                  paddingBottom: "8px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
-                }}>
+              <div className="bg-[#111] border border-neutral-800 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                <h3 className="font-display text-lg uppercase text-neutral-100 m-0 mb-4 border-b border-neutral-800 pb-2 flex justify-between items-center">
                   <span>Desglose de Precio</span>
-                  <span style={{ color: "var(--color-volt)" }}>${priceDetails.totalPrice.toFixed(2)}</span>
+                  <span className="text-[var(--color-volt)]">${priceDetails.totalPrice.toFixed(2)}</span>
                 </h3>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "var(--type-body-sm)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", color: "#CCC" }}>
+                <div className="flex flex-col gap-3 text-sm">
+                  <div className="flex justify-between text-neutral-300">
                     <span>Zapatilla Base Nike By You</span>
-                    <span style={{ fontWeight: 600, color: "#FFF" }}>$149.99</span>
+                    <span className="font-semibold text-white">$149.99</span>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", color: priceDetails.premiumColorCost > 0 ? "var(--color-volt)" : "#666" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <div className={`flex justify-between ${priceDetails.premiumColorCost > 0 ? 'text-[var(--color-volt)]' : 'text-neutral-500'}`}>
+                    <span className="flex items-center gap-2">
                       Acabado Color Premium
                       {priceDetails.premiumColorCost > 0 && (
-                        <span style={{ fontSize: "10px", backgroundColor: "rgba(206,255,0,0.15)", color: "var(--color-volt)", padding: "2px 6px", borderRadius: "4px" }}>ACTIVO</span>
+                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt)] px-1.5 py-0.5 rounded">ACTIVO</span>
                       )}
                     </span>
-                    <span style={{ fontWeight: 600 }}>+${priceDetails.premiumColorCost.toFixed(2)}</span>
+                    <span className="font-semibold">+${priceDetails.premiumColorCost.toFixed(2)}</span>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", color: priceDetails.customTextCost > 0 ? "var(--color-volt)" : "#666" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <div className={`flex justify-between ${priceDetails.customTextCost > 0 ? 'text-[var(--color-volt)]' : 'text-neutral-500'}`}>
+                    <span className="flex items-center gap-2">
                       Grabado Láser en Talón ({customText || "Sin texto"})
                       {priceDetails.customTextCost > 0 && (
-                        <span style={{ fontSize: "10px", backgroundColor: "rgba(206,255,0,0.15)", color: "var(--color-volt)", padding: "2px 6px", borderRadius: "4px" }}>CUSTOM</span>
+                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt)] px-1.5 py-0.5 rounded">CUSTOM</span>
                       )}
                     </span>
-                    <span style={{ fontWeight: 600 }}>+${priceDetails.customTextCost.toFixed(2)}</span>
+                    <span className="font-semibold">+${priceDetails.customTextCost.toFixed(2)}</span>
                   </div>
 
-                  <div style={{
-                    borderTop: "1px dashed #333",
-                    marginTop: "8px",
-                    paddingTop: "12px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline"
-                  }}>
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", color: "#FFF", textTransform: "uppercase" }}>
+                  <div className="border-t border-dashed border-neutral-700 mt-2 pt-3 flex justify-between items-baseline">
+                    <span className="font-display text-lg text-white uppercase">
                       Total Inversión
                     </span>
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h2)", color: "var(--color-volt)", fontWeight: 700 }}>
+                    <span className="font-display text-2xl text-[var(--color-volt)] font-bold">
                       ${priceDetails.totalPrice.toFixed(2)}
                     </span>
                   </div>
@@ -321,7 +216,7 @@ export default function CustomizerPage() {
             </div>
 
             {/* RIGHT COLUMN: Customization Tabs, Color Palette, Size Selector & Action Buttons */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xl)" }}>
+            <div className="flex flex-col gap-10">
               
               {/* Controls mode of SneakerCustomizer */}
               <SneakerCustomizer
@@ -335,72 +230,41 @@ export default function CustomizerPage() {
               />
 
               {/* Size Selector from 24 to 30 */}
-              <div style={{
-                backgroundColor: "#111111",
-                border: "1px solid #222",
-                borderRadius: "16px",
-                padding: "var(--space-lg)"
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", textTransform: "uppercase", color: "#F5F5F5", margin: 0 }}>
-                    Selecciona Tu Talla <span style={{ color: "#888", fontSize: "14px", fontWeight: 400 }}>(CM / MX)</span>
+              <div className="bg-[#111] border border-neutral-800 rounded-2xl p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-display text-lg uppercase text-neutral-100 m-0">
+                    Selecciona Tu Talla <span className="text-neutral-500 text-sm font-normal">(CM / MX)</span>
                   </h3>
-                  <span style={{ fontSize: "var(--type-caption)", color: "var(--color-volt)", fontWeight: 600, cursor: "pointer", textDecoration: "underline" }}>
+                  <span className="text-xs text-[var(--color-volt)] font-semibold cursor-pointer underline">
                     Guía de Tallas
                   </span>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(64px, 1fr))", gap: "10px" }}>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(64px,1fr))] gap-2.5">
                   {SIZES_MX.map((size) => (
                     <button
                       key={size}
                       type="button"
                       onClick={() => setSelectedSize(size)}
-                      className={`size-btn ${selectedSize === size ? "active" : ""}`}
+                      className={`bg-[#141414] border border-[#292929] text-neutral-300 font-display text-base font-semibold py-3 px-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[var(--color-volt)] hover:text-white hover:-translate-y-0.5 ${selectedSize === size ? "bg-[var(--color-volt)] border-[var(--color-volt)] text-[var(--color-ink)] font-extrabold shadow-[0_4px_15px_rgba(206,255,0,0.4)]" : ""}`}
                     >
                       {size}
                     </button>
                   ))}
                 </div>
 
-                <p style={{ fontSize: "var(--type-caption)", color: "#777", marginTop: "12px", marginBottom: 0 }}>
+                <p className="text-xs text-neutral-500 mt-3 mb-0">
                   📏 Ajuste fiel a la talla. Recomendamos pedir media talla más si prefieres ajuste holgado para básquetbol o uso urbano.
                 </p>
               </div>
 
               {/* Action Buttons */}
-              <div style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "var(--space-md)",
-                backgroundColor: "#141414",
-                border: "1px solid #2A2A2A",
-                borderRadius: "16px",
-                padding: "var(--space-lg)"
-              }}>
+              <div className="flex flex-col gap-4 bg-[#141414] border border-[#2a2a2a] rounded-2xl p-6 sticky bottom-4 z-10 lg:static">
                 <motion.button
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={handleAddToCart}
-                  style={{
-                    backgroundColor: "var(--color-volt)",
-                    color: "var(--color-ink)",
-                    fontFamily: "var(--font-display)",
-                    fontSize: "var(--type-h3)",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    border: "none",
-                    borderRadius: "12px",
-                    padding: "18px var(--space-lg)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "12px",
-                    boxShadow: "0 8px 25px rgba(206, 255, 0, 0.3)",
-                    transition: "all 0.2s"
-                  }}
+                  className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display text-xl font-bold uppercase tracking-wider border-none rounded-xl py-4 px-6 cursor-pointer flex items-center justify-center gap-3 shadow-[0_8px_25px_rgba(206,255,0,0.3)] transition-all duration-200 w-full"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="9" cy="21" r="1" />
@@ -414,26 +278,7 @@ export default function CustomizerPage() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={handleSaveDesign}
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "#F5F5F5",
-                    fontFamily: "var(--font-display)",
-                    fontSize: "var(--type-h4)",
-                    fontWeight: 600,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    border: "2px solid #333",
-                    borderRadius: "12px",
-                    padding: "16px var(--space-lg)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "10px",
-                    transition: "all 0.2s"
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-volt)"; e.currentTarget.style.color = "var(--color-volt)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333"; e.currentTarget.style.color = "#F5F5F5"; }}
+                  className="bg-transparent text-neutral-100 font-display text-lg font-semibold uppercase tracking-wider border-2 border-neutral-800 rounded-xl py-3.5 px-6 cursor-pointer flex items-center justify-center gap-2.5 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt)] w-full"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
@@ -441,7 +286,7 @@ export default function CustomizerPage() {
                   GUARDAR EN MIS DISEÑOS
                 </motion.button>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "8px", borderTop: "1px solid #222", fontSize: "var(--type-micro)", color: "#888" }}>
+                <div className="flex justify-between items-center pt-2 border-t border-neutral-800 text-[10px] sm:text-xs text-neutral-500 w-full">
                   <span>🔒 Garantía de fabricación artesanal 3-4 semanas</span>
                   <span>⚡ Envío gratis en Ecuador & MX</span>
                 </div>
@@ -456,127 +301,75 @@ export default function CustomizerPage() {
       {/* Saved Designs Modal */}
       <AnimatePresence>
         {showSavedModal && (
-          <div style={{
-            position: "fixed",
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.85)",
-            backdropFilter: "blur(10px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "var(--space-md)"
-          }}>
+          <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              style={{
-                backgroundColor: "#111111",
-                border: "1px solid #333",
-                borderRadius: "20px",
-                padding: "var(--space-xl)",
-                width: "100%",
-                maxWidth: "680px",
-                maxHeight: "85vh",
-                display: "flex",
-                flexDirection: "column",
-                boxShadow: "0 25px 50px rgba(0,0,0,0.8)"
-              }}
+              className="bg-[#111] border border-neutral-800 rounded-2xl p-8 w-full max-w-[680px] max-h-[85vh] flex flex-col shadow-[0_25px_50px_rgba(0,0,0,0.8)]"
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)", borderBottom: "1px solid #222", paddingBottom: "var(--space-md)" }}>
+              <div className="flex justify-between items-center mb-6 border-b border-neutral-800 pb-4">
                 <div>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", textTransform: "uppercase", color: "#FFF", margin: 0 }}>
+                  <h3 className="font-display text-2xl uppercase text-white m-0">
                     Mis Diseños Guardados
                   </h3>
-                  <p style={{ fontSize: "var(--type-caption)", color: "#888", margin: "4px 0 0 0" }}>
+                  <p className="text-xs text-neutral-500 mt-1 mb-0">
                     Carga tus combinaciones personalizadas para continuar editando o comprar.
                   </p>
                 </div>
                 <button
                   onClick={() => setShowSavedModal(false)}
-                  style={{ background: "none", border: "none", color: "#888", cursor: "pointer", padding: "4px" }}
+                  className="bg-transparent border-none text-neutral-500 cursor-pointer p-1 hover:text-white transition-colors"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
               </div>
 
-              <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", paddingRight: "4px" }}>
+              <div className="flex-1 overflow-y-auto flex flex-col gap-3 pr-1 custom-scrollbar">
                 {savedDesigns.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "var(--space-2xl) 0", color: "#666" }}>
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ margin: "0 auto 12px", opacity: 0.5 }}>
+                  <div className="text-center py-12 text-neutral-500">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mx-auto mb-3 opacity-50">
                       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                     </svg>
-                    <p style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", textTransform: "uppercase" }}>No tienes diseños guardados</p>
-                    <p style={{ fontSize: "var(--type-caption)" }}>Crea una combinación única y haz clic en "Guardar en Mis Diseños".</p>
+                    <p className="font-display text-lg uppercase m-0 mb-1">No tienes diseños guardados</p>
+                    <p className="text-xs m-0">Crea una combinación única y haz clic en "Guardar en Mis Diseños".</p>
                   </div>
                 ) : (
                   savedDesigns.map((design) => (
                     <div
                       key={design.id}
                       onClick={() => handleLoadDesign(design)}
-                      style={{
-                        backgroundColor: "#181818",
-                        border: "1px solid #2A2A2A",
-                        borderRadius: "12px",
-                        padding: "16px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        transition: "all 0.2s"
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-volt)"; e.currentTarget.style.backgroundColor = "#202020"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.backgroundColor = "#181818"; }}
+                      className="bg-[#181818] border border-[#2a2a2a] rounded-xl p-4 flex justify-between items-center cursor-pointer transition-all duration-200 hover:border-[var(--color-volt)] hover:bg-[#202020] group"
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                        <div style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "10px",
-                          backgroundColor: "#0F0F0F",
-                          border: "1px solid #333",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          position: "relative",
-                          overflow: "hidden"
-                        }}>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-lg bg-[#0f0f0f] border border-neutral-800 flex items-center justify-center relative overflow-hidden">
                           {/* Mini dots showing colors */}
-                          <div style={{ display: "flex", gap: "3px" }}>
-                            <div style={{ width: "12px", height: "12px", borderRadius: "50%", backgroundColor: design.colors?.swoosh?.hex || "#CEFF00" }} />
-                            <div style={{ width: "12px", height: "12px", borderRadius: "50%", backgroundColor: design.colors?.upper?.hex || "#FFF" }} />
-                            <div style={{ width: "12px", height: "12px", borderRadius: "50%", backgroundColor: design.colors?.sole?.hex || "#111" }} />
+                          <div className="flex gap-1">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: design.colors?.swoosh?.hex || "#CEFF00" }} />
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: design.colors?.upper?.hex || "#FFF" }} />
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: design.colors?.sole?.hex || "#111" }} />
                           </div>
                         </div>
 
                         <div>
-                          <h4 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-body)", textTransform: "uppercase", color: "#FFF", margin: 0 }}>
+                          <h4 className="font-display text-base uppercase text-white m-0">
                             {design.nombre || `Diseño #${design.id.slice(-4)}`}
                           </h4>
-                          <span style={{ fontSize: "var(--type-caption)", color: "#888" }}>
-                            Talón: <strong style={{ color: "var(--color-volt)" }}>{design.customText || "LEGADO"}</strong> | {design.date || "Hoy"}
+                          <span className="text-xs text-neutral-500">
+                            Talón: <strong className="text-[var(--color-volt)]">{design.customText || "LEGADO"}</strong> | {design.date || "Hoy"}
                           </span>
                         </div>
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                        <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--color-volt)", fontSize: "var(--type-h4)" }}>
+                      <div className="flex items-center gap-4">
+                        <span className="font-display font-bold text-[var(--color-volt)] text-lg">
                           ${design.price ? design.price.toFixed(2) : "159.99"}
                         </span>
 
                         <button
                           onClick={(e) => handleDeleteDesign(design.id, e)}
                           title="Eliminar diseño"
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            color: "#666",
-                            cursor: "pointer",
-                            padding: "6px"
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.color = "#D30005"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.color = "#666"; }}
+                          className="bg-transparent border-none text-neutral-500 cursor-pointer p-1.5 hover:text-red-600 transition-colors"
                         >
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                         </button>
