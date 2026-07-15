@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useCouponStore } from './useCouponStore';
 
 export const useUIStore = create((set) => ({
   isLuckyWheelOpen: false,
@@ -26,17 +27,23 @@ export const useCartStore = create(
       couponCode: null,
       discountPercent: 0,
       applyCoupon: (code) => {
-        if (code.toUpperCase() === "NIKE10") {
-          set({ couponCode: "NIKE10", discountPercent: 10 });
-          return { success: true, message: "Cupón aplicado: 10% OFF" };
+        const cartTotal = get().items.reduce((total, item) => total + (item.precio * item.quantity), 0);
+        const { valid, message, coupon } = useCouponStore.getState().validateCoupon(code, cartTotal);
+        
+        if (valid) {
+          useCouponStore.getState().incrementUsage(code);
+          set({ 
+            couponCode: coupon.code, 
+            discountPercent: coupon.type === "percentage" ? coupon.value : 0,
+            discountAmount: coupon.type === "fixed" ? coupon.value : 0,
+            freeShipping: coupon.type === "freeshipping"
+          });
+          return { success: true, message: `Cupón aplicado: ${coupon.description}` };
         }
-        if (code.toUpperCase() === "LEGADO20") {
-          set({ couponCode: "LEGADO20", discountPercent: 20 });
-          return { success: true, message: "Cupón aplicado: 20% OFF" };
-        }
-        return { success: false, message: "Cupón inválido o expirado" };
+        
+        return { success: false, message: message || "Cupón inválido o expirado" };
       },
-      removeCoupon: () => set({ couponCode: null, discountPercent: 0 }),
+      removeCoupon: () => set({ couponCode: null, discountPercent: 0, discountAmount: 0, freeShipping: false }),
       addToCart: (product, size, quantity = 1, color = null) => {
         set((state) => {
           const existingItemIndex = state.items.findIndex(

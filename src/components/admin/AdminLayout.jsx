@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import "../../admin.css";
 import { useAuthStore } from "../../store/useAuthStore";
+import AdminNotifications from "./AdminNotifications";
 
 const CATEGORIES = [
   "Análisis y Resumen",
@@ -27,6 +28,7 @@ const TABS = [
   { id: "fidelidad", label: "Club Lealtad", icon: "fidelidad", category: "Marketing y Ventas" },
   { id: "drops", label: "Lanzamientos", icon: "drops", category: "Marketing y Ventas" },
   { id: "ai-stylist", label: "AI Stylist", icon: "ai-stylist", category: "Marketing y Ventas" },
+  { id: "cupones", label: "Cupones", icon: "cupones", category: "Marketing y Ventas" },
   
   // Contenido y Comunidad
   { id: "inicio", label: "CMS de Inicio", icon: "inicio", category: "Contenido y Comunidad" },
@@ -76,6 +78,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
       case "pedidos": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>;
       case "clientes": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
       case "marketing": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
+      case "cupones": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
       case "resenas": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>;
       case "metricas": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>;
       case "social": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>;
@@ -187,7 +190,8 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
             </div>
           </div>
 
-          <div className="admin-header-actions">
+          <div className="admin-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <AdminNotifications setActiveTab={setActiveTab} />
             <button onClick={handleLogout} className="btn btn--secondary btn--sm">
               Cerrar Sesión
             </button>

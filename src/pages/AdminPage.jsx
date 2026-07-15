@@ -22,6 +22,7 @@ import AuditLogsAdmin from "../components/admin/AuditLogsAdmin";
 import ThemeAdmin from "../components/admin/ThemeAdmin";
 import SEOAdmin from "../components/admin/SEOAdmin";
 import LangAdmin from "../components/admin/LangAdmin";
+import CouponsAdmin from "../components/admin/CouponsAdmin";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -39,6 +40,7 @@ export default function AdminPage() {
       case "fidelidad": return <LoyaltyAdmin />;
       case "drops": return <DropsAdmin />;
       case "ai-stylist": return <AIStylist />;
+      case "cupones": return <CouponsAdmin />;
       
       case "inicio": return <HomeAdmin />;
       case "comunidad": return <CommunityAdmin />;
