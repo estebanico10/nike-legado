@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ProductProvider } from "./context/ProductContext";
 import { SiteProvider } from "./context/SiteContext";
 import { ToastProvider, useToast } from "./context/ToastContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { SEOProvider } from "./context/SEOContext";
+import { LangProvider } from "./context/LangContext";
 import Navbar from "./components/Navbar";
 import CinematicLoader from "./components/ui/CinematicLoader";
 import PageTransition from "./components/PageTransition";
@@ -37,17 +40,12 @@ import ExitIntentPopup from "./components/ExitIntentPopup";
 import LuckyWheel from "./components/LuckyWheel";
 import CartDrawer from "./components/CartDrawer";
 import AIPersonalShopper from "./components/AIPersonalShopper";
-import { useUIStore, useThemeStore } from "./store/useStore";
+import { useUIStore } from "./store/useStore";
 import SmoothScroll from "./components/layout/SmoothScroll";
 
 
 function AppRoutes() {
   const location = useLocation();
-  const { accentColor } = useThemeStore();
-
-  useEffect(() => {
-    document.documentElement.style.setProperty('--color-volt', accentColor);
-  }, [accentColor]);
 
   /* Admin and Portal page have their own layouts — no navbar/footer */
   if (location.pathname === "/admin" || location.pathname === "/" || location.pathname === "/login" || location.pathname === "/perfil" || location.pathname === "/favoritos" || location.pathname === "/presentacion") {
@@ -153,13 +151,19 @@ export default function AppWrapper() {
     <HelmetProvider>
       <HashRouter>
         <SmoothScroll>
-          <ProductProvider>
-            <SiteProvider>
-              <ToastProvider>
-                <App />
-              </ToastProvider>
-            </SiteProvider>
-          </ProductProvider>
+          <ThemeProvider>
+            <SEOProvider>
+              <LangProvider>
+                <ProductProvider>
+                  <SiteProvider>
+                    <ToastProvider>
+                      <App />
+                    </ToastProvider>
+                  </SiteProvider>
+                </ProductProvider>
+              </LangProvider>
+            </SEOProvider>
+          </ThemeProvider>
         </SmoothScroll>
       </HashRouter>
     </HelmetProvider>

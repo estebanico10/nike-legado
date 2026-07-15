@@ -19,6 +19,9 @@ import ReviewsModeration from "../components/admin/ReviewsModeration";
 import SocialAdmin from "../components/admin/SocialAdmin";
 import MediaManagerAdmin from "../components/admin/MediaManagerAdmin";
 import AuditLogsAdmin from "../components/admin/AuditLogsAdmin";
+import ThemeAdmin from "../components/admin/ThemeAdmin";
+import SEOAdmin from "../components/admin/SEOAdmin";
+import LangAdmin from "../components/admin/LangAdmin";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -47,6 +50,9 @@ export default function AdminPage() {
       case "equipo": return <TeamAdmin />;
       case "configuracion": return <StoreSettings />;
       case "auditoria": return <AuditLogsAdmin />;
+      case "tema": return <ThemeAdmin />;
+      case "seo": return <SEOAdmin />;
+      case "idiomas": return <LangAdmin />;
       
       default: return <SalesDashboard />;
     }

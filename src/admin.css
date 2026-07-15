@@ -377,3 +377,45 @@
     font-size: var(--type-h4);
   }
 }
+
+/* Print Styles for PDF Export */
+@media print {
+  .admin-sidebar, 
+  .admin-header, 
+  .admin-menu-toggle,
+  .admin-sidebar-footer,
+  .no-print {
+    display: none !important;
+  }
+  
+  .admin-main {
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  .admin-content {
+    padding: 0 !important;
+  }
+  
+  .admin-wrapper {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .admin-card {
+    border: 1px solid #ccc !important;
+    background: white !important;
+    color: black !important;
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+  
+  .admin-card-title,
+  h3, h4, p, div {
+    color: black !important;
+  }
+  
+  .admin-card div[style*="var(--color-volt)"] {
+    color: black !important;
+  }
+}
