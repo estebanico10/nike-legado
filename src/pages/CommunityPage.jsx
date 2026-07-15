@@ -57,7 +57,7 @@ export default function CommunityPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-[rgba(212,255,0,0.1)] text-[var(--color-volt)] border border-[rgba(212,255,0,0.4)] px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[1.5px] mb-6"
+              className="inline-flex items-center gap-2 bg-[rgba(212,255,0,0.1)] text-[var(--color-volt-text)] border border-[rgba(212,255,0,0.4)] px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[1.5px] mb-6"
             >
               <Sparkles size={15} /> COMUNIDAD ECUADOR & LATAM
             </motion.div>
@@ -68,7 +68,7 @@ export default function CommunityPage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-display text-[clamp(2rem,5vw,3.8rem)] font-black uppercase tracking-[-1px] leading-[1.05] m-0 mb-6 text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
             >
-              EL MURO DEL BARRIO — <span className="text-[var(--color-volt)]">STREET STYLE OOTD</span>
+              EL MURO DEL BARRIO — <span className="text-[var(--color-volt-text)]">STREET STYLE OOTD</span>
             </motion.h1>
 
             <motion.p
@@ -97,7 +97,7 @@ export default function CommunityPage() {
               </motion.button>
 
               <div className="bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-[30px] flex items-center gap-3">
-                <Award size={22} className="text-[var(--color-volt)]" />
+                <Award size={22} className="text-[var(--color-volt-text)]" />
                 <div className="text-left">
                   <div className="text-[11px] text-[#888] uppercase font-bold">
                     Tu Street Cred actual
@@ -150,7 +150,7 @@ export default function CommunityPage() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="bg-[#121212]/60 backdrop-blur-md border border-dashed border-white/15 rounded-3xl p-16 text-center max-w-[600px] mx-auto my-10"
               >
-                <div className="w-16 h-16 rounded-full bg-[rgba(212,255,0,0.1)] text-[var(--color-volt)] flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 rounded-full bg-[rgba(212,255,0,0.1)] text-[var(--color-volt-text)] flex items-center justify-center mx-auto mb-6">
                   <Sparkles size={30} />
                 </div>
                 <h3 className="font-display text-[22px] font-extrabold uppercase text-white m-0 mb-2.5">

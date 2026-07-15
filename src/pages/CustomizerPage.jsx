@@ -135,7 +135,7 @@ export default function CustomizerPage() {
                 </span>
               </div>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-neutral-100 m-0 leading-tight">
-                NIKE BY YOU <span className="text-[var(--color-volt)]">— LEGADO</span>
+                NIKE BY YOU <span className="text-[var(--color-volt-text)]">— LEGADO</span>
               </h1>
               <p className="text-neutral-400 text-sm mt-2 max-w-2xl">
                 Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma exclusiva en el talón.
@@ -144,7 +144,7 @@ export default function CustomizerPage() {
 
             <button
               onClick={() => setShowSavedModal(true)}
-              className="bg-neutral-900 border border-neutral-700 text-neutral-100 px-5 py-3 rounded-full font-display text-sm font-semibold uppercase tracking-wider flex items-center gap-2 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt)] cursor-pointer"
+              className="bg-neutral-900 border border-neutral-700 text-neutral-100 px-5 py-3 rounded-full font-display text-sm font-semibold uppercase tracking-wider flex items-center gap-2 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] cursor-pointer"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
@@ -173,7 +173,7 @@ export default function CustomizerPage() {
               <div className="bg-[#111] border border-neutral-800 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                 <h3 className="font-display text-lg uppercase text-neutral-100 m-0 mb-4 border-b border-neutral-800 pb-2 flex justify-between items-center">
                   <span>Desglose de Precio</span>
-                  <span className="text-[var(--color-volt)]">${priceDetails.totalPrice.toFixed(2)}</span>
+                  <span className="text-[var(--color-volt-text)]">${priceDetails.totalPrice.toFixed(2)}</span>
                 </h3>
 
                 <div className="flex flex-col gap-3 text-sm">
@@ -182,21 +182,21 @@ export default function CustomizerPage() {
                     <span className="font-semibold text-white">$149.99</span>
                   </div>
 
-                  <div className={`flex justify-between ${priceDetails.premiumColorCost > 0 ? 'text-[var(--color-volt)]' : 'text-neutral-500'}`}>
+                  <div className={`flex justify-between ${priceDetails.premiumColorCost > 0 ? 'text-[var(--color-volt-text)]' : 'text-neutral-500'}`}>
                     <span className="flex items-center gap-2">
                       Acabado Color Premium
                       {priceDetails.premiumColorCost > 0 && (
-                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt)] px-1.5 py-0.5 rounded">ACTIVO</span>
+                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt-text)] px-1.5 py-0.5 rounded">ACTIVO</span>
                       )}
                     </span>
                     <span className="font-semibold">+${priceDetails.premiumColorCost.toFixed(2)}</span>
                   </div>
 
-                  <div className={`flex justify-between ${priceDetails.customTextCost > 0 ? 'text-[var(--color-volt)]' : 'text-neutral-500'}`}>
+                  <div className={`flex justify-between ${priceDetails.customTextCost > 0 ? 'text-[var(--color-volt-text)]' : 'text-neutral-500'}`}>
                     <span className="flex items-center gap-2">
                       Grabado Láser en Talón ({customText || "Sin texto"})
                       {priceDetails.customTextCost > 0 && (
-                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt)] px-1.5 py-0.5 rounded">CUSTOM</span>
+                        <span className="text-[10px] bg-[var(--color-volt)]/15 text-[var(--color-volt-text)] px-1.5 py-0.5 rounded">CUSTOM</span>
                       )}
                     </span>
                     <span className="font-semibold">+${priceDetails.customTextCost.toFixed(2)}</span>
@@ -206,7 +206,7 @@ export default function CustomizerPage() {
                     <span className="font-display text-lg text-white uppercase">
                       Total Inversión
                     </span>
-                    <span className="font-display text-2xl text-[var(--color-volt)] font-bold">
+                    <span className="font-display text-2xl text-[var(--color-volt-text)] font-bold">
                       ${priceDetails.totalPrice.toFixed(2)}
                     </span>
                   </div>
@@ -235,7 +235,7 @@ export default function CustomizerPage() {
                   <h3 className="font-display text-lg uppercase text-neutral-100 m-0">
                     Selecciona Tu Talla <span className="text-neutral-500 text-sm font-normal">(CM / MX)</span>
                   </h3>
-                  <span className="text-xs text-[var(--color-volt)] font-semibold cursor-pointer underline">
+                  <span className="text-xs text-[var(--color-volt-text)] font-semibold cursor-pointer underline">
                     Guía de Tallas
                   </span>
                 </div>
@@ -278,7 +278,7 @@ export default function CustomizerPage() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={handleSaveDesign}
-                  className="bg-transparent text-neutral-100 font-display text-lg font-semibold uppercase tracking-wider border-2 border-neutral-800 rounded-xl py-3.5 px-6 cursor-pointer flex items-center justify-center gap-2.5 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt)] w-full"
+                  className="bg-transparent text-neutral-100 font-display text-lg font-semibold uppercase tracking-wider border-2 border-neutral-800 rounded-xl py-3.5 px-6 cursor-pointer flex items-center justify-center gap-2.5 transition-all duration-200 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] w-full"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
@@ -356,13 +356,13 @@ export default function CustomizerPage() {
                             {design.nombre || `Diseño #${design.id.slice(-4)}`}
                           </h4>
                           <span className="text-xs text-neutral-500">
-                            Talón: <strong className="text-[var(--color-volt)]">{design.customText || "LEGADO"}</strong> | {design.date || "Hoy"}
+                            Talón: <strong className="text-[var(--color-volt-text)]">{design.customText || "LEGADO"}</strong> | {design.date || "Hoy"}
                           </span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <span className="font-display font-bold text-[var(--color-volt)] text-lg">
+                        <span className="font-display font-bold text-[var(--color-volt-text)] text-lg">
                           ${design.price ? design.price.toFixed(2) : "159.99"}
                         </span>
 

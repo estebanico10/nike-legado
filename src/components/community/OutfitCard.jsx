@@ -81,14 +81,14 @@ export default function OutfitCard({ post }) {
                 {authorName}
               </span>
               {post.featured && (
-                <span title="Destacado por Nike Legado" className="text-[var(--color-volt)] flex">
+                <span title="Destacado por Nike Legado" className="text-[var(--color-volt-text)] flex">
                   <Sparkles size={14} />
                 </span>
               )}
             </div>
             {post.location && (
               <div className="flex items-center gap-1 text-[#999] text-xs mt-0.5">
-                <MapPin size={12} className="text-[var(--color-volt)]" />
+                <MapPin size={12} className="text-[var(--color-volt-text)]" />
                 <span>{post.location}</span>
               </div>
             )}
@@ -97,7 +97,7 @@ export default function OutfitCard({ post }) {
 
         {/* Badge Destacado */}
         {post.featured && (
-          <span className="bg-[rgba(212,255,0,0.15)] text-[var(--color-volt)] border border-[var(--color-volt)] px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[1px] flex items-center gap-1">
+          <span className="bg-[rgba(212,255,0,0.15)] text-[var(--color-volt-text)] border border-[var(--color-volt)] px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[1px] flex items-center gap-1">
             <Flame size={12} fill="var(--color-volt)" /> Destacado
           </span>
         )}
@@ -121,9 +121,9 @@ export default function OutfitCard({ post }) {
         {post.shoe && (
           <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center">
             <div className="bg-[#0a0a0a]/85 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full inline-flex items-center gap-2 text-white text-xs font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
-              <Tag size={12} className="text-[var(--color-volt)]" />
+              <Tag size={12} className="text-[var(--color-volt-text)]" />
               <span className="text-[#ccc] font-normal">Zapa:</span>
-              <span className="text-[var(--color-volt)] font-bold">{post.shoe}</span>
+              <span className="text-[var(--color-volt-text)] font-bold">{post.shoe}</span>
             </div>
           </div>
         )}
@@ -142,7 +142,7 @@ export default function OutfitCard({ post }) {
             <motion.button
               whileTap={{ scale: 0.88 }}
               onClick={handleLikeClick}
-              className={`px-3.5 py-2 rounded-full flex items-center gap-2 cursor-pointer font-bold text-[13px] transition-all duration-200 ${isLiked ? 'bg-[rgba(212,255,0,0.15)] border border-[var(--color-volt)] text-[var(--color-volt)]' : 'bg-white/5 border border-white/10 text-[#ccc] hover:bg-white/10'}`}
+              className={`px-3.5 py-2 rounded-full flex items-center gap-2 cursor-pointer font-bold text-[13px] transition-all duration-200 ${isLiked ? 'bg-[rgba(212,255,0,0.15)] border border-[var(--color-volt)] text-[var(--color-volt-text)]' : 'bg-white/5 border border-white/10 text-[#ccc] hover:bg-white/10'}`}
             >
               <Flame size={16} fill={isLiked ? "var(--color-volt)" : "none"} />
               <span>{likesCount}</span>
@@ -196,7 +196,7 @@ export default function OutfitCard({ post }) {
                     commentsList.map((c) => (
                       <div key={c.id} className={`bg-white/5 p-2 px-3 rounded-md border-l-2 ${c.author === "Tú" ? 'border-l-[var(--color-volt)]' : 'border-l-white/20'}`}>
                         <div className="flex justify-between items-center mb-1">
-                          <span className={`font-bold text-xs ${c.author === "Tú" ? 'text-[var(--color-volt)]' : 'text-white'}`}>
+                          <span className={`font-bold text-xs ${c.author === "Tú" ? 'text-[var(--color-volt-text)]' : 'text-white'}`}>
                             {c.author}
                           </span>
                           <span className="text-[10px] text-[#777]">
