@@ -23,45 +23,44 @@
   --font-body: "Helvetica Neue", "Inter", -apple-system, sans-serif;
   --font-street: "Sedgwick Ave Display", "Permanent Marker", cursive;
 
-  --type-hero: 120px;
-  --type-h1: 86px;
-  --type-h2: 54px;
-  --type-h3: 36px;
-  --type-h4: 24px;
-  --type-body-lg: 20px;
+  --type-hero: 72px;
+  --type-h1: 48px;
+  --type-h2: 36px;
+  --type-h3: 24px;
+  --type-h4: 20px;
+  --type-body-lg: 18px;
   --type-body: 16px;
   --type-body-sm: 14px;
   --type-caption: 12px;
   --type-micro: 10px;
 
-  --lh-hero: 120px;
-  --lh-h1: 88px;
-  --lh-h2: 56px;
-  --lh-h3: 40px;
+  --lh-hero: 76px;
+  --lh-h1: 52px;
+  --lh-h2: 40px;
+  --lh-h3: 28px;
 
-  --tracking-tight: -0.04em;
+  --tracking-tight: -0.03em;
   --tracking-normal: 0em;
-  --tracking-wide: 0.1em;
 
-  --space-2xs: 8px;
-  --space-xs: 16px;
-  --space-sm: 24px;
-  --space-md: 40px;
-  --space-lg: 64px;
-  --space-xl: 96px;
-  --space-2xl: 128px;
-  --space-3xl: 192px;
-  --space-4xl: 256px;
-  --space-5xl: 320px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+  --space-5xl: 128px;
 
   --container-sm: 640px;
   --container-md: 960px;
-  --container-lg: 1280px;
-  --container-max: 1600px;
+  --container-lg: 1200px;
+  --container-max: 1440px;
 
   --radius-none: 0px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
 
   --duration-micro: 150ms;
   --duration-std: 300ms;
@@ -170,15 +169,15 @@ img {
 
 @media (max-width: 599px) {
   :root {
-    --type-hero: 64px;
-    --type-h1: 48px;
-    --type-h2: 36px;
-    --type-h3: 28px;
-    --type-h4: 20px;
-    --lh-hero: 68px;
-    --lh-h1: 52px;
-    --lh-h2: 40px;
-    --lh-h3: 32px;
+    --type-hero: 40px;
+    --type-h1: 32px;
+    --type-h2: 24px;
+    --type-h3: 20px;
+    --type-h4: 18px;
+    --lh-hero: 44px;
+    --lh-h1: 36px;
+    --lh-h2: 28px;
+    --lh-h3: 24px;
   }
   .container {
     padding: 0 var(--space-md);
@@ -187,12 +186,12 @@ img {
 
 @media (min-width: 600px) and (max-width: 1023px) {
   :root {
-    --type-hero: 96px;
-    --type-h1: 64px;
-    --type-h2: 48px;
-    --lh-hero: 96px;
-    --lh-h1: 68px;
-    --lh-h2: 52px;
+    --type-hero: 56px;
+    --type-h1: 40px;
+    --type-h2: 30px;
+    --lh-hero: 60px;
+    --lh-h1: 44px;
+    --lh-h2: 34px;
   }
 }
 
