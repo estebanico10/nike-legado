@@ -6,6 +6,7 @@ import AnimatedBackground from "../components/AnimatedBackground";
 import OutfitCard from "../components/community/OutfitCard";
 import UploadOutfitModal from "../components/community/UploadOutfitModal";
 import { useCommunityStore, useLoyaltyStore } from "../store/useStore";
+import { useI18nStore } from "../store/useI18nStore";
 
 const CATEGORY_TABS = [
   "Todos",
@@ -20,6 +21,7 @@ export default function CommunityPage() {
   const userPoints = useLoyaltyStore((state) => state.points);
   const [activeTab, setActiveTab] = useState("Todos");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useI18nStore();
 
   // Filtrar posts aprobados y por categoría activa
   const filteredPosts = useMemo(() => {
@@ -59,7 +61,7 @@ export default function CommunityPage() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 bg-[rgba(212,255,0,0.1)] text-[var(--color-volt-text)] border border-[rgba(212,255,0,0.4)] px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[1.5px] mb-6"
             >
-              <Sparkles size={15} /> COMUNIDAD ECUADOR & LATAM
+              <Sparkles size={15} /> {t("COMUNIDAD ECUADOR & LATAM")}
             </motion.div>
 
             <motion.h1
@@ -68,7 +70,7 @@ export default function CommunityPage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-display text-[clamp(2rem,5vw,3.8rem)] font-black uppercase tracking-[-1px] leading-[1.05] m-0 mb-6 text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
             >
-              EL MURO DEL BARRIO — <span className="text-[var(--color-volt-text)]">STREET STYLE OOTD</span>
+              {t("EL MURO DEL BARRIO")} — <span className="text-[var(--color-volt-text)]">{t("STREET STYLE OOTD")}</span>
             </motion.h1>
 
             <motion.p
@@ -77,7 +79,7 @@ export default function CommunityPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-[#bbb] text-[clamp(1rem,2vw,1.2rem)] leading-[1.6] m-0 mb-10 max-w-[680px] font-body"
             >
-              Aquí el estilo no se dicta en pasarelas, se construye en la calle. Comparte tu outfit, vota por los mejores looks y acumula <strong className="text-white">Street Cred</strong> para canjear beneficios exclusivos en la tienda.
+              {t("Aquí el estilo no se dicta en pasarelas, se construye en la calle. Comparte tu outfit, vota por los mejores looks y acumula")} <strong className="text-white">Street Cred</strong> {t("para canjear beneficios exclusivos en la tienda.")}
             </motion.p>
 
             {/* CTA y Stats del Usuario */}
@@ -93,14 +95,14 @@ export default function CommunityPage() {
                 whileTap={{ scale: 0.96 }}
                 className="bg-[var(--color-volt)] text-black border-none px-8 py-4 rounded-[35px] font-display text-base font-black uppercase tracking-[0.5px] cursor-pointer flex items-center gap-2.5 shadow-[0_8px_24px_rgba(212,255,0,0.25)]"
               >
-                <Upload size={20} strokeWidth={2.5} /> SUBIR MI OUTFIT (+150 PTS)
+                <Upload size={20} strokeWidth={2.5} /> {t("SUBIR MI OUTFIT")} (+150 PTS)
               </motion.button>
 
               <div className="bg-white/5 backdrop-blur-md border border-white/10 px-5 py-3 rounded-[30px] flex items-center gap-3">
                 <Award size={22} className="text-[var(--color-volt-text)]" />
                 <div className="text-left">
                   <div className="text-[11px] text-[#888] uppercase font-bold">
-                    Tu Street Cred actual
+                    {t("Tu Street Cred actual")}
                   </div>
                   <div className="text-base font-extrabold text-white">
                     {userPoints} PTS
@@ -128,7 +130,7 @@ export default function CommunityPage() {
                     whileTap={{ scale: 0.97 }}
                     className={`px-5 py-2.5 rounded-[30px] font-display text-sm font-extrabold uppercase tracking-[0.5px] cursor-pointer transition-all duration-250 flex items-center gap-1.5 ${isActive ? 'bg-[var(--color-volt)] text-black border border-[var(--color-volt)] shadow-[0_6px_20px_rgba(212,255,0,0.2)]' : 'bg-white/5 text-[#ccc] border border-white/10 hover:bg-white/10'}`}
                   >
-                    {tab}
+                    {t(tab)}
                   </motion.button>
                 );
               })}
@@ -136,12 +138,12 @@ export default function CommunityPage() {
 
             {/* Info de resultados */}
             <div className="text-[#888] text-[13px] font-semibold">
-              Mostrando <strong className="text-white">{filteredPosts.length}</strong> looks en el muro
+              {t("Mostrando")} <strong className="text-white">{filteredPosts.length}</strong> {t("looks en el muro")}
             </div>
           </div>
 
           {/* Grid de Outfits -> Transformado a Swipeable Stack */}
-          <div className="relative w-full max-w-sm mx-auto min-h-[650px] mt-12 flex justify-center perspective-[1000px]">
+          <div className="relative w-full max-w-sm mx-auto min-h-[900px] mt-12 flex justify-center perspective-[1000px]">
             <AnimatePresence>
               {filteredPosts.length === 0 ? (
                 <motion.div
@@ -155,16 +157,16 @@ export default function CommunityPage() {
                     <Sparkles size={30} />
                   </div>
                   <h3 className="font-display text-[22px] font-extrabold uppercase text-black m-0 mb-2.5">
-                    No hay looks en "{activeTab}" aún
+                    {t("No hay looks en")} "{t(activeTab)}" {t("aún")}
                   </h3>
                   <p className="text-gray-500 text-sm m-0 mb-8">
-                    ¡Sé el pionero del barrio en esta categoría!
+                    {t("¡Sé el pionero del barrio en esta categoría!")}
                   </p>
                   <button
                     onClick={() => setIsModalOpen(true)}
                     className="inline-flex items-center gap-2 bg-black text-white font-semibold px-6 py-3 rounded-full hover:bg-gray-800 transition-colors"
                   >
-                    <PlusCircle size={18} /> Subir outfit
+                    <PlusCircle size={18} /> {t("Subir outfit")}
                   </button>
                 </motion.div>
               ) : (

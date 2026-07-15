@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SEO from "../components/SEO";
 import AnimatedBackground from "../components/AnimatedBackground";
@@ -6,15 +6,14 @@ import BadgeCard from "../components/loyalty/BadgeCard";
 import RewardCard from "../components/loyalty/RewardCard";
 import {
   useLoyaltyStore,
-  useUserStore,
   defaultRewards,
   defaultBadgesCatalog,
   defaultThresholds
 } from "../store/useStore";
+import { useI18nStore } from "../store/useI18nStore";
 
 export default function ClubPage() {
   const points = useLoyaltyStore((state) => state.points ?? 350);
-  const level = useLoyaltyStore((state) => state.level || "Rookie");
   const badges = useLoyaltyStore((state) => state.badges || ["rookie"]);
   const history = useLoyaltyStore((state) => state.history || []);
   const rewards = useLoyaltyStore((state) => state.rewards || defaultRewards);
@@ -23,28 +22,26 @@ export default function ClubPage() {
 
   const [badgeFilter, setBadgeFilter] = useState("all"); // 'all', 'unlocked', 'locked'
   const [showHowToEarn, setShowHowToEarn] = useState(false);
+  const { t } = useI18nStore();
 
   // Calculate tier details and progress
   const rookieThresh = thresholds.rookie ?? 0;
   const sneakerheadThresh = thresholds.sneakerhead ?? 500;
   const vipThresh = thresholds.vip ?? 1500;
 
-  let currentTierName = "Rookie";
-  let nextTierName = "Sneakerhead";
-  let nextTierTarget = sneakerheadThresh;
-  let progressPercent = 0;
-  let pointsRemaining = 0;
+  let currentTierName;
+  let nextTierName;
+  let progressPercent;
+  let pointsRemaining;
 
   if (points < sneakerheadThresh) {
     currentTierName = "Rookie";
     nextTierName = "Sneakerhead";
-    nextTierTarget = sneakerheadThresh;
     progressPercent = Math.min(100, Math.round((points / sneakerheadThresh) * 100));
     pointsRemaining = sneakerheadThresh - points;
   } else if (points < vipThresh) {
     currentTierName = "Sneakerhead";
     nextTierName = "VIP Legado";
-    nextTierTarget = vipThresh;
     const range = vipThresh - sneakerheadThresh;
     const pointsInTier = points - sneakerheadThresh;
     progressPercent = Math.min(100, Math.round((pointsInTier / range) * 100));
@@ -52,7 +49,6 @@ export default function ClubPage() {
   } else {
     currentTierName = "VIP Legado";
     nextTierName = "Rango Máximo";
-    nextTierTarget = points;
     progressPercent = 100;
     pointsRemaining = 0;
   }
@@ -91,12 +87,11 @@ export default function ClubPage() {
         paddingTop: "100px",
         paddingBottom: "var(--space-4xl)",
         position: "relative",
-        color: "#FFFFFF",
       }}
     >
       <SEO
-        title="Club Nike Legado — Street Cred"
-        description="Acumula puntos Street Cred, desbloquea insignias callejeras y canjea cupones y beneficios exclusivos."
+        title={`Club Nike Legado — Street Cred`}
+        description={t("Acumula puntos Street Cred, desbloquea insignias callejeras y canjea cupones y beneficios exclusivos.")}
       />
       <AnimatedBackground />
 
@@ -124,7 +119,7 @@ export default function ClubPage() {
               border: "1px solid rgba(206, 255, 0, 0.3)",
             }}
           >
-            Gamification & Street Cred Hub
+            {t("Gamification & Street Cred Hub")}
           </span>
           <h1
             style={{
@@ -135,12 +130,12 @@ export default function ClubPage() {
               letterSpacing: "0.03em",
               margin: "0 0 12px 0",
               lineHeight: 1.1,
-              background: "linear-gradient(135deg, #FFFFFF 0%, #CEFF00 100%)",
+              background: "linear-gradient(135deg, var(--color-ink) 0%, var(--color-volt) 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
           >
-            CLUB NIKE LEGADO
+            {t("CLUB NIKE LEGADO")}
           </h1>
           <p
             style={{
@@ -151,7 +146,7 @@ export default function ClubPage() {
               margin: "0 auto",
             }}
           >
-            El prestigio del barrio se gana en cada paso. Acumula puntos <strong style={{ color: "var(--color-volt)" }}>Street Cred</strong>, asciende de rango, colecciona insignias únicas y canjea tus beneficios.
+            {t("El prestigio del barrio se gana en cada paso. Acumula puntos")} <strong style={{ color: "var(--color-volt)" }}>Street Cred</strong>, {t("asciende de rango, colecciona insignias únicas y canjea tus beneficios.")}
           </p>
         </motion.div>
 
@@ -221,7 +216,7 @@ export default function ClubPage() {
                   }}
                 >
                   <span>{getTierIcon(currentTierName)}</span>
-                  <span>RANGO: {currentTierName}</span>
+                  <span>{t("RANGO:")} {currentTierName}</span>
                 </span>
 
                 <button
@@ -246,7 +241,7 @@ export default function ClubPage() {
                     e.currentTarget.style.color = "#A0A0A0";
                   }}
                 >
-                  ¿Cómo ganar más PTS? 💡
+                  {t("¿Cómo ganar más PTS? 💡")}
                 </button>
               </div>
 
@@ -272,7 +267,7 @@ export default function ClubPage() {
                     letterSpacing: "0.1em",
                   }}
                 >
-                  PTS STREET CRED
+                  {t("PTS STREET CRED")}
                 </span>
               </div>
             </div>
@@ -287,8 +282,8 @@ export default function ClubPage() {
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Progreso al rango: <span style={{ color: "var(--color-volt)" }}>{nextTierName}</span>
+                <div style={{ fontSize: "14px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: "#EEEEEE" }}>
+                  {t("Progreso al rango:")} <span style={{ color: "var(--color-volt)" }}>{nextTierName}</span>
                 </div>
                 <div style={{ fontFamily: "var(--font-display)", fontSize: "16px", fontWeight: 700, color: "#AAAAAA" }}>
                   {progressPercent}%
@@ -330,11 +325,11 @@ export default function ClubPage() {
 
               {pointsRemaining > 0 ? (
                 <div style={{ marginTop: "14px", fontSize: "13px", color: "#CCCCCC" }}>
-                  🔥 Acumula <strong style={{ color: "var(--color-volt)" }}>{pointsRemaining} PTS más</strong> para desbloquear la insignia y privilegios de <strong style={{ color: "#FFFFFF" }}>{nextTierName}</strong>.
+                  🔥 {t("Acumula")} <strong style={{ color: "var(--color-volt)" }}>{pointsRemaining} {t("PTS más")}</strong> {t("para desbloquear la insignia y privilegios de")} <strong style={{ color: "#FFFFFF" }}>{nextTierName}</strong>.
                 </div>
               ) : (
                 <div style={{ marginTop: "14px", fontSize: "13px", color: "var(--color-volt)", fontWeight: 600 }}>
-                  👑 ¡Has alcanzado el rango máximo del Club! Tienes acceso VIP absoluto a todos los drops del barrio.
+                  👑 {t("¡Has alcanzado el rango máximo del Club! Tienes acceso VIP absoluto a todos los drops del barrio.")}
                 </div>
               )}
             </div>
@@ -352,20 +347,20 @@ export default function ClubPage() {
               >
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
                   <div style={{ background: "rgba(255,255,255,0.03)", padding: "14px", borderRadius: "8px", border: "1px solid #262626" }}>
-                    <div style={{ fontSize: "18px", marginBottom: "6px" }}>🛍️ Comprar en Tienda</div>
-                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>Recibe <strong style={{ color: "var(--color-volt)" }}>+10 PTS</strong> por cada $1 USD de compra completada.</div>
+                    <div style={{ fontSize: "18px", marginBottom: "6px", color: "#EEEEEE" }}>🛍️ {t("Comprar en Tienda")}</div>
+                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>{t("Recibe")} <strong style={{ color: "var(--color-volt)" }}>+10 PTS</strong> {t("por cada $1 USD de compra completada.")}</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.03)", padding: "14px", borderRadius: "8px", border: "1px solid #262626" }}>
-                    <div style={{ fontSize: "18px", marginBottom: "6px" }}>📸 Publicar en el Muro</div>
-                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>Comparte tu outfit callejero en el Muro OOTD y gana <strong style={{ color: "var(--color-volt)" }}>+50 PTS</strong>.</div>
+                    <div style={{ fontSize: "18px", marginBottom: "6px", color: "#EEEEEE" }}>📸 {t("Publicar en el Muro")}</div>
+                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>{t("Comparte tu outfit callejero en el Muro OOTD y gana")} <strong style={{ color: "var(--color-volt)" }}>+50 PTS</strong>.</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.03)", padding: "14px", borderRadius: "8px", border: "1px solid #262626" }}>
-                    <div style={{ fontSize: "18px", marginBottom: "6px" }}>🎨 Diseñar en Customizer</div>
-                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>Crea e interactúa con tus zapatillas 3D en el Customizer para ganar <strong style={{ color: "var(--color-volt)" }}>+100 PTS</strong>.</div>
+                    <div style={{ fontSize: "18px", marginBottom: "6px", color: "#EEEEEE" }}>🎨 {t("Diseñar en Customizer")}</div>
+                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>{t("Crea e interactúa con tus zapatillas 3D en el Customizer para ganar")} <strong style={{ color: "var(--color-volt)" }}>+100 PTS</strong>.</div>
                   </div>
                   <div style={{ background: "rgba(255,255,255,0.03)", padding: "14px", borderRadius: "8px", border: "1px solid #262626" }}>
-                    <div style={{ fontSize: "18px", marginBottom: "6px" }}>🎉 Retos y Eventos</div>
-                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>Participa en torneos de barrio o eventos para recibir bonos de hasta <strong style={{ color: "var(--color-volt)" }}>+500 PTS</strong>.</div>
+                    <div style={{ fontSize: "18px", marginBottom: "6px", color: "#EEEEEE" }}>🎉 {t("Retos y Eventos")}</div>
+                    <div style={{ fontSize: "13px", color: "#AAAAAA" }}>{t("Participa en torneos de barrio o eventos para recibir bonos de hasta")} <strong style={{ color: "var(--color-volt)" }}>+500 PTS</strong>.</div>
                   </div>
                 </div>
               </motion.div>
@@ -397,12 +392,13 @@ export default function ClubPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
+                  color: "var(--color-ink)",
                 }}
               >
-                <span>🎁</span> CANJEAR RECOMPENSAS
+                <span>🎁</span> {t("CANJEAR RECOMPENSAS")}
               </h2>
-              <p style={{ color: "#888888", fontSize: "14px", margin: "4px 0 0 0" }}>
-                Intercambia tu Street Cred por cupones directos para el Checkout, pases de drops e ítems físicos.
+              <p style={{ color: "var(--color-ink-soft)", fontSize: "14px", margin: "4px 0 0 0" }}>
+                {t("Intercambia tu Street Cred por cupones directos para el Checkout, pases de drops e ítems físicos.")}
               </p>
             </div>
           </div>
@@ -446,12 +442,13 @@ export default function ClubPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
+                  color: "var(--color-ink)",
                 }}
               >
-                <span>🏆</span> VITRINA DE INSIGNIAS (BADGES)
+                <span>🏆</span> {t("VITRINA DE INSIGNIAS (BADGES)")}
               </h2>
-              <p style={{ color: "#888888", fontSize: "14px", margin: "4px 0 0 0" }}>
-                Colecciona trofeos del barrio. Tienes <strong style={{ color: "var(--color-volt)" }}>{unlockedCount} de {badgesCatalog.length}</strong> insignias desbloqueadas.
+              <p style={{ color: "var(--color-ink-soft)", fontSize: "14px", margin: "4px 0 0 0" }}>
+                {t("Colecciona trofeos del barrio. Tienes")} <strong style={{ color: "var(--color-volt)" }}>{unlockedCount} de {badgesCatalog.length}</strong> {t("insignias desbloqueadas.")}
               </p>
             </div>
 
@@ -472,7 +469,7 @@ export default function ClubPage() {
                   transition: "all 0.2s ease",
                 }}
               >
-                TODAS ({badgesCatalog.length})
+                {t("TODAS")} ({badgesCatalog.length})
               </button>
               <button
                 onClick={() => setBadgeFilter("unlocked")}
@@ -489,7 +486,7 @@ export default function ClubPage() {
                   transition: "all 0.2s ease",
                 }}
               >
-                DESBLOQUEADAS ({unlockedCount})
+                {t("DESBLOQUEADAS")} ({unlockedCount})
               </button>
               <button
                 onClick={() => setBadgeFilter("locked")}
@@ -506,7 +503,7 @@ export default function ClubPage() {
                   transition: "all 0.2s ease",
                 }}
               >
-                BLOQUEADAS ({lockedCount})
+                {t("BLOQUEADAS")} ({lockedCount})
               </button>
             </div>
           </div>
@@ -552,12 +549,13 @@ export default function ClubPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
+                  color: "var(--color-ink)",
                 }}
               >
-                <span>📜</span> HISTORIAL DE STREET CRED
+                <span>📜</span> {t("HISTORIAL DE STREET CRED")}
               </h2>
-              <p style={{ color: "#888888", fontSize: "14px", margin: "4px 0 0 0" }}>
-                Registro completo de todas las actividades, compras y canjes en tu cuenta.
+              <p style={{ color: "var(--color-ink-soft)", fontSize: "14px", margin: "4px 0 0 0" }}>
+                {t("Registro completo de todas las actividades, compras y canjes en tu cuenta.")}
               </p>
             </div>
           </div>
@@ -574,7 +572,7 @@ export default function ClubPage() {
               }}
             >
               <div style={{ fontSize: "36px", marginBottom: "12px" }}>🔍</div>
-              <p style={{ fontSize: "16px", margin: 0 }}>Aún no tienes movimientos registrados en tu historial de Street Cred.</p>
+              <p style={{ fontSize: "16px", margin: 0 }}>{t("Aún no tienes movimientos registrados en tu historial de Street Cred.")}</p>
             </div>
           ) : (
             <div
@@ -590,9 +588,9 @@ export default function ClubPage() {
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
                   <thead>
                     <tr style={{ background: "#0A0A0A", borderBottom: "1px solid #2B2B2B" }}>
-                      <th style={{ padding: "16px 24px", fontFamily: "var(--font-display)", fontSize: "13px", color: "#A0A0A0", textTransform: "uppercase" }}>ACTIVIDAD</th>
-                      <th style={{ padding: "16px 24px", fontFamily: "var(--font-display)", fontSize: "13px", color: "#A0A0A0", textTransform: "uppercase" }}>FECHA</th>
-                      <th style={{ padding: "16px 24px", fontFamily: "var(--font-display)", fontSize: "13px", color: "#A0A0A0", textTransform: "uppercase", textAlign: "right" }}>VARIACIÓN PTS</th>
+                      <th style={{ padding: "16px 24px", fontFamily: "var(--font-display)", fontSize: "13px", color: "#A0A0A0", textTransform: "uppercase" }}>{t("ACTIVIDAD")}</th>
+                      <th style={{ padding: "16px 24px", fontFamily: "var(--font-display)", fontSize: "13px", color: "#A0A0A0", textTransform: "uppercase" }}>{t("FECHA")}</th>
+                      <th style={{ padding: "16px 24px", fontFamily: "var(--font-display)", fontSize: "13px", color: "#A0A0A0", textTransform: "uppercase", textAlign: "right" }}>{t("VARIACIÓN PTS")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -627,7 +625,7 @@ export default function ClubPage() {
                               </div>
                               <div>
                                 <div style={{ fontWeight: 600, color: "#FFFFFF", fontSize: "15px" }}>
-                                  {item.action || "Movimiento Street Cred"}
+                                  {t(item.action || "Movimiento Street Cred")}
                                 </div>
                                 <div style={{ fontSize: "12px", color: "#777777" }}>
                                   ID Transacción: #{item.id || `TX-${idx}`}
@@ -636,7 +634,7 @@ export default function ClubPage() {
                             </div>
                           </td>
                           <td style={{ padding: "18px 24px", color: "#AAAAAA", fontSize: "14px", whiteSpace: "nowrap" }}>
-                            {item.date || "Hoy"}
+                            {item.date || t("Hoy")}
                           </td>
                           <td
                             style={{

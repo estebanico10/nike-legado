@@ -4,11 +4,13 @@ import { MessageCircle, Share2, MapPin, Flame, Send, Sparkles, Tag } from "./Com
 import { useCommunityStore, useLoyaltyStore } from "../../store/useStore";
 import { resolveAsset } from "../../utils/resolveAsset";
 import { useToast } from "../../context/ToastContext";
+import { useI18nStore } from "../../store/useI18nStore";
 
 export default function OutfitCard({ post }) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const { addToast } = useToast();
+  const { t } = useI18nStore();
 
   // Handle both possible property names just in case
   const authorName = post.author || post.alias || "@anon_street";
@@ -98,7 +100,7 @@ export default function OutfitCard({ post }) {
         {/* Badge Destacado */}
         {post.featured && (
           <span className="bg-[rgba(212,255,0,0.15)] text-[var(--color-volt-text)] border border-[var(--color-volt)] px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[1px] flex items-center gap-1">
-            <Flame size={12} fill="var(--color-volt)" /> Destacado
+            <Flame size={12} fill="var(--color-volt)" /> {t("Destacado")}
           </span>
         )}
       </div>
@@ -122,7 +124,7 @@ export default function OutfitCard({ post }) {
           <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center">
             <div className="bg-[#0a0a0a]/85 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-full inline-flex items-center gap-2 text-white text-xs font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
               <Tag size={12} className="text-[var(--color-volt-text)]" />
-              <span className="text-[#ccc] font-normal">Zapa:</span>
+              <span className="text-[#ccc] font-normal">{t("Zapa:")}</span>
               <span className="text-[var(--color-volt-text)] font-bold">{post.shoe}</span>
             </div>
           </div>
@@ -183,14 +185,14 @@ export default function OutfitCard({ post }) {
             >
               <div className="mt-4 pt-4 border-t border-dashed border-white/10 flex flex-col gap-3">
                 <h5 className="m-0 text-xs font-bold text-[#aaa] uppercase tracking-[0.5px]">
-                  Comentarios del Barrio ({commentsList.length})
+                  {t("Comentarios del Barrio")} ({commentsList.length})
                 </h5>
 
                 {/* Lista de comentarios */}
                 <div className="max-h-[180px] overflow-y-auto flex flex-col gap-2.5 pr-1 custom-scrollbar">
                   {commentsList.length === 0 ? (
                     <p className="m-0 text-xs text-[#666] italic">
-                      Sé el primero en comentar sobre este outfit 🔥
+                      {t("Sé el primero en comentar sobre este outfit")} 🔥
                     </p>
                   ) : (
                     commentsList.map((c) => (
@@ -215,7 +217,7 @@ export default function OutfitCard({ post }) {
                 <form onSubmit={handleCommentSubmit} className="flex gap-2 mt-1">
                   <input
                     type="text"
-                    placeholder="Escribe tu comentario en el barrio..."
+                    placeholder={t("Escribe tu comentario en el barrio...")}
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     className="flex-1 bg-[#161616] border border-white/15 rounded-full px-3.5 py-2 text-white text-[13px] outline-none focus:border-[var(--color-volt)] transition-colors"

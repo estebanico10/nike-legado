@@ -212,6 +212,7 @@ export default function ProductQuickView({ producto, onClose }) {
 
           {/* Product Details (Right) */}
           <div
+            data-lenis-prevent="true"
             style={{
               padding: "var(--space-2xl) var(--space-xl)",
               display: "flex",
