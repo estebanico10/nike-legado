@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Permanent+Marker&family=Sedgwick+Ave+Display&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 
 :root {
@@ -15,7 +12,6 @@
   --color-success: #128A09;
   --color-focus: #0066CC;
   --color-volt: #CEFF00;
-  --color-volt-text: #000000; /* Negro para buen contraste en fondo blanco (Light Mode) */
   --color-orange: #FF6600;
   --color-indoor-blue: #043174;
 
@@ -77,7 +73,6 @@
   --color-canvas: #111111;
   --color-canvas-alt: #1A1A1A;
   --color-canvas-nav: rgba(17, 17, 17, 0.80);
-  --color-volt-text: var(--color-volt); /* Neon en Dark Mode */
 }
 
 *,

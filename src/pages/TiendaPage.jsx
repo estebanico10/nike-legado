@@ -7,7 +7,6 @@ import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CompareDrawer from "../components/CompareDrawer";
-import SEO from "../components/SEO";
 
 function CountUp({ value }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -31,11 +30,12 @@ export default function TiendaPage() {
   const [searchParams] = useSearchParams();
   const [filtroActivo, setFiltroActivo] = useState(null);
   const [filtroTipo, setFiltroTipo] = useState(null);
-  const [orden, setOrden] = useState("default");
+  const [orden, setOrden] = useState("default"); // default, precio_asc, precio_desc, ventas
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [filtroColor, setFiltroColor] = useState(null);
   const [maxPrecio, setMaxPrecio] = useState(200);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [layoutMode, setLayoutMode] = useState("grid3"); // grid2, grid3, list
 
   const query = searchParams.get("q") || "";
   const isWishlistMode = searchParams.get("filter") === "wishlist";
@@ -51,17 +51,18 @@ export default function TiendaPage() {
       .filter((p) => (filtroTipo ? p.tipo === filtroTipo : true))
       .filter((p) => (filtroColor ? p.colores?.includes(filtroColor) : true))
       .filter((p) => (p.precioOferta || p.precio) <= maxPrecio)
-      .map(p => ({ ...p, ventas: p.ventas || ((p.id.charCodeAt(0) * 17) % 50) }))
+      .map(p => ({ ...p, ventas: p.ventas || ((p.id.charCodeAt(0) * 17) % 50) })) // mock ventas for sorting
       .sort((a, b) => {
         const pA = a.precioOferta || a.precio;
         const pB = b.precioOferta || b.precio;
         if (orden === "precio_asc") return pA - pB;
         if (orden === "precio_desc") return pB - pA;
         if (orden === "ventas") return b.ventas - a.ventas;
-        return 0;
+        return 0; // default
       });
   }, [productos, wishlist, isWishlistMode, query, filtroActivo, filtroTipo, filtroColor, maxPrecio, orden]);
 
+  // Extract all unique colors
   const coloresDisponibles = useMemo(() => {
     const colors = new Set();
     productos.forEach(p => {
@@ -72,16 +73,22 @@ export default function TiendaPage() {
 
   return (
     <>
-      <SEO title="Tienda" description="Explora nuestra colección de ropa, zapatos y accesorios con el estilo único del fútbol callejero ecuatoriano." />
       <AnimatedBackground />
-      <main className="min-h-screen bg-canvas pt-24 pb-20">
-        <div className="max-w-global mx-auto px-4 sm:px-6 lg:px-8">
+      <main style={{ paddingTop: "var(--space-3xl)", paddingBottom: "var(--space-5xl)", position: "relative", zIndex: 1 }}>
+        <div className="container">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
-            className="flex items-baseline justify-between mb-16 flex-wrap gap-4 border-b border-gray-200 pb-8"
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              marginBottom: "var(--space-2xl)",
+              flexWrap: "wrap",
+              gap: "var(--space-md)",
+            }}
           >
             <motion.h1
               initial="hidden"
@@ -90,7 +97,17 @@ export default function TiendaPage() {
                 visible: { transition: { staggerChildren: 0.05 } },
                 hidden: {}
               }}
-              className="font-sans text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase text-gray-900 flex overflow-hidden leading-none"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "var(--type-h2)",
+                lineHeight: "var(--lh-h2)",
+                fontWeight: 700,
+                letterSpacing: "var(--tracking-tight)",
+                textTransform: "uppercase",
+                color: "var(--color-ink)",
+                display: "flex",
+                overflow: "hidden"
+              }}
             >
               {Array.from(isWishlistMode ? "FAVORITOS" : (query ? `RESULTADOS` : "COLECCIÓN")).map((char, i) => (
                 <motion.span
@@ -99,69 +116,176 @@ export default function TiendaPage() {
                     hidden: { y: "100%", opacity: 0 },
                     visible: { y: "0%", opacity: 1, transition: { duration: 0.5, ease: [0, 0, 0.2, 1] } }
                   }}
-                  whileHover={{ color: "#ceff00", y: -5 }}
+                  whileHover={{ color: "var(--color-volt)", y: -5 }}
                 >
                   {char === " " ? "\u00A0" : char}
                 </motion.span>
               ))}
             </motion.h1>
-            <p className="font-sans text-base text-gray-400 font-medium max-w-sm ml-auto text-right">
-              {query && <span className="block mb-1 text-black">Resultados para "{query}"</span>}
-              Mostrando <CountUp value={productosFiltrados.length} />{" "}
-              {productosFiltrados.length === 1 ? "producto" : "productos"} seleccionados para superar tus límites.
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "var(--type-body-sm)",
+                color: "var(--color-ink-soft)",
+              }}
+            >
+              {query && <span style={{display:"block", marginBottom:"4px"}}>Resultados para "{query}"</span>}
+              <CountUp value={productosFiltrados.length} />{" "}
+              {productosFiltrados.length === 1 ? "producto" : "productos"}
             </p>
           </motion.div>
 
-          <div className="flex flex-col lg:flex-row gap-12">
-            {/* Lateral Filters Panel */}
-            <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-10">
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Categorías</h3>
-                <div className="flex flex-col gap-2">
+          {/* Filters and Sorting */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", marginBottom: "var(--space-2xl)" }}>
+            
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "var(--space-md)", alignItems: "center" }}>
+              {/* Categorías */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "var(--space-xs)",
+                  overflowX: "auto",
+                  paddingBottom: "var(--space-2xs)",
+                  scrollbarWidth: "none"
+                }}
+              >
+                <button
+                  onClick={() => setFiltroActivo(null)}
+                  className={`btn ${filtroActivo === null ? "btn--primary" : "btn--secondary"}`}
+                  style={{ whiteSpace: "nowrap", fontSize: "var(--type-caption)", padding: "8px 16px", borderRadius: "999px", transition: "all 0.3s ease" }}
+                >
+                  Todas las categorías
+                </button>
+                {categorias.map((cat) => (
                   <button
-                    onClick={() => setFiltroActivo(null)}
-                    className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroActivo === null ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
+                    key={cat}
+                    onClick={() => setFiltroActivo(cat)}
+                    className="btn btn--secondary"
+                    style={{ 
+                      whiteSpace: "nowrap", 
+                      fontSize: "var(--type-caption)", 
+                      padding: "8px 16px", 
+                      borderRadius: "999px", 
+                      transition: "all 0.3s ease",
+                      border: filtroActivo === cat ? "1px solid var(--color-ink)" : "1px solid var(--color-ink-muted)",
+                      backgroundColor: filtroActivo === cat ? "var(--color-ink)" : "transparent",
+                      color: filtroActivo === cat ? "var(--color-canvas)" : "var(--color-ink)",
+                    }}
                   >
-                    Todas las categorías
+                    {cat}
                   </button>
-                  {categorias.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setFiltroActivo(cat)}
-                      className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroActivo === cat ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
+                ))}
               </div>
 
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Tipo</h3>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => setFiltroTipo(null)}
-                    className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroTipo === null ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
+              {/* Ordenamiento y Layout */}
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+                  <label style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500, textTransform: "uppercase" }}>Ordenar:</label>
+                  <select
+                    value={orden}
+                    onChange={(e) => setOrden(e.target.value)}
+                    style={{
+                      backgroundColor: "var(--color-canvas)",
+                      border: "1px solid #E5E5E5",
+                      color: "var(--color-ink)",
+                      padding: "6px 12px",
+                      borderRadius: "999px",
+                      fontSize: "var(--type-caption)",
+                      fontFamily: "var(--font-body)",
+                      cursor: "pointer",
+                      outline: "none",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+                    }}
                   >
-                    Cualquier Tipo
+                    <option value="default">Relevancia</option>
+                    <option value="precio_asc">Precio: Menor a Mayor</option>
+                    <option value="precio_desc">Precio: Mayor a Menor</option>
+                    <option value="ventas">Más Vendidos</option>
+                  </select>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", borderLeft: "1px solid var(--color-ink-muted)", paddingLeft: "12px", marginLeft: "4px" }}>
+                  <button
+                    onClick={() => setLayoutMode("grid2")}
+                    style={{
+                      background: "none", border: "none", color: layoutMode === "grid2" ? "var(--color-volt)" : "var(--color-ink-soft)",
+                      cursor: "pointer", display: "flex", padding: "4px", transition: "color 0.2s"
+                    }}
+                    title="Vista 2 Columnas"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="18"></rect><rect x="14" y="3" width="7" height="18"></rect></svg>
                   </button>
-                  {tiposProducto.map((tipo) => (
-                    <button
-                      key={tipo}
-                      onClick={() => setFiltroTipo(tipo)}
-                      className={`text-left text-sm py-2 px-4 rounded-lg font-medium transition-colors ${filtroTipo === tipo ? "bg-black text-white" : "bg-transparent text-gray-600 hover:bg-gray-100"}`}
-                    >
-                      {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
-                    </button>
-                  ))}
+                  <button
+                    onClick={() => setLayoutMode("grid3")}
+                    style={{
+                      background: "none", border: "none", color: layoutMode === "grid3" ? "var(--color-volt)" : "var(--color-ink-soft)",
+                      cursor: "pointer", display: "flex", padding: "4px", transition: "color 0.2s"
+                    }}
+                    title="Vista 3 Columnas"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="5" height="18"></rect><rect x="9.5" y="3" width="5" height="18"></rect><rect x="17" y="3" width="5" height="18"></rect></svg>
+                  </button>
+                  <button
+                    onClick={() => setLayoutMode("list")}
+                    style={{
+                      background: "none", border: "none", color: layoutMode === "list" ? "var(--color-volt)" : "var(--color-ink-soft)",
+                      cursor: "pointer", display: "flex", padding: "4px", transition: "color 0.2s"
+                    }}
+                    title="Vista Lista"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                  </button>
                 </div>
               </div>
+            </div>
 
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between">
-                  <span>Precio Máx.</span>
-                  <span className="text-black font-mono">${maxPrecio}</span>
-                </h3>
+            {/* Tipos de Producto */}
+            <div style={{ display: "flex", gap: "var(--space-xs)", overflowX: "auto", paddingBottom: "var(--space-2xs)", scrollbarWidth: "none" }}>
+                <button
+                  onClick={() => setFiltroTipo(null)}
+                  className="btn btn--secondary"
+                  style={{ 
+                    whiteSpace: "nowrap", 
+                    fontSize: "var(--type-caption)", 
+                    padding: "6px 16px", 
+                    borderRadius: "999px",
+                    border: filtroTipo === null ? "1px solid var(--color-ink)" : "1px solid #E5E5E5",
+                    backgroundColor: filtroTipo === null ? "var(--color-ink)" : "transparent",
+                    color: filtroTipo === null ? "var(--color-canvas)" : "var(--color-ink)",
+                    transition: "all 0.3s ease"
+                  }}
+                >
+                  Cualquier Tipo
+                </button>
+                {tiposProducto.map((tipo) => (
+                  <button
+                    key={tipo}
+                    onClick={() => setFiltroTipo(tipo)}
+                    className="btn btn--secondary"
+                    style={{ 
+                      whiteSpace: "nowrap", 
+                      fontSize: "var(--type-caption)", 
+                      padding: "6px 16px", 
+                      borderRadius: "999px",
+                      border: filtroTipo === tipo ? "1px solid var(--color-ink)" : "1px solid #E5E5E5",
+                      backgroundColor: filtroTipo === tipo ? "var(--color-ink)" : "transparent",
+                      color: filtroTipo === tipo ? "var(--color-canvas)" : "var(--color-ink)",
+                      transition: "all 0.3s ease"
+                    }}
+                  >
+                    {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                  </button>
+                ))}
+            </div>
+
+            {/* Advanced Filters: Price & Color */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2xl)", marginTop: "var(--space-sm)", paddingTop: "var(--space-md)", borderTop: "1px solid var(--color-ink-muted)" }}>
+              {/* Price Slider */}
+              <div style={{ flex: 1, minWidth: "200px", maxWidth: "300px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-xs)" }}>
+                  <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Precio Máximo</span>
+                  <span style={{ fontSize: "var(--type-caption)", fontWeight: 600 }}>${maxPrecio}</span>
+                </div>
                 <input 
                   type="range" 
                   min="10" 
@@ -169,16 +293,25 @@ export default function TiendaPage() {
                   step="5" 
                   value={maxPrecio}
                   onChange={(e) => setMaxPrecio(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                  style={{ width: "100%", cursor: "pointer", accentColor: "var(--color-ink)" }}
                 />
               </div>
 
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Color</h3>
-                <div className="flex gap-3 flex-wrap">
+              {/* Color Filter */}
+              <div style={{ flex: 1, minWidth: "200px" }}>
+                <span style={{ display: "block", fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase", marginBottom: "var(--space-sm)" }}>Color</span>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                   <button
                     onClick={() => setFiltroColor(null)}
-                    className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-[10px] transition-all ${filtroColor === null ? "border-black text-black font-bold" : "border-gray-200 text-gray-500"}`}
+                    style={{
+                      width: "32px", height: "32px", borderRadius: "50%",
+                      backgroundColor: "transparent",
+                      border: "1px solid #E5E5E5",
+                      cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: filtroColor === null ? "var(--color-ink)" : "var(--color-ink-soft)",
+                      fontWeight: filtroColor === null ? 700 : 400
+                    }}
                     title="Todos los colores"
                   >
                     ALL
@@ -187,93 +320,94 @@ export default function TiendaPage() {
                     <button
                       key={c}
                       onClick={() => setFiltroColor(c)}
-                      className="w-10 h-10 rounded-full border border-gray-200 transition-all"
                       style={{
+                        width: "32px", height: "32px", borderRadius: "50%",
                         backgroundColor: c,
-                        boxShadow: filtroColor === c ? "0 0 0 2px white, 0 0 0 4px black" : "none",
+                        border: "1px solid rgba(0,0,0,0.1)",
+                        outline: filtroColor === c ? "2px solid var(--color-ink)" : "none",
+                        outlineOffset: "2px",
+                        cursor: "pointer"
                       }}
                       title={c}
                     />
                   ))}
                 </div>
               </div>
-            </aside>
-
-            {/* Main Content */}
-            <div className="flex-1">
-              <div className="flex justify-end mb-8">
-                <div className="flex items-center gap-4">
-                  <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Ordenar por:</label>
-                  <select
-                    value={orden}
-                    onChange={(e) => setOrden(e.target.value)}
-                    className="bg-white border-2 border-gray-200 text-gray-900 py-3 px-6 rounded-full text-sm font-bold cursor-pointer outline-none shadow-sm focus:ring-2 focus:ring-black focus:border-black appearance-none"
-                  >
-                    <option value="default">Relevancia</option>
-                    <option value="precio_asc">Precio: Menor a Mayor</option>
-                    <option value="precio_desc">Precio: Mayor a Menor</option>
-                    <option value="ventas">Más Vendidos</option>
-                  </select>
-                </div>
-              </div>
-
-              <AnimatePresence mode="popLayout">
-                <motion.div 
-                  initial="hidden"
-                  animate="visible"
-                  variants={{
-                    hidden: { opacity: 0 },
-                    visible: {
-                      opacity: 1,
-                      transition: { staggerChildren: 0.1 }
-                    }
-                  }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-                >
-                  {productosFiltrados.slice(0, visibleCount).map((producto, i) => (
-                    <motion.div 
-                      key={producto.id}
-                      layout
-                      variants={{
-                        hidden: { opacity: 0, y: 30, scale: 0.95 },
-                        visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } }
-                      }}
-                      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                    >
-                      <ProductCard
-                        producto={producto}
-                        index={i}
-                        onQuickView={setQuickViewProduct}
-                        layoutMode="grid3"
-                      />
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-
-              {visibleCount < productosFiltrados.length && (
-                <div className="flex justify-center mt-16">
-                  <button 
-                    onClick={() => setVisibleCount(prev => prev + 12)}
-                    className="bg-black text-white font-bold uppercase tracking-wider py-4 px-12 rounded-full hover:bg-gray-800 transition-colors shadow-lg"
-                  >
-                    Cargar Más
-                  </button>
-                </div>
-              )}
-
-              {productosFiltrados.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-32 bg-white rounded-3xl shadow-sm border border-gray-100"
-                >
-                  <p className="text-xl text-gray-500 font-medium">No hay productos que coincidan con los filtros.</p>
-                  <button onClick={() => { setFiltroActivo(null); setFiltroTipo(null); setFiltroColor(null); setMaxPrecio(200); }} className="mt-6 text-black underline font-bold">Borrar filtros</button>
-                </motion.div>
-              )}
             </div>
+
           </div>
+
+          {/* Grid Animado */}
+          <AnimatePresence mode="popLayout">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 }
+              }
+            }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: layoutMode === "grid2" 
+                ? "repeat(auto-fill, minmax(calc(50% - var(--space-md)), 1fr))" 
+                : layoutMode === "grid3"
+                ? "repeat(auto-fill, minmax(calc(33.333% - var(--space-md)), 1fr))"
+                : "1fr",
+              gap: "var(--space-lg)",
+            }}
+          >
+            {productosFiltrados.slice(0, visibleCount).map((producto, i) => (
+              <motion.div 
+                key={producto.id}
+                layout
+                variants={{
+                  hidden: { opacity: 0, y: 30, scale: 0.95 },
+                  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0, 0, 0.2, 1] } }
+                }}
+                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                whileHover={{ y: layoutMode === "list" ? 0 : -8 }}
+              >
+                <ProductCard
+                  producto={producto}
+                  index={i}
+                  onQuickView={setQuickViewProduct}
+                  layoutMode={layoutMode}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+          </AnimatePresence>
+
+          {/* Load More Button */}
+          {visibleCount < productosFiltrados.length && (
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "var(--space-4xl)" }}>
+              <button 
+                onClick={() => setVisibleCount(prev => prev + 12)}
+                className="btn btn--secondary"
+              >
+                Cargar Más
+              </button>
+            </div>
+          )}
+
+          {productosFiltrados.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{
+                textAlign: "center",
+                padding: "var(--space-4xl) 0",
+                color: "var(--color-ink-soft)",
+              }}
+            >
+              <p style={{ fontSize: "var(--type-body-lg)" }}>
+                No hay productos en esta categoría aún.
+              </p>
+            </motion.div>
+          )}
         </div>
       </main>
 

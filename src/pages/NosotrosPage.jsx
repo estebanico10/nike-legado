@@ -14,13 +14,205 @@ const colorData = [
   { name: "Secondary Text", hex: "#757575", pct: 2, desc: "Metadata, captions, descripciones secundarias y labels de formulario" },
 ];
 
-import { SectionLabel, SectionTitle } from "../components/nosotros/SectionHeaders";
-import PhotoPlaceholder from "../components/nosotros/PhotoPlaceholder";
-import TeamMemberPhoto from "../components/nosotros/TeamMemberPhoto";
-import MarqueeText from "../components/nosotros/MarqueeText";
-import DonutChart from "../components/nosotros/DonutChart";
-import VerticalTimeline from "../components/nosotros/VerticalTimeline";
-import SEO from "../components/SEO";
+
+const ease = [0, 0, 0.2, 1];
+
+/* ─── Reusable sub-components ─── */
+
+function SectionLabel({ children }) {
+  return (
+    <p style={{
+      fontFamily: "var(--font-body)", fontSize: "var(--type-caption)", fontWeight: 500,
+      textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--color-ink-soft)",
+      marginBottom: "var(--space-md)",
+    }}>{children}</p>
+  );
+}
+
+function SectionTitle({ children, style }) {
+  return (
+    <h2 style={{
+      fontFamily: "var(--font-display)", fontSize: "var(--type-h2)", lineHeight: "var(--lh-h2)",
+      fontWeight: 700, letterSpacing: "var(--tracking-tight)", textTransform: "uppercase",
+      color: "var(--color-ink)", marginBottom: "var(--space-2xl)", ...style,
+    }}>{children}</h2>
+  );
+}
+
+function PhotoPlaceholder({ src, width, height, label, style }) {
+  const [error, setError] = useState(!src);
+
+  if (!error && src) {
+    return (
+      <img
+        src={resolveAsset(src)}
+        alt={label || "Photo"}
+        style={{ width, height, objectFit: "cover", display: "block", ...style }}
+        onError={() => setError(true)}
+      />
+    );
+  }
+
+  return (
+    <div style={{
+      width, height, backgroundColor: "var(--color-canvas-alt)",
+      border: "2px dashed var(--color-ink-muted)", display: "flex", alignItems: "center",
+      justifyContent: "center", flexDirection: "column", gap: "12px",
+      color: "var(--color-ink-soft)", fontFamily: "var(--font-body)",
+      fontSize: "var(--type-caption)", textTransform: "uppercase", letterSpacing: "0.08em",
+      overflow: "hidden", ...style,
+    }}>
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </svg>
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function TeamMemberPhoto({ member }) {
+  const [error, setError] = useState(!member.photo);
+
+  if (!error && member.photo) {
+    return (
+      <div style={{ overflow: "hidden", width: "160px", height: "160px", backgroundColor: "var(--color-canvas-alt)" }}>
+        <motion.img
+          src={resolveAsset(member.photo)}
+          alt={member.name}
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: member.objectPosition || "center center", display: "block", filter: "grayscale(100%)" }}
+          whileHover={{ scale: 1.05, filter: "grayscale(0%)" }}
+          transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] }}
+          onError={() => setError(true)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div 
+      whileHover={{ scale: 1.05, borderColor: "var(--color-volt)" }}
+      transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] }}
+      style={{
+        width: "160px", height: "160px", backgroundColor: "var(--color-canvas-alt)",
+        border: "2px dashed var(--color-ink-muted)", display: "flex",
+        alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "8px",
+      }}>
+      <span style={{
+        fontFamily: "var(--font-display)", fontSize: "var(--type-h2)",
+        fontWeight: 700, color: "var(--color-ink-muted)", letterSpacing: "0.02em",
+      }}>{member.initials}</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-ink-muted)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </motion.div>
+  );
+}
+
+function MarqueeText() {
+  return (
+    <div style={{
+      width: "100vw", marginLeft: "calc(-50vw + 50%)", overflow: "hidden", backgroundColor: "var(--color-volt)", color: "#111",
+      padding: "var(--space-md) 0", borderTop: "2px solid var(--color-ink)", borderBottom: "2px solid var(--color-ink)",
+      display: "flex", whiteSpace: "nowrap", alignItems: "center", marginBottom: "var(--space-4xl)"
+    }}>
+      <motion.div
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
+        style={{ display: "flex", gap: "var(--space-2xl)", paddingRight: "var(--space-2xl)" }}
+      >
+        {Array(10).fill("STREETWEAR ECUATORIANO ✦ MINIMALISMO ABSOLUTO ✦ HERENCIA ANDINA ✦ ").map((text, i) => (
+          <span key={i} style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>{text}</span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function DonutChart({ data, size = 260 }) {
+  const cx = size / 2, cy = size / 2, radius = size * 0.38, strokeWidth = size * 0.18;
+  const circumference = 2 * Math.PI * radius;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: "block" }}>
+      {data.map((item, i) => {
+        const dashLength = (item.pct / 100) * circumference;
+        const prevSum = data.slice(0, i).reduce((sum, curr) => sum + curr.pct, 0);
+        const dashOffset = -(prevSum / 100) * circumference;
+        return (
+          <motion.circle key={item.name} cx={cx} cy={cy} r={radius} fill="none"
+            stroke={item.hex} strokeWidth={strokeWidth}
+            strokeDasharray={`${dashLength} ${circumference - dashLength}`}
+            strokeDashoffset={dashOffset}
+            style={{ transformOrigin: "center", transform: "rotate(-90deg)",
+              filter: item.hex === "#FFFFFF" ? "drop-shadow(0 0 1px rgba(0,0,0,0.15))" : "none" }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.12, duration: 0.5, ease }} />
+        );
+      })}
+      <text x={cx} y={cy - 8} textAnchor="middle" fill="var(--color-ink)" fontFamily="var(--font-display)" fontSize="26" fontWeight="700">100%</text>
+      <text x={cx} y={cy + 14} textAnchor="middle" fill="var(--color-ink-soft)" fontFamily="var(--font-body)" fontSize="10" letterSpacing="0.08em">DISTRIBUCIÓN</text>
+    </svg>
+  );
+}
+
+/* ─── Timeline Component ─── */
+
+const timelinePhases = [
+  {
+    phase: "FASE 01",
+    title: "Conceptualización & Branding",
+    desc: "Definición de la identidad gráfica, reglas de diseño (escala de 8px, chrome invisible) y la narrativa: streetwear minimalista con herencia andina."
+  },
+  {
+    phase: "FASE 02",
+    title: "UI/UX & Prototipado",
+    desc: "Diseño de wireframes de alta fidelidad, paleta cromática basada en espacio negativo y creación de la arquitectura de la información SPA."
+  },
+  {
+    phase: "FASE 03",
+    title: "Desarrollo Front-End",
+    desc: "Implementación en React 18, Vite, Framer Motion y Vanilla CSS. Creación del sistema de ruteo, transiciones de página y animaciones complejas (mesh, parallax, tilt)."
+  },
+  {
+    phase: "FASE 04",
+    title: "Validación & Despliegue",
+    desc: "Pruebas de rendimiento, optimización de assets, integración del CMS local y despliegue final. Pulido del motion design."
+  }
+];
+
+function VerticalTimeline() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2xl)", position: "relative" }}>
+      {/* Línea vertical */}
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: "24px", width: "2px", backgroundColor: "var(--color-ink-muted)", zIndex: 0 }} />
+      
+      {timelinePhases.map((item, i) => (
+        <motion.div 
+          key={item.phase}
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, ease, delay: i * 0.15 }}
+          style={{ display: "flex", gap: "var(--space-xl)", position: "relative", zIndex: 1 }}
+        >
+          {/* Nodo */}
+          <div style={{ 
+            width: "48px", height: "48px", borderRadius: "50%", backgroundColor: "var(--color-volt)", border: "4px solid var(--color-canvas)",
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 0 0 2px var(--color-ink)"
+          }}>
+            <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "14px", color: "#111" }}>{i + 1}</span>
+          </div>
+          
+          {/* Contenido */}
+          <div style={{ paddingTop: "8px" }}>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-caption)", fontWeight: 600, color: "var(--color-ink-soft)", textTransform: "uppercase", letterSpacing: "0.1em" }}>{item.phase}</span>
+            <h4 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", fontWeight: 700, color: "var(--color-ink)", textTransform: "uppercase", marginTop: "var(--space-2xs)", marginBottom: "var(--space-sm)" }}>{item.title}</h4>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "var(--type-body-sm)", color: "var(--color-ink-soft)", lineHeight: 1.6, maxWidth: "600px" }}>{item.desc}</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 /* ─── Main Page ─── */
 
@@ -28,7 +220,6 @@ export default function NosotrosPage() {
   const { team } = useSite();
   return (
     <>
-      <SEO title="Nosotros" description="Conoce el alma del barrio. Nuestro equipo, manifiesto y sistema de diseño." />
       <AnimatedBackground />
       <main style={{ paddingTop: "var(--space-4xl)", paddingBottom: "var(--space-5xl)", position: "relative", zIndex: 1 }}>
       <div className="container">

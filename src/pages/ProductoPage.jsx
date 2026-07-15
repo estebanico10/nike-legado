@@ -9,27 +9,25 @@ import CustomerReviews from "../components/CustomerReviews";
 import { resolveAsset } from "../utils/resolveAsset";
 import ProductCard from "../components/ProductCard";
 import SizeGuideModal from "../components/SizeGuideModal";
+import InteractiveShoe3D from "../components/InteractiveShoe3D";
 import SizeRecommender from "../components/SizeRecommender";
-import { Suspense, lazy } from "react";
-const ProductConfigurator3D = lazy(() => import("../components/3d/ProductConfigurator3D"));
 import CountdownTimer from "../components/CountdownTimer";
 import RelatedProducts from "../components/RelatedProducts";
 import BundleBuilder from "../components/BundleBuilder";
 import ARSimulatorModal from "../components/ARSimulatorModal";
-import { useCartStore, useRecentStore, useWishlistStore } from "../store/useStore";
+import { useCartStore, useRecentStore } from "../store/useStore";
 import { useI18nStore } from "../store/useI18nStore";
 
 export default function ProductoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { productos } = useProducts();
+  const { productos, wishlist, toggleWishlist } = useProducts();
   const { addToCart } = useCartStore();
   const { addRecentProduct } = useRecentStore();
-  const { toggleWishlist, isInWishlist } = useWishlistStore();
   const { formatPrice } = useI18nStore();
   const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
-  const isWishlisted = producto ? isInWishlist(producto.id) : false;
+  const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
   
   const [activeImage, setActiveImage] = useState(0);
   const [selectedTalla, setSelectedTalla] = useState(null);
@@ -343,17 +341,12 @@ export default function ProductoPage() {
           </div>
 
           {/* 3D Experience Section */}
-          <div style={{ marginTop: "var(--space-5xl)", marginBottom: "var(--space-5xl)" }}>
-            <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <Suspense fallback={<div style={{ height: "400px", display: "flex", alignItems: "center", justifyContent: "center" }}>Cargando experiencia 3D...</div>}>
-                <ProductConfigurator3D initialColor={producto.colores?.[0] || '#CEFF00'} />
-              </Suspense>
-            </motion.div>
+          <div style={{ marginTop: "var(--space-4xl)", marginBottom: "var(--space-4xl)" }}>
+            <div style={{ textAlign: "center", marginBottom: "var(--space-2xl)" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "var(--type-h3)", textTransform: "uppercase" }}>Vista 360°</h2>
+              <p style={{ color: "var(--color-ink-soft)", fontSize: "var(--type-body-sm)" }}>Interactúa con el modelo 3D</p>
+            </div>
+            <InteractiveShoe3D />
           </div>
 
       {/* HOW IT'S MADE SECTION */}
