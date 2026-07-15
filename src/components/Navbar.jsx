@@ -31,6 +31,7 @@ const navLinks = [
 function NavDropdown({ label, children }) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useI18nStore();
 
   const isChildActive = children.some(c => location.pathname === c.to);
 
@@ -56,7 +57,7 @@ function NavDropdown({ label, children }) {
           transition: "color var(--duration-micro) var(--ease-out)",
         }}
       >
-        {label}
+        {t(label)}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}>
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -118,7 +119,7 @@ function NavDropdown({ label, children }) {
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--color-canvas-alt)"; e.currentTarget.style.color = "var(--color-ink)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = location.pathname === c.to ? "var(--color-ink)" : "var(--color-ink-soft)"; }}
                 >
-                  {c.label}
+                  {t(c.label)}
                 </Link>
               ))}
             </div>
@@ -132,7 +133,7 @@ function NavDropdown({ label, children }) {
 // Toolbox Component para agrupar Ajustes (derecha)
 function Toolbox() {
   const [isOpen, setIsOpen] = useState(false);
-  const { currency, setCurrency, lang, setLang } = useI18nStore();
+  const { currency, setCurrency, lang, setLang, t } = useI18nStore();
   
   return (
     <div 
@@ -177,14 +178,14 @@ function Toolbox() {
             }}>
               
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 8px" }}>
-                <span style={{ fontSize: "var(--type-caption)", fontWeight: 500 }}>Tema</span>
+                <span style={{ fontSize: "var(--type-caption)", fontWeight: 500 }}>{t("Tema")}</span>
                 <ThemeToggle />
               </div>
               
               <div style={{ height: "1px", backgroundColor: "var(--color-ink-muted)" }} />
 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 8px" }}>
-                <span style={{ fontSize: "var(--type-caption)", fontWeight: 500 }}>Moneda</span>
+                <span style={{ fontSize: "var(--type-caption)", fontWeight: 500 }}>{t("Moneda")}</span>
                 <select 
                   value={currency} 
                   onChange={(e) => setCurrency(e.target.value)}
@@ -202,7 +203,7 @@ function Toolbox() {
               </div>
 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 8px" }}>
-                <span style={{ fontSize: "var(--type-caption)", fontWeight: 500 }}>Idioma</span>
+                <span style={{ fontSize: "var(--type-caption)", fontWeight: 500 }}>{t("Idioma")}</span>
                 <select 
                   value={lang} 
                   onChange={(e) => setLang(e.target.value)}
@@ -224,7 +225,7 @@ function Toolbox() {
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "8px", color: "var(--color-volt)", textDecoration: "none", fontSize: "var(--type-caption)", fontWeight: 600
               }}>
-                Panel Admin
+                {t("Panel Admin")}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                   <line x1="3" y1="9" x2="21" y2="9"></line>
@@ -249,6 +250,7 @@ export default function Navbar() {
   const cartCount = useCartStore((state) => state.getCartCount());
   const wishlistCount = useWishlistStore((state) => state.items.length);
   const { openCart, openSearch } = useUIStore();
+  const { t } = useI18nStore();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious();
@@ -308,7 +310,7 @@ export default function Navbar() {
               color: "var(--color-ink)",
             }}
           >
-            EL ADN DE LA PASIÓN
+            {t("EL ADN DE LA PASIÓN")}
           </span>
         </Link>
 
@@ -343,7 +345,7 @@ export default function Navbar() {
                   textDecoration: "none"
                 }}
               >
-                {link.label}
+                {t(link.label)}
                 {isActive && (
                   <motion.div
                     layoutId="nav-indicator"
@@ -533,7 +535,7 @@ export default function Navbar() {
                           marginBottom: "var(--space-md)",
                         }}
                       >
-                        {link.label}
+                        {t(link.label)}
                       </span>
                       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)", paddingLeft: "var(--space-md)" }}>
                         {link.children.map(c => (
@@ -550,7 +552,7 @@ export default function Navbar() {
                               textDecoration: "none"
                             }}
                           >
-                            {c.label}
+                            {t(c.label)}
                           </Link>
                         ))}
                       </div>
@@ -572,7 +574,7 @@ export default function Navbar() {
                         textDecoration: "none"
                       }}
                     >
-                      {link.label}
+                      {t(link.label)}
                     </Link>
                   )}
                 </motion.div>

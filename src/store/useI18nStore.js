@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import enDict from "../locales/en.json";
+
 const exchangeRates = {
   USD: 1,
   MXN: 18.5,
@@ -15,6 +17,14 @@ export const useI18nStore = create(
       setCurrency: (currency) => set({ currency }),
       setLang: (lang) => set({ lang }),
       
+      t: (key) => {
+        const { lang } = get();
+        if (lang === "en" && enDict[key]) {
+          return enDict[key];
+        }
+        return key; // Fallback a la clave original (español)
+      },
+
       formatPrice: (priceInUSD) => {
         const { currency } = get();
         const rate = exchangeRates[currency] || 1;

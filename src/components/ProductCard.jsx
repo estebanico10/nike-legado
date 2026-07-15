@@ -10,7 +10,7 @@ import CountdownTimer from "./CountdownTimer";
 import { useI18nStore } from "../store/useI18nStore";
 
 export default function ProductCard({ producto, index, onQuickView, layoutMode = "grid3" }) {
-  const { formatPrice } = useI18nStore();
+  const { formatPrice, t } = useI18nStore();
   const [hoveredColor, setHoveredColor] = useState(null);
   
   // Use the color's specific image if available, else default
@@ -74,7 +74,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
     const defaultSize = producto.tallas?.[0] || "M";
     const defaultColor = producto.colores?.[0] || "#000000";
     addToCart(producto, defaultSize, defaultColor);
-    addToast(`${producto.nombre} añadido al carrito`, "success");
+    addToast(`${producto.nombre} ${t("¡Agregado!")}`, "success");
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 1800);
   };
@@ -188,7 +188,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
               >
                 <OptimizedImage
                   src={segundaImagen}
-                  alt={`${producto.nombre} — vista alternativa`}
+                  alt={`${producto.nombre} — ${t("Vista rápida")}`}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </motion.div>
@@ -209,7 +209,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
             }}
             onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
             onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-            aria-label={isWished ? "Quitar de favoritos" : "Añadir a favoritos"}
+            aria-label={isWished ? t("Quitar de favoritos") : t("Añadir a favoritos")}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill={isWished ? "#D30005" : "none"} stroke="currentColor" strokeWidth="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -234,7 +234,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
               zIndex: 2,
             }}
           >
-            Nuevo
+            {t("Nuevo")}
           </span>
         )}
 
@@ -255,7 +255,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
               zIndex: 2,
             }}
           >
-            Oferta
+            {t("Oferta")}
           </span>
         )}
 
@@ -305,10 +305,10 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
-                    ¡Agregado!
+                    {t("¡Agregado!")}
                   </>
                 ) : (
-                  "Agregar al carrito"
+                  t("Agregar al carrito")
                 )}
               </motion.button>
               <motion.button
@@ -325,7 +325,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
                   justifyContent: "center",
                   backdropFilter: "blur(8px)",
                 }}
-                title="Vista rápida"
+                title={t("Vista rápida")}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -347,7 +347,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
                   justifyContent: "center",
                   backdropFilter: "blur(8px)",
                 }}
-                title={isCompared ? "Quitar de comparar" : "Comparar"}
+                title={isCompared ? t("Quitar de comparar") : t("Comparar")}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="3" width="7" height="18" rx="1"></rect>
@@ -376,7 +376,7 @@ export default function ProductCard({ producto, index, onQuickView, layoutMode =
         >
           {producto.nombre}
           {producto.esNuevo && (
-            <span style={{ position: "absolute", top: "-24px", left: "0px", backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", padding: "2px 6px", fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", zIndex: 5, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>Nuevo</span>
+            <span style={{ position: "absolute", top: "-24px", left: "0px", backgroundColor: "var(--color-canvas)", color: "var(--color-ink)", padding: "2px 6px", fontSize: "10px", fontWeight: "bold", textTransform: "uppercase", zIndex: 5, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>{t("Nuevo")}</span>
           )}
         </motion.h3>
 

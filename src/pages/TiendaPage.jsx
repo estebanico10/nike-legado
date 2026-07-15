@@ -7,6 +7,7 @@ import ProductCard from "../components/ProductCard";
 import ProductQuickView from "../components/ProductQuickView";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CompareDrawer from "../components/CompareDrawer";
+import { useI18nStore } from "../store/useI18nStore";
 
 function CountUp({ value }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -26,6 +27,7 @@ function CountUp({ value }) {
 export default function TiendaPage() {
   const { productos, categorias, tiposProducto } = useProducts();
   const { items: wishlist } = useWishlistStore();
+  const { t } = useI18nStore();
 
   const [searchParams] = useSearchParams();
   const [filtroActivo, setFiltroActivo] = useState(null);
@@ -109,7 +111,7 @@ export default function TiendaPage() {
                 overflow: "hidden"
               }}
             >
-              {Array.from(isWishlistMode ? "FAVORITOS" : (query ? `RESULTADOS` : "COLECCIÓN")).map((char, i) => (
+              {Array.from(isWishlistMode ? t("FAVORITOS") : (query ? t("RESULTADOS") : t("COLECCIÓN"))).map((char, i) => (
                 <motion.span
                   key={i}
                   variants={{
@@ -129,9 +131,9 @@ export default function TiendaPage() {
                 color: "var(--color-ink-soft)",
               }}
             >
-              {query && <span style={{display:"block", marginBottom:"4px"}}>Resultados para "{query}"</span>}
+              {query && <span style={{display:"block", marginBottom:"4px"}}>{t("Resultados para")} "{query}"</span>}
               <CountUp value={productosFiltrados.length} />{" "}
-              {productosFiltrados.length === 1 ? "producto" : "productos"}
+              {productosFiltrados.length === 1 ? t("producto") : t("productos")}
             </p>
           </motion.div>
 
@@ -154,7 +156,7 @@ export default function TiendaPage() {
                   className={`btn ${filtroActivo === null ? "btn--primary" : "btn--secondary"}`}
                   style={{ whiteSpace: "nowrap", fontSize: "var(--type-caption)", padding: "8px 16px", borderRadius: "999px", transition: "all 0.3s ease" }}
                 >
-                  Todas las categorías
+                  {t("Todas las categorías")}
                 </button>
                 {categorias.map((cat) => (
                   <button
@@ -172,7 +174,7 @@ export default function TiendaPage() {
                       color: filtroActivo === cat ? "var(--color-canvas)" : "var(--color-ink)",
                     }}
                   >
-                    {cat}
+                    {t(cat)}
                   </button>
                 ))}
               </div>
@@ -180,7 +182,7 @@ export default function TiendaPage() {
               {/* Ordenamiento y Layout */}
               <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)", flexWrap: "wrap" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
-                  <label style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500, textTransform: "uppercase" }}>Ordenar:</label>
+                  <label style={{ fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", fontWeight: 500, textTransform: "uppercase" }}>{t("Ordenar:")}</label>
                   <select
                     value={orden}
                     onChange={(e) => setOrden(e.target.value)}
@@ -197,10 +199,10 @@ export default function TiendaPage() {
                       boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
                     }}
                   >
-                    <option value="default">Relevancia</option>
-                    <option value="precio_asc">Precio: Menor a Mayor</option>
-                    <option value="precio_desc">Precio: Mayor a Menor</option>
-                    <option value="ventas">Más Vendidos</option>
+                    <option value="default">{t("Relevancia")}</option>
+                    <option value="precio_asc">{t("Precio: Menor a Mayor")}</option>
+                    <option value="precio_desc">{t("Precio: Mayor a Menor")}</option>
+                    <option value="ventas">{t("Más Vendidos")}</option>
                   </select>
                 </div>
 
@@ -255,7 +257,7 @@ export default function TiendaPage() {
                     transition: "all 0.3s ease"
                   }}
                 >
-                  Cualquier Tipo
+                  {t("Cualquier Tipo")}
                 </button>
                 {tiposProducto.map((tipo) => (
                   <button
@@ -273,7 +275,7 @@ export default function TiendaPage() {
                       transition: "all 0.3s ease"
                     }}
                   >
-                    {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                    {t(tipo.charAt(0).toUpperCase() + tipo.slice(1))}
                   </button>
                 ))}
             </div>
@@ -283,7 +285,7 @@ export default function TiendaPage() {
               {/* Price Slider */}
               <div style={{ flex: 1, minWidth: "200px", maxWidth: "300px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-xs)" }}>
-                  <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Precio Máximo</span>
+                  <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>{t("Precio Máximo")}</span>
                   <span style={{ fontSize: "var(--type-caption)", fontWeight: 600 }}>${maxPrecio}</span>
                 </div>
                 <input 
@@ -299,7 +301,7 @@ export default function TiendaPage() {
 
               {/* Color Filter */}
               <div style={{ flex: 1, minWidth: "200px" }}>
-                <span style={{ display: "block", fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase", marginBottom: "var(--space-sm)" }}>Color</span>
+                <span style={{ display: "block", fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase", marginBottom: "var(--space-sm)" }}>{t("Color")}</span>
                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                   <button
                     onClick={() => setFiltroColor(null)}
@@ -312,7 +314,7 @@ export default function TiendaPage() {
                       color: filtroColor === null ? "var(--color-ink)" : "var(--color-ink-soft)",
                       fontWeight: filtroColor === null ? 700 : 400
                     }}
-                    title="Todos los colores"
+                    title={t("Todos los colores")}
                   >
                     ALL
                   </button>
@@ -388,7 +390,7 @@ export default function TiendaPage() {
                 onClick={() => setVisibleCount(prev => prev + 12)}
                 className="btn btn--secondary"
               >
-                Cargar Más
+                {t("Cargar Más")}
               </button>
             </div>
           )}
@@ -404,7 +406,7 @@ export default function TiendaPage() {
               }}
             >
               <p style={{ fontSize: "var(--type-body-lg)" }}>
-                No hay productos en esta categoría aún.
+                {t("No hay productos en esta categoría aún.")}
               </p>
             </motion.div>
           )}

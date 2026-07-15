@@ -25,7 +25,7 @@ export default function ProductoPage() {
   const { items: wishlist, toggleWishlist } = useWishlistStore();
   const { addToCart } = useCartStore();
   const { addRecentProduct } = useRecentStore();
-  const { formatPrice } = useI18nStore();
+  const { formatPrice, t } = useI18nStore();
   const { addToast } = useToast();
   const producto = productos.find(p => p.id === id);
   const isWishlisted = producto ? wishlist.some(w => w.id === producto.id) : false;
@@ -96,9 +96,9 @@ export default function ProductoPage() {
         <div className="container">
           {/* Breadcrumbs */}
           <nav style={{ marginBottom: "var(--space-xl)", fontSize: "var(--type-caption)", color: "var(--color-ink-soft)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-            <Link to="/tienda" style={{ color: "inherit", textDecoration: "none" }}>Tienda</Link> 
+            <Link to="/tienda" style={{ color: "inherit", textDecoration: "none" }}>{t("Tienda")}</Link> 
             <span style={{ margin: "0 8px" }}>/</span>
-            <Link to="/tienda" style={{ color: "inherit", textDecoration: "none" }}>{producto.categoria}</Link>
+            <Link to="/tienda" style={{ color: "inherit", textDecoration: "none" }}>{t(producto.categoria)}</Link>
             <span style={{ margin: "0 8px" }}>/</span>
             <span style={{ color: "var(--color-ink)", fontWeight: 500 }}>{producto.nombre}</span>
           </nav>
@@ -150,10 +150,10 @@ export default function ProductoPage() {
                   {/* Badges */}
                   <div style={{ position: "absolute", top: "16px", left: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
                     {producto.esNuevo && (
-                      <span className="badge-indoor" style={{ backgroundColor: "var(--color-ink)" }}>NUEVO</span>
+                      <span className="badge-indoor" style={{ backgroundColor: "var(--color-ink)" }}>{t("NUEVO")}</span>
                     )}
                     {producto.enOferta && (
-                      <span className="badge-indoor" style={{ backgroundColor: "var(--color-sale)", borderLeftColor: "var(--color-ink)" }}>OFERTA</span>
+                      <span className="badge-indoor" style={{ backgroundColor: "var(--color-sale)", borderLeftColor: "var(--color-ink)" }}>{t("OFERTA")}</span>
                     )}
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function ProductoPage() {
                 {producto.colores && producto.colores.length > 0 && (
                   <div style={{ marginBottom: "var(--space-xl)" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "var(--space-sm)" }}>
-                      <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>Color</span>
+                      <span style={{ fontSize: "var(--type-caption)", fontWeight: 600, textTransform: "uppercase" }}>{t("Color")}</span>
                     </div>
                     
                     <div style={{ display: "flex", gap: "var(--space-sm)" }}>
@@ -289,10 +289,10 @@ export default function ProductoPage() {
                     {added ? (
                       <>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        Añadido al Carrito
+                        {t("Añadido al Carrito")}
                       </>
                     ) : (
-                      "Añadir al Carrito"
+                      t("Añadir al Carrito")
                     )}
                   </motion.button>
                   
@@ -311,7 +311,7 @@ export default function ProductoPage() {
                     }}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline><polyline points="7.5 19.79 7.5 14.6 3 12"></polyline><polyline points="21 12 16.5 14.6 16.5 19.79"></polyline><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                    Ver en AR
+                    {t("Ver en AR")}
                   </motion.button>
 
                   <motion.button
