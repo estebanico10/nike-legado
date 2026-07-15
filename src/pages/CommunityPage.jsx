@@ -141,8 +141,8 @@ export default function CommunityPage() {
           </div>
 
           {/* Grid de Outfits -> Transformado a Swipeable Stack */}
-          <div className="relative w-full max-w-sm mx-auto h-[650px] mt-12 flex justify-center perspective-[1000px]">
-            <AnimatePresence mode="popLayout">
+          <div className="relative w-full max-w-sm mx-auto min-h-[650px] mt-12 flex justify-center perspective-[1000px]">
+            <AnimatePresence>
               {filteredPosts.length === 0 ? (
                 <motion.div
                   key="empty-state"

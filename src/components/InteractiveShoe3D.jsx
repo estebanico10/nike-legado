@@ -1,4 +1,5 @@
 import { useRef, useState, Suspense } from "react";
+import ErrorBoundary from "./ErrorBoundary";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, ContactShadows, useGLTF } from "@react-three/drei";
 import { motion } from "framer-motion";
@@ -28,8 +29,8 @@ function Shoe({ shoeColors, ...props }) {
   );
 }
 
-// Precargar el modelo para que no haya delay
-useGLTF.preload("https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/shoe-1/model.gltf");
+// Removida precarga agresiva para evitar fallos si el servidor 3D está caído.
+// useGLTF.preload("https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/shoe-1/model.gltf");
 
 export default function InteractiveShoe3D() {
   const [colors, setColors] = useState({
@@ -57,19 +58,21 @@ export default function InteractiveShoe3D() {
     <div style={{ width: "100%", height: "600px", position: "relative", backgroundColor: "var(--color-canvas-alt)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
       
       {/* 3D Canvas */}
-      <Canvas shadows camera={{ position: [0, 0, 4], fov: 45 }}>
-        <color attach="background" args={["#f4f4f4"]} />
-        <ambientLight intensity={0.7} />
-        <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={1} castShadow shadow-bias={-0.0001} />
-        
-        <Suspense fallback={null}>
-          <Shoe shoeColors={colors} position={[0, -0.8, 0]} rotation={[0.3, Math.PI, 0]} />
-          <Environment preset="city" />
-          <ContactShadows position={[0, -0.8, 0]} opacity={0.75} scale={10} blur={2} far={4} />
-        </Suspense>
-        
-        <OrbitControls enableZoom={false} enablePan={false} minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 2} />
-      </Canvas>
+      <ErrorBoundary>
+        <Canvas shadows camera={{ position: [0, 0, 4], fov: 45 }}>
+          <color attach="background" args={["#f4f4f4"]} />
+          <ambientLight intensity={0.7} />
+          <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={1} castShadow shadow-bias={-0.0001} />
+          
+          <Suspense fallback={null}>
+            <Shoe shoeColors={colors} position={[0, -0.8, 0]} rotation={[0.3, Math.PI, 0]} />
+            <Environment preset="city" />
+            <ContactShadows position={[0, -0.8, 0]} opacity={0.75} scale={10} blur={2} far={4} />
+          </Suspense>
+          
+          <OrbitControls enableZoom={false} enablePan={false} minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 2} />
+        </Canvas>
+      </ErrorBoundary>
 
       {/* Nike By You Overlay UI */}
       <div style={{ position: "absolute", inset: "0", pointerEvents: "none", padding: "var(--space-2xl)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>

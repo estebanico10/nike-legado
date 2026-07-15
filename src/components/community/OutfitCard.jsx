@@ -25,7 +25,7 @@ export default function OutfitCard({ post }) {
       useLoyaltyStore.getState().addPoints(10, "Like en Muro de Comunidad");
       try {
         addToast("+10 PTS Street Cred ganados 🔥", "success");
-      } catch (e) {
+      } catch {
         // Fallback if toast context not available
       }
     }
@@ -44,7 +44,7 @@ export default function OutfitCard({ post }) {
     setCommentText("");
     try {
       addToast("Comentario publicado en el Muro", "success");
-    } catch (e) {
+    } catch {
       // ignore
     }
   };
@@ -54,7 +54,7 @@ export default function OutfitCard({ post }) {
       navigator.clipboard.writeText(window.location.href);
       try {
         addToast("Enlace del look copiado al portapapeles", "info");
-      } catch (e) {
+      } catch {
         // ignore
       }
     }
@@ -104,7 +104,7 @@ export default function OutfitCard({ post }) {
       </div>
 
       {/* Imagen del Look */}
-      <div className="relative w-full pt-[115%] bg-[#0d0d0d] overflow-hidden">
+      <div className="relative w-full bg-[#0d0d0d] overflow-hidden" style={{ paddingTop: '115%' }}>
         <motion.img
           src={resolveAsset(imageSrc)}
           alt={`Look de ${authorName} - ${post.shoe || "Nike Style"}`}
