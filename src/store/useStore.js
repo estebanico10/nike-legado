@@ -274,25 +274,6 @@ export const useCompareStore = create(
   )
 );
 
-export const useCouponStore = create(
-  persist(
-    (set) => ({
-      coupons: [
-        { id: "1", code: "NIKE10", discountPercent: 10, active: true, expiresAt: "2026-12-31" },
-        { id: "2", code: "LEGADO20", discountPercent: 20, active: true, expiresAt: "2026-12-31" }
-      ],
-      addCoupon: (coupon) => set((state) => ({ coupons: [...state.coupons, { ...coupon, id: Date.now().toString() }] })),
-      updateCoupon: (id, updates) => set((state) => ({
-        coupons: state.coupons.map(c => c.id === id ? { ...c, ...updates } : c)
-      })),
-      deleteCoupon: (id) => set((state) => ({
-        coupons: state.coupons.filter(c => c.id !== id)
-      }))
-    }),
-    { name: 'nike-coupon-storage' }
-  )
-);
-
 export const useBannerStore = create(
   persist(
     (set) => ({
