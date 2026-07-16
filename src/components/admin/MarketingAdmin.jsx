@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useCouponStore, useBannerStore } from "../../store/useStore";
+import { useBannerStore } from "../../store/useStore";
+import { useCouponStore } from "../../store/useCouponStore";
 
 export default function MarketingAdmin() {
   const { coupons, addCoupon, updateCoupon, deleteCoupon } = useCouponStore();

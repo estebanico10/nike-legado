@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useLoyaltyStore, useCouponStore } from "../../store/useStore";
+import { useLoyaltyStore } from "../../store/useStore";
+import { useCouponStore } from "../../store/useCouponStore";
 import { useToast } from "../../context/ToastContext";
 
 export default function RewardCard({ reward }) {
