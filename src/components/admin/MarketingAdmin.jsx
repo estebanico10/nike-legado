@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useBannerStore } from "../../store/useStore";
+
 import { useCouponStore } from "../../store/useCouponStore";
 
 export default function MarketingAdmin() {
   const { coupons, addCoupon, updateCoupon, deleteCoupon } = useCouponStore();
-  const { banners, addBanner, updateBanner, deleteBanner } = useBannerStore();
+  // const { banners, addBanner, updateBanner, deleteBanner } = useBannerStore();
   
   const [activeTab, setActiveTab] = useState("coupons");
   
