@@ -2,12 +2,14 @@ import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, Text, Float } from "@react-three/drei";
 import * as THREE from "three";
+import { resolveAsset } from "../../utils/resolveAsset";
 
 export default function ShoeModel3D({ colors, customText }) {
   const group = useRef();
   
-  // Load the downloaded realistic Shoe model
-  const { nodes, materials } = useGLTF("/assets/Shoe.glb");
+  // Load the downloaded realistic Shoe model using resolveAsset for GitHub Pages / Vite base URL support
+  const modelPath = resolveAsset("/assets/Shoe.glb");
+  const { nodes, materials } = useGLTF(modelPath);
 
   // Apply colors dynamically
   useEffect(() => {
@@ -80,4 +82,4 @@ export default function ShoeModel3D({ colors, customText }) {
 }
 
 // Preload the model
-useGLTF.preload("/assets/Shoe.glb");
+useGLTF.preload(resolveAsset("/assets/Shoe.glb"));

@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, ContactShadows, OrbitControls, Html, useProgress } from "@react-three/drei";
 import ShoeModel3D from "./ShoeModel3D";
 import CameraController from "./CameraController";
+import ErrorBoundary from "../ErrorBoundary";
 
 function Loader() {
   const { progress } = useProgress();
@@ -43,34 +44,41 @@ export default function SneakerCustomizer({
         overflow: "hidden"
       }}
     >
-      <Canvas shadows camera={{ position: [4, 3, 6], fov: 45 }}>
-        <Suspense fallback={<Loader />}>
-          {/* Entorno y Luces */}
-          <ambientLight intensity={0.5} />
-          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-          <Environment preset="studio" />
-          
-          {/* Sombras de Contacto */}
-          <ContactShadows position={[0, -0.4, 0]} opacity={0.7} scale={10} blur={2.5} far={4} />
-          
-          {/* Modelo 3D */}
-          <ShoeModel3D colors={activeColors} customText={customText} activeTab={activeTab} />
-          
-          {/* Controlador Cinemático de Cámara */}
-          <CameraController activeTab={activeTab} />
-          
-          {/* Controles para rotación manual */}
-          <OrbitControls 
-            enableZoom={true} 
-            enablePan={false} 
-            minPolarAngle={Math.PI / 4} 
-            maxPolarAngle={Math.PI / 2} 
-            minDistance={3}
-            maxDistance={10}
-            makeDefault
-          />
-        </Suspense>
-      </Canvas>
+      <ErrorBoundary fallback={
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", backgroundColor: "#111", color: "#FFF", padding: "20px", textAlign: "center" }}>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", color: "var(--color-volt)", textTransform: "uppercase", marginBottom: "8px" }}>Visor 3D</p>
+          <p style={{ fontSize: "0.9rem", color: "#AAA" }}>Modelo 3D recargándose. Por favor actualice la página o verifique su conexión.</p>
+        </div>
+      }>
+        <Canvas shadows camera={{ position: [4, 3, 6], fov: 45 }}>
+          <Suspense fallback={<Loader />}>
+            {/* Entorno y Luces */}
+            <ambientLight intensity={0.5} />
+            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+            <Environment preset="studio" />
+            
+            {/* Sombras de Contacto */}
+            <ContactShadows position={[0, -0.4, 0]} opacity={0.7} scale={10} blur={2.5} far={4} />
+            
+            {/* Modelo 3D */}
+            <ShoeModel3D colors={activeColors} customText={customText} activeTab={activeTab} />
+            
+            {/* Controlador Cinemático de Cámara */}
+            <CameraController activeTab={activeTab} />
+            
+            {/* Controles para rotación manual */}
+            <OrbitControls 
+              enableZoom={true} 
+              enablePan={false} 
+              minPolarAngle={Math.PI / 4} 
+              maxPolarAngle={Math.PI / 2} 
+              minDistance={3}
+              maxDistance={10}
+              makeDefault
+            />
+          </Suspense>
+        </Canvas>
+      </ErrorBoundary>
 
       {/* Etiquetas sobrepuestas eliminadas para limpieza visual, el padre controlará la UI */}
       
