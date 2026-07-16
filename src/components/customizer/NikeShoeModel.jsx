@@ -14,11 +14,11 @@ function NikeSwoosh({ color = "#ffffff", position = [0, 0, 0], rotation = [0, 0,
 
   const shape = useMemo(() => {
     const s = new THREE.Shape();
-    s.moveTo(0, 0);
-    s.bezierCurveTo(0.15, 0.06, 0.38, 0.2,  0.58, 0.1);
-    s.bezierCurveTo(0.78, 0.01, 0.96, -0.04, 1.1, 0.02);
-    s.bezierCurveTo(0.82, 0.24, 0.48, 0.3,  0.28, 0.23);
-    s.bezierCurveTo(0.08, 0.16, 0.02, 0.06,  0,  0);
+    // Forma del Swoosh mucho más realista
+    s.moveTo(0.15, 0.4); // Punta superior izquierda
+    s.bezierCurveTo(-0.05, 0.2, -0.05, -0.05, 0.2, 0.0); // Gancho (Hook) inferior izquierdo
+    s.bezierCurveTo(0.5, 0.05, 0.8, 0.2, 1.1, 0.5); // Curva inferior hacia la punta derecha
+    s.bezierCurveTo(0.7, 0.25, 0.35, 0.15, 0.15, 0.4); // Curva superior de regreso a la punta
     return s;
   }, []);
 
@@ -40,22 +40,22 @@ function ShoeInstance({ c, customText, nodes }) {
 
   // Controles en tiempo real para tapar el logo de Adidas con el Swoosh
   const { swooshExtX, swooshExtY, swooshExtZ, swooshExtRX, swooshExtRY, swooshExtRZ, swooshScale } = useControls('Swoosh Exterior', {
-    swooshExtX: { value: 0.08, step: 0.01 },
-    swooshExtY: { value: 0.04, step: 0.01 },
-    swooshExtZ: { value: 0.08, step: 0.01 },
-    swooshExtRX: { value: 0, step: 0.05 },
-    swooshExtRY: { value: 0, step: 0.05 },
-    swooshExtRZ: { value: 0, step: 0.05 },
-    swooshScale: { value: 0.8, step: 0.05 },
+    swooshExtX: { value: -0.35, step: 0.01 },
+    swooshExtY: { value: -0.23, step: 0.01 },
+    swooshExtZ: { value: 0.25, step: 0.01 },
+    swooshExtRX: { value: -0.23, step: 0.01 },
+    swooshExtRY: { value: 0.00, step: 0.01 },
+    swooshExtRZ: { value: 0.00, step: 0.01 },
+    swooshScale: { value: 1.20, step: 0.05 },
   });
 
   const { swooshIntX, swooshIntY, swooshIntZ, swooshIntRX, swooshIntRY, swooshIntRZ } = useControls('Swoosh Interior', {
-    swooshIntX: { value: -0.05, step: 0.01 },
-    swooshIntY: { value: 0.04, step: 0.01 },
-    swooshIntZ: { value: -0.06, step: 0.01 },
-    swooshIntRX: { value: 0, step: 0.05 },
-    swooshIntRY: { value: Math.PI, step: 0.05 },
-    swooshIntRZ: { value: 0, step: 0.05 },
+    swooshIntX: { value: -0.35, step: 0.01 },
+    swooshIntY: { value: -0.23, step: 0.01 },
+    swooshIntZ: { value: -0.33, step: 0.01 },
+    swooshIntRX: { value: 0.10, step: 0.01 },
+    swooshIntRY: { value: 0.00, step: 0.01 },
+    swooshIntRZ: { value: 0.00, step: 0.01 },
   });
 
   return (
