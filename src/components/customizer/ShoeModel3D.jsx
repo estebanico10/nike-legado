@@ -1,7 +1,5 @@
 import { useRef, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF, Text, Float } from "@react-three/drei";
-import * as THREE from "three";
+import { useGLTF, Float } from "@react-three/drei";
 import { resolveAsset } from "../../utils/resolveAsset";
 
 export default function ShoeModel3D({ colors, customText }) {
@@ -11,35 +9,23 @@ export default function ShoeModel3D({ colors, customText }) {
   const modelPath = resolveAsset("/assets/Shoe.glb");
   const { nodes, materials } = useGLTF(modelPath);
 
-  // Apply colors dynamically
+  // Apply colors dynamically sin recompilar shaders ni crear objetos basura
   useEffect(() => {
     if (materials) {
-      // The Khronos shoe usually has one or a few materials. We tint all of them to the upper color.
+      const targetHex = colors.upper?.hex || "#ffffff";
       Object.values(materials).forEach(mat => {
-        // Ensure it's a standard or physical material
-        if (mat.color) {
-          // Tint the material with the selected "upper" color
-          const colorObj = new THREE.Color(colors.upper?.hex || "#ffffff");
-          
-          // If the model has textures, the color multiplies with the texture.
-          // To make the color pop more, we can adjust it
-          mat.color = colorObj;
-          mat.needsUpdate = true;
+        if (mat && mat.color) {
+          mat.color.set(targetHex);
+          mat.roughness = 0.35;
+          mat.metalness = 0.1;
         }
       });
     }
-  }, [colors, materials]);
-
-  // Breathing animation
-  useFrame((state) => {
-    if (group.current) {
-      group.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
-    }
-  });
+  }, [colors.upper?.hex, materials]);
 
   return (
-    <group ref={group} position={[0, 0, 0]} dispose={null} scale={15}>
-      <Float speed={2} rotationIntensity={0.1} floatIntensity={0.1}>
+    <group ref={group} position={[0, -0.35, 0]} dispose={null} scale={8.8}>
+      <Float speed={1.2} rotationIntensity={0.03} floatIntensity={0.04}>
         
         {/* Render the realistic shoe mesh */}
         {nodes && Object.keys(nodes).map(key => {

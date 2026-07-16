@@ -31,3 +31,15 @@ export function calculatePriceDetails(activeColors = {}, customText = "") {
     totalPrice
   };
 }
+
+export const cameraPositions = {
+  general: { x: 5, y: 2.2, z: 6.2, lookAt: { x: 0, y: 0, z: 0 } },
+  swoosh: { x: 4.2, y: 1.2, z: 3.8, lookAt: { x: 0, y: 0.1, z: 0 } },
+  upper: { x: 3.5, y: 3.2, z: 4.5, lookAt: { x: 0, y: 0.2, z: 0 } },
+  sole: { x: 0, y: -4.2, z: 3.5, lookAt: { x: 0, y: -0.2, z: 0 } },
+  laces: { x: 0, y: 4.5, z: 2.2, lookAt: { x: 0, y: 0.3, z: 0 } },
+  heel: { x: -4.5, y: 1.5, z: -4.2, lookAt: { x: 0, y: 0.1, z: -0.3 } },
+  lateral: { x: 6.5, y: 0.8, z: 0, lookAt: { x: 0, y: 0, z: 0 } },
+  top: { x: 0.05, y: 7.2, z: 0.05, lookAt: { x: 0, y: 0, z: 0 } },
+  default: { x: 5, y: 2.2, z: 6.2, lookAt: { x: 0, y: 0, z: 0 } }
+};

@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCustomizerStore } from "../../store/useCustomizerStore";
 import { Canvas } from "@react-three/fiber";
@@ -6,6 +6,7 @@ import { Environment, ContactShadows, OrbitControls, Html, useProgress } from "@
 import ShoeModel3D from "./ShoeModel3D";
 import CameraController from "./CameraController";
 import ErrorBoundary from "../ErrorBoundary";
+import gsap from "gsap";
 
 function Loader() {
   const { progress } = useProgress();
@@ -31,7 +32,41 @@ export default function SneakerCustomizer({
   const currentLayerObj = layers.find(l => l.id === activeTab) || layers[0] || { id: "swoosh", label: "Swoosh" };
   const currentColorObj = activeColors[activeTab] || colors[0] || { hex: "#000", name: "Default" };
 
-  // PREVIEW: 3D Canvas taking up the designated space
+  const orbitControlsRef = useRef();
+  const [customView, setCustomView] = useState("general");
+  const [autoRotate, setAutoRotate] = useState(false);
+
+  const handleZoom = (direction) => {
+    if (orbitControlsRef.current && orbitControlsRef.current.object) {
+      const camera = orbitControlsRef.current.object;
+      const target = orbitControlsRef.current.target;
+      const currentPos = camera.position.clone();
+      const dirVec = currentPos.clone().sub(target).normalize();
+      const distance = currentPos.distanceTo(target);
+      const newDistance = direction === "in" 
+        ? Math.max(2.5, distance * 0.75) 
+        : Math.min(16, distance * 1.3);
+      
+      const newPos = target.clone().add(dirVec.multiplyScalar(newDistance));
+      
+      gsap.to(camera.position, {
+        x: newPos.x,
+        y: newPos.y,
+        z: newPos.z,
+        duration: 0.6,
+        ease: "power2.out",
+        onUpdate: () => orbitControlsRef.current?.update()
+      });
+    }
+  };
+
+  const handleTabSelection = (layerId) => {
+    if (onTabChange) onTabChange(layerId);
+    setCustomView(layerId);
+    setAutoRotate(false);
+  };
+
+  // PREVIEW: 3D Canvas con controles y HUD de visualización optimizados para alto rendimiento
   const renderPreview = () => (
     <div 
       style={{
@@ -50,38 +85,160 @@ export default function SneakerCustomizer({
           <p style={{ fontSize: "0.9rem", color: "#AAA" }}>Modelo 3D recargándose. Por favor actualice la página o verifique su conexión.</p>
         </div>
       }>
-        <Canvas shadows camera={{ position: [4, 3, 6], fov: 45 }}>
+        <Canvas 
+          shadows 
+          camera={{ position: [5, 2.2, 6.2], fov: 45 }}
+          dpr={[1, Math.min(1.5, typeof window !== 'undefined' ? window.devicePixelRatio : 1)]}
+          performance={{ min: 0.5 }}
+          gl={{ powerPreference: "high-performance", antialias: true, alpha: false }}
+        >
           <Suspense fallback={<Loader />}>
             {/* Entorno y Luces */}
-            <ambientLight intensity={0.5} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+            <ambientLight intensity={0.6} />
+            <spotLight position={[10, 12, 10]} angle={0.2} penumbra={1} intensity={1.2} castShadow />
             <Environment preset="studio" />
             
-            {/* Sombras de Contacto */}
-            <ContactShadows position={[0, -0.4, 0]} opacity={0.7} scale={10} blur={2.5} far={4} />
+            {/* Sombras de Contacto (Bake en 1 frame para máximo rendimiento sin lag) */}
+            <ContactShadows position={[0, -0.4, 0]} opacity={0.65} scale={12} blur={2} far={4} resolution={512} frames={1} />
             
             {/* Modelo 3D */}
             <ShoeModel3D colors={activeColors} customText={customText} activeTab={activeTab} />
             
-            {/* Controlador Cinemático de Cámara */}
-            <CameraController activeTab={activeTab} />
+            {/* Controlador Cinemático de Cámara (GSAP) */}
+            <CameraController activeTab={activeTab} controlsRef={orbitControlsRef} customView={customView} />
             
-            {/* Controles para rotación manual */}
+            {/* Controles para rotación, paneo y zoom libres */}
             <OrbitControls 
+              ref={orbitControlsRef}
               enableZoom={true} 
-              enablePan={false} 
-              minPolarAngle={Math.PI / 4} 
-              maxPolarAngle={Math.PI / 2} 
-              minDistance={3}
-              maxDistance={10}
+              enablePan={true} 
+              minPolarAngle={Math.PI / 6} 
+              maxPolarAngle={Math.PI * 0.85} 
+              minDistance={2.5}
+              maxDistance={16}
               makeDefault
+              autoRotate={autoRotate}
+              autoRotateSpeed={1.5}
             />
           </Suspense>
         </Canvas>
       </ErrorBoundary>
 
-      {/* Etiquetas sobrepuestas eliminadas para limpieza visual, el padre controlará la UI */}
-      
+      {/* HUD de Controles de Visualización 3D (Ergonómico, flotante y accesible) */}
+      <div style={{
+        position: "absolute",
+        top: "20px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        background: "rgba(12, 12, 12, 0.8)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: "1px solid rgba(255, 255, 255, 0.15)",
+        padding: "6px 12px",
+        borderRadius: "100px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px",
+        zIndex: 30,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+        pointerEvents: "auto",
+        maxWidth: "92vw",
+        overflowX: "auto"
+      }}>
+        {/* Zoom In / Zoom Out */}
+        <div style={{ display: "flex", alignItems: "center", gap: "4px", borderRight: "1px solid rgba(255,255,255,0.15)", paddingRight: "8px" }}>
+          <button
+            onClick={() => handleZoom("in")}
+            title="Acercar (Zoom In)"
+            style={{
+              background: "rgba(255,255,255,0.08)", border: "none", color: "#FFF", width: "28px", height: "28px",
+              borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "14px", fontWeight: "bold", transition: "all 0.2s"
+            }}
+          >
+            +
+          </button>
+          <button
+            onClick={() => handleZoom("out")}
+            title="Alejar (Zoom Out)"
+            style={{
+              background: "rgba(255,255,255,0.08)", border: "none", color: "#FFF", width: "28px", height: "28px",
+              borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "14px", fontWeight: "bold", transition: "all 0.2s"
+            }}
+          >
+            -
+          </button>
+        </div>
+
+        {/* Vistas predefinidas */}
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          {[
+            { id: "general", label: "General", icon: "👁️" },
+            { id: "lateral", label: "Lateral", icon: "👟" },
+            { id: "top", label: "Superior", icon: "⬆️" },
+            { id: "heel", label: "Talón", icon: "🏷️" }
+          ].map(view => {
+            const isCurrent = customView === view.id;
+            return (
+              <button
+                key={view.id}
+                onClick={() => {
+                  setCustomView(view.id);
+                  setAutoRotate(false);
+                }}
+                style={{
+                  background: isCurrent ? "var(--color-volt)" : "transparent",
+                  color: isCurrent ? "#000" : "#AAA",
+                  border: isCurrent ? "1px solid var(--color-volt)" : "1px solid transparent",
+                  padding: "4px 10px",
+                  borderRadius: "100px",
+                  fontSize: "11px",
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap"
+                }}
+              >
+                <span>{view.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Auto-Rotate Turntable */}
+        <div style={{ borderLeft: "1px solid rgba(255,255,255,0.15)", paddingLeft: "8px" }}>
+          <button
+            onClick={() => setAutoRotate(!autoRotate)}
+            title="Giro 360° automático"
+            style={{
+              background: autoRotate ? "var(--color-volt)" : "rgba(255,255,255,0.08)",
+              color: autoRotate ? "#000" : "#FFF",
+              border: "none",
+              padding: "4px 10px",
+              borderRadius: "100px",
+              fontSize: "11px",
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              transition: "all 0.2s",
+              whiteSpace: "nowrap"
+            }}
+          >
+            <span>🔄 360°</span>
+          </button>
+        </div>
+      </div>
+
       <div style={{
         position: "absolute",
         bottom: "var(--space-md)",
@@ -136,7 +293,7 @@ export default function SneakerCustomizer({
             return (
               <button
                 key={layer.id}
-                onClick={() => onTabChange && onTabChange(layer.id)}
+                onClick={() => handleTabSelection(layer.id)}
                 style={{
                   position: "relative",
                   padding: "10px 16px",

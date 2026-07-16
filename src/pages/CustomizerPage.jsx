@@ -114,7 +114,7 @@ export default function CustomizerPage() {
         description="Diseña tus propias zapatillas Nike Legado personalizadas por capas y estilo callejero."
       />
 
-      <main className="h-screen w-full relative overflow-hidden bg-black text-white" style={{ fontFamily: "var(--font-body)" }}>
+      <main className="h-[calc(100vh-80px)] min-h-[640px] w-full relative overflow-hidden bg-black text-white" style={{ fontFamily: "var(--font-body)" }}>
         
         {/* 3D Canvas Background */}
         <div className="absolute inset-0 z-0">

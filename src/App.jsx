@@ -83,8 +83,12 @@ function AppRoutes() {
           </Routes>
         </Suspense>
       </AnimatePresence>
-      <hr className="section-divider" />
-      <Footer />
+      {location.pathname !== "/customizer" && (
+        <>
+          <hr className="section-divider" />
+          <Footer />
+        </>
+      )}
     </>
   );
 }
