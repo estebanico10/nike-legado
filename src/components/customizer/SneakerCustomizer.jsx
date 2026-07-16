@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCustomizerStore } from "../../store/useCustomizerStore";
 import { Canvas } from "@react-three/fiber";
 import { Environment, ContactShadows, OrbitControls, Html, useProgress } from "@react-three/drei";
-import ShoeModel3D from "./ShoeModel3D";
+import NikeShoeModel from "./NikeShoeModel";
 import CameraController from "./CameraController";
 import ErrorBoundary from "../ErrorBoundary";
 import gsap from "gsap";
@@ -98,27 +98,28 @@ export default function SneakerCustomizer({
             <spotLight position={[10, 12, 10]} angle={0.2} penumbra={1} intensity={1.2} castShadow />
             <Environment preset="studio" />
             
-            {/* Sombras de Contacto (Bake en 1 frame para máximo rendimiento sin lag) */}
-            <ContactShadows position={[0, -0.4, 0]} opacity={0.65} scale={12} blur={2} far={4} resolution={512} frames={1} />
+            {/* Sombras de Contacto — posicionadas justo bajo el zapato procedural */}
+            <ContactShadows position={[0, -0.38, 0]} opacity={0.55} scale={3.5} blur={1.8} far={1.2} resolution={512} frames={1} />
             
-            {/* Modelo 3D */}
-            <ShoeModel3D colors={activeColors} customText={customText} activeTab={activeTab} />
+            {/* Modelo Nike 3D Procedural */}
+            <NikeShoeModel colors={activeColors} customText={customText} />
             
             {/* Controlador Cinemático de Cámara (GSAP) */}
             <CameraController activeTab={activeTab} controlsRef={orbitControlsRef} customView={customView} />
             
-            {/* Controles para rotación, paneo y zoom libres */}
+            {/* Controles — zoom scroll/pinch completamente libre */}
             <OrbitControls 
               ref={orbitControlsRef}
-              enableZoom={true} 
+              enableZoom={true}
+              zoomSpeed={1.2}
               enablePan={true} 
-              minPolarAngle={Math.PI / 6} 
-              maxPolarAngle={Math.PI * 0.85} 
-              minDistance={2.5}
-              maxDistance={16}
+              minPolarAngle={0}
+              maxPolarAngle={Math.PI}
+              minDistance={1.2}
+              maxDistance={22}
               makeDefault
               autoRotate={autoRotate}
-              autoRotateSpeed={1.5}
+              autoRotateSpeed={1.8}
             />
           </Suspense>
         </Canvas>
