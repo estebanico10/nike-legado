@@ -2,7 +2,7 @@ import { Suspense, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCustomizerStore } from "../../store/useCustomizerStore";
 import { Canvas } from "@react-three/fiber";
-import { Environment, ContactShadows, OrbitControls, Html, useProgress } from "@react-three/drei";
+import { Environment, OrbitControls, Html, useProgress } from "@react-three/drei";
 import NikeShoeModel from "./NikeShoeModel";
 import GLBShoeModel from "./GLBShoeModel";
 import CameraController from "./CameraController";
@@ -101,9 +101,6 @@ export default function SneakerCustomizer({
             <ambientLight intensity={0.6} />
             <spotLight position={[10, 12, 10]} angle={0.2} penumbra={1} intensity={1.2} castShadow />
             <Environment preset="studio" />
-            
-            {/* Sombras de Contacto — posicionadas justo bajo el zapato */}
-            <ContactShadows position={[0, -0.38, 0]} opacity={0.55} scale={3.5} blur={1.8} far={1.2} resolution={512} frames={1} />
             
             {/* Modelo 3D */}
             {selectedModelConfig.type === "procedural" ? (

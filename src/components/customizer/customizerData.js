@@ -60,7 +60,7 @@ export const SHOE_MODELS = [
       laces: "Laces Material",
       heel: ["Flap Material.002", "Tag material", "Tag materialright.001"],
     },
-    scale: 1.45,
+    scale: 1.7,
     position: [0, -0.4, 0],
     rotation: [0, 0.3, 0],
     pairBehavior: "native", // El GLB ya trae ambos zapatos
@@ -75,11 +75,11 @@ export const SHOE_MODELS = [
     price: 199.99,
     supportsLayerColors: false,
     materialMap: { upper: "DefaultMaterial" },
-    scale: 0.8,
+    scale: 0.5,
     position: [0, -0.1, 0],
     rotation: [0, -Math.PI / 2, 0],
     pairBehavior: "clone", // El GLB solo trae uno, se debe clonar para ver ambos
-    pairConfig: { offset: 1.8 }
+    pairConfig: { offset: 4.0 }
   },
   {
     id: "legado",
