@@ -23,6 +23,7 @@
   transition: width var(--duration-std) var(--ease-out), transform var(--duration-std) var(--ease-out);
   width: 260px; /* Default expanded */
   height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
 }
 
@@ -81,13 +82,11 @@
 .admin-nav {
   flex: 1 1 auto;
   min-height: 0; /* Ensures flex child allows scrolling */
-  height: 100%;
   padding: var(--space-md) var(--space-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: block; /* Removing flex here avoids child blowout issues */
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 .admin-nav-btn {
