@@ -15,12 +15,19 @@ export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "bo
   useEffect(() => {
     if (!materials || !modelConfig.materialMap) return;
 
-    const applyColorToMaterial = (materialName, hexColor) => {
+    const applyColorToMaterial = (materialName, hexColor, isSwoosh = false) => {
       const mat = materials[materialName];
       if (mat && mat.color) {
         // En modelos GLB con un solo material bakeado (ej. Air Jordan), el color funciona como un tinte global
         // En modelos con materiales por piezas (ej. Air Force 1), cambia el color base.
         mat.color.set(hexColor);
+        
+        // Si es el Swoosh (y tiene texturas oscuras por defecto), removemos la textura base (map) 
+        // para que el color sólido puro sea visible (pero mantenemos el normalMap de cuero)
+        if (isSwoosh && mat.map) {
+          mat.map = null;
+          mat.needsUpdate = true;
+        }
       }
     };
 
@@ -34,8 +41,8 @@ export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "bo
       }
       if (map.swoosh) {
         const c = colors.swoosh?.hex || "#ffffff";
-        if (Array.isArray(map.swoosh)) map.swoosh.forEach(m => applyColorToMaterial(m, c));
-        else applyColorToMaterial(map.swoosh, c);
+        if (Array.isArray(map.swoosh)) map.swoosh.forEach(m => applyColorToMaterial(m, c, true));
+        else applyColorToMaterial(map.swoosh, c, true);
       }
       if (map.sole) {
         const c = colors.sole?.hex || "#111111";
