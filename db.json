@@ -115,7 +115,7 @@
         "./assets/products/indoor-genz-specs.png",
         "./assets/products/indoor-genz-court.jpg"
       ],
-      "descripcion": "Diseñada con el alma del fútbol de barrio: 'El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro, y aún, siempre volvíamos.'. Tejido técnico transpirable, gráficos estilo graffiti 'Fútbol Amigos Barrio Sueños' y sellos de autenticidad en Volt y Azul Indoor.",
+      "descripcion": "Diseñada con el alma del fútbol de barrio: 'El verdadero gol no se marcó en un gran estadio, sino en una cancha improvisada de tierra, donde las mochilas servían de arco y nuestras mamás se convertían en las árbitras; pitando un final inesperado, pero nosotros siempre le decíamos: «¡Una más y nos vamos!».'. Tejido técnico transpirable, gráficos estilo graffiti 'Fútbol Amigos Barrio Sueños' y sellos de autenticidad en Volt y Azul Indoor.",
       "precio": 30.00,
       "enOferta": false,
       "esNuevo": true,
@@ -376,7 +376,7 @@
   "presentationSections": [
     { "id": "1", "title": "Nombre del Proyecto", "content": "Nike Legado: EL ADN DE LA PASIÓN", "order": 1 },
     { "id": "2", "title": "Integrantes", "content": "- Integrante 1\n- Integrante 2\n- Integrante 3", "order": 2 },
-    { "id": "3", "title": "Insight", "content": "Conectar emocionalmente a los jóvenes con sus raíces en el fútbol de barrio.", "order": 3 },
+    { "id": "3", "title": "Insight", "content": "El verdadero gol no se marcó en un gran estadio, sino en una cancha improvisada de tierra, donde las mochilas servían de arco y nuestras mamás se convertían en las árbitras; pitando un final inesperado, pero nosotros siempre le decíamos: «¡Una más y nos vamos!».", "order": 3 },
     { "id": "4", "title": "Diseño", "content": "Estilo moderno, alto contraste, texturas grunge y tipografías expresivas.", "order": 4 },
     { "id": "5", "title": "Marca de Identidad/visual", "content": "Colores neón (Volt), negro profundo, y detalles urbanos.", "order": 5 },
     { "id": "6", "title": "Cronograma de Posts de redes sociales", "content": "1. Lanzamiento Teaser (Lunes)\n2. Presentación del Producto (Miércoles)\n3. Testimonios de la Comunidad (Viernes)", "order": 6 }

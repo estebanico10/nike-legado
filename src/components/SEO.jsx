@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 
 export default function SEO({ title, description, image, url }) {
   const defaultTitle = "Nike Legado | El ADN de la Pasión";
-  const defaultDescription = "El verdadero gol no fue en la cancha de cemento sino en la de tierra. Streetwear ecuatoriano y herencia andina.";
+  const defaultDescription = "El verdadero gol no se marcó en un gran estadio, sino en una cancha improvisada de tierra. Streetwear ecuatoriano y herencia andina.";
   const defaultImage = "https://tu-dominio.com/assets/og-image.jpg"; // Placeholder
   const defaultUrl = "https://tu-dominio.com"; // Placeholder
 

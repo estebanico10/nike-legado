@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-const SITE_VERSION = "v5-barrio"; // bump this when initialHomeSections or initialTeam changes
+const SITE_VERSION = "v6-insight"; // bump this when initialHomeSections or initialTeam changes
 
 
 const SiteContext = createContext();
@@ -23,7 +23,7 @@ const initialHomeSections = [
   { id: "lookbook", type: "lookbook", title: "LOOKBOOK — VOL. 2: FÚTBOL BARRIO", description: "Explora la pasión de la cancha de tierra y la energía callejera de la Generación Z en nuestra editorial visual.", visible: true, order: 3, 
     images: [
       { id: "img1", src: "./assets/products/indoor-genz-front.png", title: "INDOOR GEN Z", subtitle: "Fútbol Amigos Barrio Sueños" },
-      { id: "img2", src: "./assets/products/indoor-genz-court.jpg", title: "CANCHA DE TIERRA", subtitle: "Donde las mochinas son arco" },
+      { id: "img2", src: "./assets/products/indoor-genz-court.jpg", title: "CANCHA DE TIERRA", subtitle: "Donde las mochilas servían de arco" },
       { id: "img3", src: "./assets/products/indoor-genz-back.png", title: "HECHO PARA JUGAR", subtitle: "Actitud & Energía" }
     ]
   }

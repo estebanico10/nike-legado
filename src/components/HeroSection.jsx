@@ -103,7 +103,7 @@ export default function HeroSection() {
             margin: "var(--space-md) auto var(--space-2xl)",
           }}
         >
-          “El verdadero gol no fue en la cancha de cemento sino en la de tierra, donde las mochinas fueron arco y tu mamá el árbitro más duro, y aún, siempre volvíamos.” 
+          “El verdadero gol no se marcó en un gran estadio, sino en una cancha improvisada de tierra, donde las mochilas servían de arco y nuestras mamás se convertían en las árbitras; pitando un final inesperado, pero nosotros siempre le decíamos: «¡Una más y nos vamos!».” 
           <strong style={{ 
             color: "var(--color-volt)", 
             display: "block", 

@@ -357,7 +357,7 @@ export default function NosotrosPage() {
                   lineHeight: 1.3, fontWeight: 700, color: "var(--color-ink)", textTransform: "uppercase",
                   marginBottom: "var(--space-md)"
                 }}>
-                  “EL VERDADERO GOL NO FUE EN LA CANCHA DE CEMENTO SINO EN LA DE TIERRA, DONDE LAS MOCHINAS FUERON ARCO Y TU MAMÁ EL ARBITRO MÁS DURO, Y AÚN, SIEMPRE VOLVIAMOS.”
+                  “EL VERDADERO GOL NO SE MARCÓ EN UN GRAN ESTADIO, SINO EN UNA CANCHA IMPROVISADA DE TIERRA, DONDE LAS MOCHILAS SERVÍAN DE ARCO Y NUESTRAS MAMÁS SE CONVERTÍAN EN LAS ÁRBITRAS; PITANDO UN FINAL INESPERADO, PERO NOSOTROS SIEMPRE LE DECÍAMOS: «¡UNA MÁS Y NOS VAMOS!».”
                 </p>
                 <span className="font-street" style={{ color: "var(--color-indoor-blue)", fontSize: "var(--type-h4)" }}>
                   — FÚTBOL AMIGOS BARRIO SUEÑOS
