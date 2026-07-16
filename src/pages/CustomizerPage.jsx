@@ -12,7 +12,10 @@ export default function CustomizerPage() {
   const addToCart = useCartStore((state) => state.addToCart);
   const { addToast } = useToast();
   
-  const { colors, calculatePrice } = useCustomizerStore();
+  const { colors, calculatePrice, shoeModels } = useCustomizerStore();
+  
+  const [selectedModelId, setSelectedModelId] = useState("air-force-1");
+  const selectedModel = shoeModels.find(m => m.id === selectedModelId) || shoeModels[0];
 
   const [activeColors, setActiveColors] = useState({
     swoosh: colors[0] || { name: 'Default', hex: '#000', id: 'def' },
@@ -36,7 +39,7 @@ export default function CustomizerPage() {
   });
   const [showSavedModal, setShowSavedModal] = useState(false);
 
-  const priceDetails = calculatePrice(activeColors, customText);
+  const priceDetails = calculatePrice(activeColors, customText, selectedModelId);
 
   const handleColorChange = (layerId, colorObj) => {
     setActiveColors((prev) => ({
@@ -126,6 +129,7 @@ export default function CustomizerPage() {
             onTabChange={setActiveTab}
             customText={customText}
             onTextChange={setCustomText}
+            selectedModelId={selectedModelId}
           />
         </div>
 
@@ -141,11 +145,39 @@ export default function CustomizerPage() {
               NIKE BY YOU
             </h1>
             <h2 className="font-display text-2xl font-bold uppercase text-[var(--color-volt-text)] m-0 mt-1">
-              LEGADO
+              {selectedModel.name}
             </h2>
-            <p className="text-neutral-400 text-xs mt-3 leading-relaxed">
-              Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma en el talón.
+            <p className="text-neutral-400 text-xs mt-3 leading-relaxed mb-5">
+              {selectedModel.id === "legado" 
+                ? "Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma en el talón."
+                : "Personalización premium habilitada. Explora nuevos acabados y rediseña a tu estilo este ícono clásico."}
             </p>
+
+            {/* Model Selector */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">Modelo Base</span>
+              <div className="grid grid-cols-1 gap-2">
+                {shoeModels.map(model => (
+                  <button
+                    key={model.id}
+                    onClick={() => setSelectedModelId(model.id)}
+                    className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
+                      selectedModelId === model.id
+                        ? "bg-white/10 border-[var(--color-volt)] text-white"
+                        : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex flex-col items-start text-left">
+                      <span className="text-sm font-bold font-display uppercase">{model.name}</span>
+                      <span className="text-[10px] opacity-70">{model.subtitle}</span>
+                    </div>
+                    {selectedModelId === model.id && (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-volt)" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <button

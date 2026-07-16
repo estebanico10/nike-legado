@@ -4,6 +4,7 @@ import { useCustomizerStore } from "../../store/useCustomizerStore";
 import { Canvas } from "@react-three/fiber";
 import { Environment, ContactShadows, OrbitControls, Html, useProgress } from "@react-three/drei";
 import NikeShoeModel from "./NikeShoeModel";
+import GLBShoeModel from "./GLBShoeModel";
 import CameraController from "./CameraController";
 import ErrorBoundary from "../ErrorBoundary";
 import gsap from "gsap";
@@ -26,9 +27,11 @@ export default function SneakerCustomizer({
   onTabChange,
   customText = "LEGADO",
   onTextChange,
-  mode = "full" // "full" | "preview" | "controls"
+  mode = "full", // "full" | "preview" | "controls"
+  selectedModelId = "air-force-1"
 }) {
-  const { colors, layers } = useCustomizerStore();
+  const { colors, layers, shoeModels } = useCustomizerStore();
+  const selectedModelConfig = shoeModels.find(m => m.id === selectedModelId) || shoeModels[0];
   const currentLayerObj = layers.find(l => l.id === activeTab) || layers[0] || { id: "swoosh", label: "Swoosh" };
   const currentColorObj = activeColors[activeTab] || colors[0] || { hex: "#000", name: "Default" };
 
@@ -98,11 +101,15 @@ export default function SneakerCustomizer({
             <spotLight position={[10, 12, 10]} angle={0.2} penumbra={1} intensity={1.2} castShadow />
             <Environment preset="studio" />
             
-            {/* Sombras de Contacto — posicionadas justo bajo el zapato procedural */}
+            {/* Sombras de Contacto — posicionadas justo bajo el zapato */}
             <ContactShadows position={[0, -0.38, 0]} opacity={0.55} scale={3.5} blur={1.8} far={1.2} resolution={512} frames={1} />
             
-            {/* Modelo Nike 3D Procedural */}
-            <NikeShoeModel colors={activeColors} customText={customText} />
+            {/* Modelo 3D */}
+            {selectedModelConfig.type === "procedural" ? (
+              <NikeShoeModel colors={activeColors} customText={customText} />
+            ) : (
+              <GLBShoeModel modelConfig={selectedModelConfig} colors={activeColors} customText={customText} />
+            )}
             
             {/* Controlador Cinemático de Cámara (GSAP) */}
             <CameraController activeTab={activeTab} controlsRef={orbitControlsRef} customView={customView} />

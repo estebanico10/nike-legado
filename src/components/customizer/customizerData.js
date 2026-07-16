@@ -43,3 +43,49 @@ export const cameraPositions = {
   top: { x: 0.05, y: 7.2, z: 0.05, lookAt: { x: 0, y: 0, z: 0 } },
   default: { x: 5, y: 2.2, z: 6.2, lookAt: { x: 0, y: 0, z: 0 } }
 };
+
+export const SHOE_MODELS = [
+  {
+    id: "air-force-1",
+    name: "Air Force 1",
+    subtitle: "'07 White/Black",
+    type: "glb",
+    asset: "/assets/AirForce1.glb",
+    price: 189.99,
+    supportsLayerColors: true,
+    materialMap: {
+      upper: ["Main Body Material", "Main Shoe Inside", "Insole Material", "Insole Material right"],
+      swoosh: ["Logo left Material", "Logo right Material"],
+      sole: "Sole Material",
+      laces: "Laces Material",
+      heel: ["Flap Material.002", "Tag material", "Tag materialright.001"],
+    },
+    scale: 0.03,
+    position: [0, -0.35, 0],
+    rotation: [0, 0.3, 0],
+  },
+  {
+    id: "air-jordan-1",
+    name: "Air Jordan 1",
+    subtitle: "Retro High OG",
+    type: "glb",
+    asset: "/assets/AirJordan.glb",
+    price: 199.99,
+    supportsLayerColors: false,
+    materialMap: { upper: "DefaultMaterial" },
+    scale: 0.085,
+    position: [0, -0.35, 0],
+    rotation: [0, -Math.PI / 2, 0],
+  },
+  {
+    id: "legado",
+    name: "Nike Legado",
+    subtitle: "Edición Procedural",
+    type: "procedural",
+    price: 149.99,
+    supportsLayerColors: true,
+    scale: 1,
+    position: [0, 0, 0],
+    rotation: [0, 0.35, 0],
+  }
+];

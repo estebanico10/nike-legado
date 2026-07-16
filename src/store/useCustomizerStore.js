@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { COLOR_PALETTE as defaultColors, LAYERS as defaultLayers } from '../components/customizer/customizerData';
+import { COLOR_PALETTE as defaultColors, LAYERS as defaultLayers, SHOE_MODELS } from '../components/customizer/customizerData';
 
 export const useCustomizerStore = create(
   persist(
     (set, get) => ({
       colors: defaultColors,
       layers: defaultLayers,
+      shoeModels: SHOE_MODELS,
       pricing: {
         basePrice: 149.99,
         premiumColorSurcharge: 10.00,
@@ -19,8 +20,13 @@ export const useCustomizerStore = create(
       updateColor: (id, colorData) => set((state) => ({ colors: state.colors.map(c => c.id === id ? { ...c, ...colorData } : c) })),
       removeColor: (id) => set((state) => ({ colors: state.colors.filter(c => c.id !== id) })),
       
-      calculatePrice: (activeColors = {}, customText = "") => {
-        const { pricing, colors } = get();
+      calculatePrice: (activeColors = {}, customText = "", modelId = "legado") => {
+        const { pricing, colors, shoeModels } = get();
+        
+        // Find the base price for the selected model
+        const selectedModel = shoeModels.find(m => m.id === modelId) || shoeModels.find(m => m.id === "legado");
+        const modelBasePrice = selectedModel ? selectedModel.price : pricing.basePrice;
+
         // Determine if any premium color is used
         let hasPremium = false;
         Object.values(activeColors).forEach(colorObj => {
@@ -36,10 +42,10 @@ export const useCustomizerStore = create(
         const customTextCost = (customText && customText.trim().length > 0) ? pricing.customTextSurcharge : 0.00;
         
         return {
-          basePrice: pricing.basePrice,
+          basePrice: modelBasePrice,
           premiumColorCost,
           customTextCost,
-          totalPrice: pricing.basePrice + premiumColorCost + customTextCost
+          totalPrice: modelBasePrice + premiumColorCost + customTextCost
         };
       }
     }),
