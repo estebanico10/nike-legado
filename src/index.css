@@ -3,11 +3,11 @@
 
 :root {
   --color-ink: var(--color-ink-light, #111111);
-  --color-ink-soft: #757575;
-  --color-ink-muted: #CCCCCC;
+  --color-ink-soft: var(--color-ink-soft-light, #757575);
+  --color-ink-muted: var(--color-ink-muted-light, #CCCCCC);
   --color-canvas: var(--color-canvas-light, #FFFFFF);
-  --color-canvas-alt: #F5F5F5;
-  --color-canvas-nav: rgba(255, 255, 255, 0.80);
+  --color-canvas-alt: var(--color-canvas-alt-light, #F5F5F5);
+  --color-canvas-nav: var(--color-canvas-nav-light, rgba(255, 255, 255, 0.80));
   --color-surface: var(--color-surface-light, #F5F5F5);
   --color-sale: #D30005;
   --color-success: #128A09;
@@ -69,11 +69,11 @@
 
 [data-theme="dark"] {
   --color-ink: var(--color-ink-dark, #F5F5F5);
-  --color-ink-soft: #A0A0A0;
-  --color-ink-muted: #3A3A3A;
+  --color-ink-soft: var(--color-ink-soft-dark, #A0A0A0);
+  --color-ink-muted: var(--color-ink-muted-dark, #3A3A3A);
   --color-canvas: var(--color-canvas-dark, #111111);
-  --color-canvas-alt: #1A1A1A;
-  --color-canvas-nav: rgba(17, 17, 17, 0.80);
+  --color-canvas-alt: var(--color-canvas-alt-dark, #1A1A1A);
+  --color-canvas-nav: var(--color-canvas-nav-dark, rgba(17, 17, 17, 0.80));
   --color-surface: var(--color-surface-dark, #1A1A1A);
   --color-volt: var(--color-volt-dark, #CEFF00);
 }
