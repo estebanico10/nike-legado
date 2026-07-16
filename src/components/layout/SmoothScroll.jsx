@@ -1,7 +1,16 @@
-import { ReactLenis, useLenis } from 'lenis/react'
-import { useEffect } from 'react'
+import { ReactLenis } from 'lenis/react'
+import { useLocation } from 'react-router-dom'
 
 export default function SmoothScroll({ children }) {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  // Si estamos en el panel de administración (/admin), devolvemos los hijos directamente
+  // para no interceptar el scroll nativo de las barras de herramientas y paneles internos.
+  if (isAdmin) {
+    return <>{children}</>;
+  }
+
   // Configuración premium de smooth scroll
   return (
     <ReactLenis root options={{ 

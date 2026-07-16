@@ -152,7 +152,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
           <span className="admin-brand-name">Nike CMS</span>
         </div>
 
-        <nav className="admin-nav">
+        <nav className="admin-nav" data-lenis-prevent="true">
           {sidebarMode === "flat" ? (
             // Flat List View
             <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -264,7 +264,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className={`admin-main ${isSidebarCollapsed ? "collapsed-sidebar" : ""}`}>
+      <main className={`admin-main ${isSidebarCollapsed ? "collapsed-sidebar" : ""}`} data-lenis-prevent="true">
         
         <header className="admin-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -297,7 +297,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
           </div>
         </header>
 
-        <div className="admin-content">
+        <div className="admin-content" data-lenis-prevent="true">
           <motion.div
             key={activeTab}
             initial={{ opacity: 0, y: 10 }}
