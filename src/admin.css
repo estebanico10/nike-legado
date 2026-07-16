@@ -22,6 +22,8 @@
   z-index: 100;
   transition: width var(--duration-std) var(--ease-out), transform var(--duration-std) var(--ease-out);
   width: 260px; /* Default expanded */
+  height: 100vh;
+  overflow: hidden;
 }
 
 .admin-sidebar.collapsed {
@@ -77,13 +79,15 @@
 }
 
 .admin-nav {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0; /* Ensures flex child allows scrolling */
+  height: 100%;
   padding: var(--space-md) var(--space-sm);
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .admin-nav-btn {

@@ -152,7 +152,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
           <span className="admin-brand-name">Nike CMS</span>
         </div>
 
-        <nav className="admin-nav" style={{ overflowY: "auto", paddingBottom: "80px" }}>
+        <nav className="admin-nav">
           {sidebarMode === "flat" ? (
             // Flat List View
             <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
