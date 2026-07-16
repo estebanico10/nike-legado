@@ -28,7 +28,8 @@ export default function SneakerCustomizer({
   customText = "LEGADO",
   onTextChange,
   mode = "full", // "full" | "preview" | "controls"
-  selectedModelId = "air-force-1"
+  selectedModelId = "air-force-1",
+  shoeVisibility = "both"
 }) {
   const { colors, layers, shoeModels } = useCustomizerStore();
   const selectedModelConfig = shoeModels.find(m => m.id === selectedModelId) || shoeModels[0];
@@ -106,9 +107,9 @@ export default function SneakerCustomizer({
             
             {/* Modelo 3D */}
             {selectedModelConfig.type === "procedural" ? (
-              <NikeShoeModel colors={activeColors} customText={customText} />
+              <NikeShoeModel colors={activeColors} customText={customText} shoeVisibility={shoeVisibility} />
             ) : (
-              <GLBShoeModel modelConfig={selectedModelConfig} colors={activeColors} customText={customText} />
+              <GLBShoeModel modelConfig={selectedModelConfig} colors={activeColors} shoeVisibility={shoeVisibility} />
             )}
             
             {/* Controlador Cinemático de Cámara (GSAP) */}

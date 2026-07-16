@@ -74,35 +74,9 @@ function Laces({ color = "#eeeeee" }) {
   );
 }
 
-// ── Modelo principal Nike Sneaker ─────────────────────────────────────────
-export default function NikeShoeModel({ colors = {}, customText = "" }) {
-  const groupRef = useRef();
-
-  const c = {
-    upper:  colors.upper?.hex  || "#CEFF00",
-    sole:   colors.sole?.hex   || "#111111",
-    swoosh: colors.swoosh?.hex || "#ffffff",
-    laces:  colors.laces?.hex  || "#eeeeee",
-    heel:   colors.heel?.hex   || "#222222",
-  };
-
-  const matUpper   = useMat(c.upper,  0.4,  0.05);
-  const matSole    = useMat(c.sole,   0.65, 0.0);
-  const matHeel    = useMat(c.heel,   0.5,  0.05);
-  const matInner   = useMat("#1a1a1a", 0.9, 0.0);
-  const matMidsole = useMat("#ddeeff", 0.5,  0.0);
-  const matTongue  = useMat(c.upper,  0.5,  0.0);
-
-  // Animación de flotación suave
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.04;
-    }
-  });
-
+function ShoeInstance({ c, customText, matUpper, matSole, matHeel, matInner, matMidsole, matTongue }) {
   return (
-    <group ref={groupRef} scale={1} position={[0, 0, 0]} rotation={[0, 0.35, 0]}>
-
+    <>
       {/* Outsole (suela inferior, gruesa) */}
       <RoundedBox args={[1.12, 0.12, 0.44]} radius={0.045} smoothness={4}
         position={[0, -0.32, 0]} material={matSole} castShadow receiveShadow />
@@ -187,7 +161,53 @@ export default function NikeShoeModel({ colors = {}, customText = "" }) {
           {customText.toUpperCase()}
         </Text>
       )}
+    </>
+  );
+}
 
+// ── Modelo principal Nike Sneaker ─────────────────────────────────────────
+export default function NikeShoeModel({ colors = {}, customText = "", shoeVisibility = "both" }) {
+  const groupRef = useRef();
+
+  const c = {
+    upper:  colors.upper?.hex  || "#CEFF00",
+    sole:   colors.sole?.hex   || "#111111",
+    swoosh: colors.swoosh?.hex || "#ffffff",
+    laces:  colors.laces?.hex  || "#eeeeee",
+    heel:   colors.heel?.hex   || "#222222",
+  };
+
+  const matUpper   = useMat(c.upper,  0.4,  0.05);
+  const matSole    = useMat(c.sole,   0.65, 0.0);
+  const matHeel    = useMat(c.heel,   0.5,  0.05);
+  const matInner   = useMat("#1a1a1a", 0.9, 0.0);
+  const matMidsole = useMat("#ddeeff", 0.5,  0.0);
+  const matTongue  = useMat(c.upper,  0.5,  0.0);
+
+  const sharedProps = { c, customText, matUpper, matSole, matHeel, matInner, matMidsole, matTongue };
+
+  // Animación de flotación suave
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.04;
+    }
+  });
+
+  return (
+    <group ref={groupRef} scale={1.2} position={[0, -0.1, 0]} rotation={[0, 0.35, 0]}>
+      {/* Zapato Base */}
+      <group position={shoeVisibility === "both" ? [-0.6, 0, 0] : [0, 0, 0]}>
+        {(shoeVisibility === "left" || shoeVisibility === "both") && (
+          <ShoeInstance {...sharedProps} />
+        )}
+      </group>
+
+      {/* Clon (Espejo) para el pie derecho */}
+      <group position={shoeVisibility === "both" ? [0.6, 0, 0] : [0, 0, 0]} scale={[-1, 1, 1]}>
+        {(shoeVisibility === "right" || shoeVisibility === "both") && (
+          <ShoeInstance {...sharedProps} />
+        )}
+      </group>
     </group>
   );
 }

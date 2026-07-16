@@ -28,6 +28,7 @@ export default function CustomizerPage() {
   const [activeTab, setActiveTab] = useState("swoosh");
   const [customText, setCustomText] = useState("LEGADO");
   const [selectedSize, setSelectedSize] = useState("28");
+  const [shoeVisibility, setShoeVisibility] = useState("both"); // "both" | "left" | "right"
   const [savedDesigns, setSavedDesigns] = useState(() => {
     try {
       const stored = localStorage.getItem("nike_saved_designs");
@@ -130,6 +131,7 @@ export default function CustomizerPage() {
             customText={customText}
             onTextChange={setCustomText}
             selectedModelId={selectedModelId}
+            shoeVisibility={shoeVisibility}
           />
         </div>
 
@@ -178,6 +180,27 @@ export default function CustomizerPage() {
                 ))}
               </div>
             </div>
+
+            {/* View Powers (Left/Right/Both) */}
+            <div className="flex flex-col gap-2 mt-5">
+              <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">Superpoderes de Vista</span>
+              <div className="flex bg-white/5 border border-white/10 rounded-lg p-1">
+                {["left", "both", "right"].map(view => (
+                  <button
+                    key={view}
+                    onClick={() => setShoeVisibility(view)}
+                    className={`flex-1 py-2 text-xs font-bold uppercase transition-all rounded-md cursor-pointer ${
+                      shoeVisibility === view
+                        ? "bg-[var(--color-volt)] text-black"
+                        : "text-neutral-400 hover:text-white"
+                    }`}
+                  >
+                    {view === "left" ? "Izq" : view === "right" ? "Der" : "Ambos"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
           </div>
 
           <button

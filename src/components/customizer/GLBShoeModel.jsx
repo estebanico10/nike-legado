@@ -3,7 +3,7 @@ import { useGLTF, Float } from "@react-three/drei";
 import { resolveAsset } from "../../utils/resolveAsset";
 import { MeshoptDecoder } from "meshoptimizer";
 
-export default function GLBShoeModel({ modelConfig, colors }) {
+export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "both" }) {
   const group = useRef();
   
   const modelPath = resolveAsset(modelConfig.asset);
@@ -61,6 +61,36 @@ export default function GLBShoeModel({ modelConfig, colors }) {
     }
   }, [colors, materials, modelConfig]);
 
+  // Lógica de Renderizado de Mallas según Configuración de Par y Visibilidad
+  const renderMeshes = (isClone = false, offset = [0, 0, 0], scaleMult = [1, 1, 1]) => {
+    return Object.keys(nodes).map(key => {
+      const node = nodes[key];
+      if (!node.isMesh) return null;
+
+      // Filtrado para modelos "nativos" que ya incluyen ambos zapatos
+      if (modelConfig.pairBehavior === "native" && modelConfig.pairConfig) {
+        const { leftRegex, rightRegex } = modelConfig.pairConfig;
+        const isLeftMesh = leftRegex ? leftRegex.test(node.name) : false;
+        const isRightMesh = rightRegex ? rightRegex.test(node.name) : false;
+        
+        if (shoeVisibility === "left" && isRightMesh) return null;
+        if (shoeVisibility === "right" && isLeftMesh) return null;
+      }
+
+      return (
+        <mesh 
+          key={`${key}${isClone ? '-clone' : ''}`}
+          geometry={node.geometry} 
+          material={node.material} 
+          castShadow 
+          receiveShadow
+          position={[offset[0], offset[1], offset[2]]}
+          scale={scaleMult}
+        />
+      );
+    });
+  };
+
   return (
     <group 
       ref={group} 
@@ -70,21 +100,19 @@ export default function GLBShoeModel({ modelConfig, colors }) {
       dispose={null}
     >
       <Float speed={1.2} rotationIntensity={0.03} floatIntensity={0.04}>
-        {nodes && Object.keys(nodes).map(key => {
-          const node = nodes[key];
-          if (node.isMesh) {
-            return (
-              <mesh 
-                key={key}
-                geometry={node.geometry} 
-                material={node.material} 
-                castShadow 
-                receiveShadow
-              />
-            );
-          }
-          return null;
-        })}
+        {/* Renderizado Base */}
+        {renderMeshes(false, 
+          modelConfig.pairBehavior === "clone" && shoeVisibility === "both" ? [-modelConfig.pairConfig.offset, 0, 0] : [0,0,0],
+          [1, 1, 1]
+        )}
+        
+        {/* Renderizado del Clon (Modo Espejo) para modelos singulares cuando se pide ver 'Ambos' */}
+        {modelConfig.pairBehavior === "clone" && shoeVisibility === "both" && (
+          renderMeshes(true, 
+            [modelConfig.pairConfig.offset, 0, 0], 
+            [-1, 1, 1] // Scale X = -1 para efecto espejo
+          )
+        )}
       </Float>
     </group>
   );
