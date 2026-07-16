@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useToast } from "../../context/ToastContext";
 
@@ -8,98 +8,243 @@ export default function ThemeAdmin() {
   
   const [formData, setFormData] = useState(themeSettings);
 
+  // Sync state if context changes externally
+  useEffect(() => {
+    setFormData(themeSettings);
+  }, [themeSettings]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Update theme in real-time for preview
+    // Update theme in real-time for live preview (entire document)
     setThemeSettings(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSave = (e) => {
     e.preventDefault();
     setThemeSettings(formData);
-    addToast("Tema actualizado exitosamente", "success");
+    addToast("Tema y Branding actualizados exitosamente", "success");
   };
 
   const handleReset = () => {
-    setFormData(defaultTheme);
-    setThemeSettings(defaultTheme);
-    addToast("Tema restaurado a por defecto", "info");
+    if(window.confirm("¿Seguro que deseas restaurar el diseño original?")) {
+      setFormData(defaultTheme);
+      setThemeSettings(defaultTheme);
+      addToast("Diseño restaurado a valores por defecto", "info");
+    }
+  };
+
+  const PRESET_THEMES = [
+    { name: "Nike Dark (Por defecto)", values: { volt: "#CEFF00", canvas: "#060606", ink: "#FFFFFF", surface: "#111111", displayFont: '"Oswald", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "0px", buttonStyle: "solid" } },
+    { name: "Techwear Cyber", values: { volt: "#00FFCC", canvas: "#0A0A0E", ink: "#E0E0FF", surface: "#161622", displayFont: '"Space Grotesk", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "4px", buttonStyle: "outline" } },
+    { name: "Minimal Light", values: { volt: "#FF4500", canvas: "#FAFAFA", ink: "#111111", surface: "#FFFFFF", displayFont: '"Helvetica Neue", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "100px", buttonStyle: "solid" } }
+  ];
+
+  const applyPreset = (presetValues) => {
+    setFormData(presetValues);
+    setThemeSettings(presetValues);
+    addToast("Preset aplicado", "success");
   };
 
   return (
-    <div className="admin-card">
-      <h2 className="admin-card-title">Editor de Temas y Branding</h2>
-      <p style={{ color: "#757575", marginBottom: "var(--space-lg)", fontSize: "var(--type-body-sm)" }}>
-        Modifica los colores globales de la tienda. Los cambios se verán reflejados al instante en toda la página.
-      </p>
-
-      <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <label className="admin-label">Color Principal (Volt)</label>
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-            <input 
-              type="color" 
-              name="volt" 
-              value={formData.volt} 
-              onChange={handleChange}
-              style={{ width: "50px", height: "40px", cursor: "pointer", background: "none", border: "none" }}
-            />
-            <input 
-              type="text" 
-              className="admin-input" 
-              name="volt" 
-              value={formData.volt} 
-              onChange={handleChange}
-            />
+          <h2 className="admin-card-title" style={{ margin: 0 }}>Editor de Diseño Visual</h2>
+          <p style={{ color: "#757575", fontSize: "14px", marginTop: "4px" }}>Controla colores, tipografías y estilos globales de la tienda.</p>
+        </div>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button onClick={handleReset} className="btn btn--secondary" style={{ borderColor: "rgba(211,0,5,0.3)", color: "#FF4500" }}>
+            Restaurar Original
+          </button>
+          <button onClick={handleSave} className="btn btn--volt">
+            Guardar Cambios
+          </button>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", alignItems: "start" }}>
+        {/* Controls Panel */}
+        <form onSubmit={handleSave} className="admin-card" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          
+          <div>
+            <h3 style={{ color: "#FFF", fontSize: "15px", borderBottom: "1px solid #333", paddingBottom: "8px", marginBottom: "16px" }}>Paleta de Colores</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div>
+                <label className="admin-label">Acento Principal (Volt)</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <input type="color" name="volt" value={formData.volt} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="volt" value={formData.volt} onChange={handleChange} />
+                </div>
+              </div>
+              <div>
+                <label className="admin-label">Fondo Global (Canvas)</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <input type="color" name="canvas" value={formData.canvas} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="canvas" value={formData.canvas} onChange={handleChange} />
+                </div>
+              </div>
+              <div>
+                <label className="admin-label">Texto Principal (Ink)</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <input type="color" name="ink" value={formData.ink} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="ink" value={formData.ink} onChange={handleChange} />
+                </div>
+              </div>
+              <div>
+                <label className="admin-label">Fondo Secundario (Surface)</label>
+                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <input type="color" name="surface" value={formData.surface} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="surface" value={formData.surface} onChange={handleChange} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style={{ color: "#FFF", fontSize: "15px", borderBottom: "1px solid #333", paddingBottom: "8px", marginBottom: "16px" }}>Tipografía y Estilo</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div>
+                <label className="admin-label">Tipografía para Títulos</label>
+                <select className="admin-input" name="displayFont" value={formData.displayFont} onChange={handleChange}>
+                  <option value='"Oswald", "Barlow Condensed", sans-serif'>Oswald (Impactante, Estrecha)</option>
+                  <option value='"Inter", "Helvetica Neue", sans-serif'>Inter (Moderna, Limpia)</option>
+                  <option value='"Space Grotesk", sans-serif'>Space Grotesk (Futurista, Tech)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="admin-label">Tipografía para Párrafos</label>
+                <select className="admin-input" name="bodyFont" value={formData.bodyFont} onChange={handleChange}>
+                  <option value='"Inter", "Helvetica Neue", sans-serif'>Inter (Moderna, Limpia)</option>
+                  <option value='"Roboto", sans-serif'>Roboto (Clásica)</option>
+                  <option value='"Arial", sans-serif'>Arial (Segura)</option>
+                </select>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                <div>
+                  <label className="admin-label">Redondeo (Border Radius)</label>
+                  <select className="admin-input" name="borderRadius" value={formData.borderRadius} onChange={handleChange}>
+                    <option value="0px">Cuadrado (0px)</option>
+                    <option value="4px">Sutil (4px)</option>
+                    <option value="12px">Redondeado (12px)</option>
+                    <option value="100px">Pastilla (100px)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="admin-label">Estilo de Botones</label>
+                  <select className="admin-input" name="buttonStyle" value={formData.buttonStyle} onChange={handleChange}>
+                    <option value="solid">Sólido</option>
+                    <option value="outline">Contorno</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+        {/* Live Preview Panel & Presets */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          
+          <div className="admin-card" style={{ padding: "20px" }}>
+            <h3 style={{ color: "#FFF", fontSize: "15px", marginBottom: "16px" }}>Temas Predefinidos</h3>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {PRESET_THEMES.map((preset, idx) => (
+                <button 
+                  key={idx} 
+                  onClick={() => applyPreset(preset.values)}
+                  className="btn btn--secondary btn--sm"
+                  style={{ fontSize: "12px", border: `1px solid ${preset.values.volt}` }}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ 
+            backgroundColor: formData.canvas, 
+            color: formData.ink,
+            border: "1px solid #333", 
+            borderRadius: "12px", 
+            padding: "32px",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+            transition: "all 0.3s ease"
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
+              <h2 style={{ 
+                fontFamily: formData.displayFont, 
+                fontSize: "28px", 
+                margin: 0, 
+                textTransform: "uppercase", 
+                letterSpacing: "1px" 
+              }}>
+                Nike <span style={{ color: formData.volt }}>Legado</span>
+              </h2>
+              <div style={{ display: "flex", gap: "16px", fontFamily: formData.bodyFont, fontSize: "14px" }}>
+                <span style={{ cursor: "pointer", borderBottom: `2px solid ${formData.volt}` }}>Hombre</span>
+                <span style={{ cursor: "pointer", opacity: 0.7 }}>Mujer</span>
+                <span style={{ cursor: "pointer", opacity: 0.7 }}>SNKRS</span>
+              </div>
+            </div>
+
+            <div style={{ 
+              backgroundColor: formData.surface,
+              borderRadius: formData.borderRadius,
+              padding: "24px",
+              marginBottom: "24px",
+              display: "flex",
+              gap: "24px",
+              alignItems: "center"
+            }}>
+              <div style={{ width: "120px", height: "120px", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: formData.borderRadius }}></div>
+              <div>
+                <h3 style={{ fontFamily: formData.displayFont, fontSize: "22px", margin: "0 0 8px 0" }}>Nike Air Max Plus</h3>
+                <p style={{ fontFamily: formData.bodyFont, opacity: 0.7, margin: "0 0 16px 0", fontSize: "14px" }}>
+                  Domina las calles con la mejor amortiguación. El legado continúa con esta edición especial.
+                </p>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <button style={{
+                    backgroundColor: formData.buttonStyle === "solid" ? formData.volt : "transparent",
+                    color: formData.buttonStyle === "solid" ? "#000" : formData.volt,
+                    border: `2px solid ${formData.volt}`,
+                    borderRadius: formData.borderRadius,
+                    padding: "8px 24px",
+                    fontFamily: formData.displayFont,
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    fontSize: "14px"
+                  }}>
+                    Añadir al Carrito
+                  </button>
+                  <button style={{
+                    backgroundColor: "transparent",
+                    color: formData.ink,
+                    border: `1px solid ${formData.ink}40`,
+                    borderRadius: formData.borderRadius,
+                    padding: "8px 24px",
+                    fontFamily: formData.bodyFont,
+                    cursor: "pointer",
+                    fontSize: "14px"
+                  }}>
+                    Detalles
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
+              {[1, 2, 3].map(i => (
+                <div key={i} style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: i === 1 ? formData.volt : `${formData.ink}40` }}></div>
+              ))}
+            </div>
+
           </div>
         </div>
-
-        <div>
-          <label className="admin-label">Color de Fondo (Canvas)</label>
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-            <input 
-              type="color" 
-              name="canvas" 
-              value={formData.canvas} 
-              onChange={handleChange}
-              style={{ width: "50px", height: "40px", cursor: "pointer", background: "none", border: "none" }}
-            />
-            <input 
-              type="text" 
-              className="admin-input" 
-              name="canvas" 
-              value={formData.canvas} 
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="admin-label">Color de Texto (Ink)</label>
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-            <input 
-              type="color" 
-              name="ink" 
-              value={formData.ink} 
-              onChange={handleChange}
-              style={{ width: "50px", height: "40px", cursor: "pointer", background: "none", border: "none" }}
-            />
-            <input 
-              type="text" 
-              className="admin-input" 
-              name="ink" 
-              value={formData.ink} 
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div style={{ display: "flex", gap: "16px", marginTop: "var(--space-md)" }}>
-          <button type="submit" className="btn btn--volt">Guardar Tema</button>
-          <button type="button" className="btn btn--secondary" onClick={handleReset}>Restaurar Default</button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SEO from "../components/SEO";
 import SneakerCustomizer from "../components/customizer/SneakerCustomizer";
-import { COLOR_PALETTE, calculatePriceDetails } from "../components/customizer/customizerData";
+import { useCustomizerStore } from "../store/useCustomizerStore";
 import { useCartStore, useLoyaltyStore } from "../store/useStore";
 import { useToast } from "../context/ToastContext";
 
@@ -11,13 +11,15 @@ const generateId = () => Date.now().toString();
 export default function CustomizerPage() {
   const addToCart = useCartStore((state) => state.addToCart);
   const { addToast } = useToast();
+  
+  const { colors, calculatePrice } = useCustomizerStore();
 
   const [activeColors, setActiveColors] = useState({
-    swoosh: COLOR_PALETTE[0], // Volt
-    upper: COLOR_PALETTE[2], // Canvas
-    sole: COLOR_PALETTE[1], // Ink
-    laces: COLOR_PALETTE[1], // Ink
-    heel: COLOR_PALETTE[6] // Dark Grey
+    swoosh: colors[0] || { name: 'Default', hex: '#000', id: 'def' },
+    upper: colors[2] || colors[0] || { name: 'Default', hex: '#000', id: 'def' },
+    sole: colors[1] || colors[0] || { name: 'Default', hex: '#000', id: 'def' },
+    laces: colors[1] || colors[0] || { name: 'Default', hex: '#000', id: 'def' },
+    heel: colors[6] || colors[0] || { name: 'Default', hex: '#000', id: 'def' }
   });
 
   const [activeTab, setActiveTab] = useState("swoosh");
@@ -34,7 +36,7 @@ export default function CustomizerPage() {
   });
   const [showSavedModal, setShowSavedModal] = useState(false);
 
-  const priceDetails = calculatePriceDetails(activeColors, customText);
+  const priceDetails = calculatePrice(activeColors, customText);
 
   const handleColorChange = (layerId, colorObj) => {
     setActiveColors((prev) => ({

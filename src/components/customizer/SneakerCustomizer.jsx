@@ -1,6 +1,6 @@
 import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { COLOR_PALETTE, LAYERS } from "./customizerData";
+import { useCustomizerStore } from "../../store/useCustomizerStore";
 import { Canvas } from "@react-three/fiber";
 import { Environment, ContactShadows, OrbitControls, Html, useProgress } from "@react-three/drei";
 import ShoeModel3D from "./ShoeModel3D";
@@ -18,13 +18,7 @@ function Loader() {
 }
 
 export default function SneakerCustomizer({
-  activeColors = {
-    swoosh: COLOR_PALETTE[0],
-    upper: COLOR_PALETTE[2],
-    sole: COLOR_PALETTE[1],
-    laces: COLOR_PALETTE[1],
-    heel: COLOR_PALETTE[6]
-  },
+  activeColors = {},
   onColorChange,
   activeTab = "swoosh",
   onTabChange,
@@ -32,8 +26,9 @@ export default function SneakerCustomizer({
   onTextChange,
   mode = "full" // "full" | "preview" | "controls"
 }) {
-  const currentLayerObj = LAYERS.find(l => l.id === activeTab) || LAYERS[0];
-  const currentColorObj = activeColors[activeTab] || COLOR_PALETTE[0];
+  const { colors, layers } = useCustomizerStore();
+  const currentLayerObj = layers.find(l => l.id === activeTab) || layers[0] || { id: "swoosh", label: "Swoosh" };
+  const currentColorObj = activeColors[activeTab] || colors[0] || { hex: "#000", name: "Default" };
 
   // PREVIEW: 3D Canvas taking up the designated space
   const renderPreview = () => (
@@ -128,7 +123,7 @@ export default function SneakerCustomizer({
           borderBottom: "1px solid rgba(255,255,255,0.1)",
           marginBottom: "16px"
         }}>
-          {LAYERS.map((layer) => {
+          {layers.map((layer) => {
             const isSelected = activeTab === layer.id;
             return (
               <button
@@ -170,7 +165,7 @@ export default function SneakerCustomizer({
             transition={{ duration: 0.2 }}
           >
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: "10px" }}>
-              {COLOR_PALETTE.map((colorItem) => {
+              {colors.map((colorItem) => {
                 const isSelectedColor = currentColorObj.hex === colorItem.hex;
                 return (
                   <motion.button

@@ -5,7 +5,7 @@ import { useAuditStore } from './useAuditStore';
 const rolePermissions = {
   'Super Admin': ['all'],
   'Analista': ['inventario', 'ventas', 'pedidos', 'clientes', 'metricas', 'cupones'],
-  'Moderador': ['comunidad', 'resenas', 'social', 'fidelidad', 'inicio', 'presentacion', 'equipo', 'marketing', 'drops', 'cupones']
+  'Moderador': ['comunidad', 'resenas', 'social', 'fidelidad', 'inicio', 'presentacion', 'equipo', 'marketing', 'drops', 'cupones', 'customizer', 'faq', 'shipping', 'builder']
 };
 
 export const useAuthStore = create(

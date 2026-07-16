@@ -23,6 +23,10 @@ import ThemeAdmin from "../components/admin/ThemeAdmin";
 import SEOAdmin from "../components/admin/SEOAdmin";
 import LangAdmin from "../components/admin/LangAdmin";
 import CouponsAdmin from "../components/admin/CouponsAdmin";
+import CustomizerAdmin from "../components/admin/CustomizerAdmin";
+import FAQAdmin from "../components/admin/FAQAdmin";
+import ShippingTaxAdmin from "../components/admin/ShippingTaxAdmin";
+import PageBuilderAdmin from "../components/admin/PageBuilderAdmin";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -39,6 +43,7 @@ export default function AdminPage() {
       case "marketing": return <MarketingAdmin />;
       case "fidelidad": return <LoyaltyAdmin />;
       case "drops": return <DropsAdmin />;
+      case "customizer": return <CustomizerAdmin />;
       case "ai-stylist": return <AIStylist />;
       case "cupones": return <CouponsAdmin />;
       
@@ -54,7 +59,10 @@ export default function AdminPage() {
       case "auditoria": return <AuditLogsAdmin />;
       case "tema": return <ThemeAdmin />;
       case "seo": return <SEOAdmin />;
-      case "idiomas": return <LangAdmin />;
+      case "lang": return <LangAdmin />;
+      case "faq": return <FAQAdmin />;
+      case "shipping": return <ShippingTaxAdmin />;
+      case "builder": return <PageBuilderAdmin />;
       
       default: return <SalesDashboard />;
     }

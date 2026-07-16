@@ -27,6 +27,7 @@ const TABS = [
   { id: "marketing", label: "Campañas", icon: "marketing", category: "Marketing y Ventas" },
   { id: "fidelidad", label: "Club Lealtad", icon: "fidelidad", category: "Marketing y Ventas" },
   { id: "drops", label: "Lanzamientos", icon: "drops", category: "Marketing y Ventas" },
+  { id: "customizer", label: "Nike By You", icon: "customizer", category: "Marketing y Ventas" },
   { id: "ai-stylist", label: "AI Stylist", icon: "ai-stylist", category: "Marketing y Ventas" },
   { id: "cupones", label: "Cupones", icon: "cupones", category: "Marketing y Ventas" },
   
@@ -42,9 +43,12 @@ const TABS = [
   { id: "equipo", label: "Equipo", icon: "equipo", category: "Sistema y Seguridad" },
   { id: "configuracion", label: "Configuración Tienda", icon: "configuracion", category: "Sistema y Seguridad" },
   { id: "auditoria", label: "Logs de Auditoría", icon: "auditoria", category: "Sistema y Seguridad" },
+  { id: "lang", label: "Idiomas & Monedas", icon: "lang", category: "Sistema y Seguridad" },
+  { id: "faq", label: "Centro de Ayuda", icon: "faq", category: "Sistema y Seguridad" },
+  { id: "shipping", label: "Envíos e Impuestos", icon: "shipping", category: "Sistema y Seguridad" },
+  { id: "builder", label: "Page Builder", icon: "builder", category: "Sistema y Seguridad" },
   { id: "tema", label: "Diseño y Tema", icon: "tema", category: "Sistema y Seguridad" },
-  { id: "seo", label: "SEO y Metadatos", icon: "seo", category: "Sistema y Seguridad" },
-  { id: "idiomas", label: "Idiomas y Textos", icon: "idiomas", category: "Sistema y Seguridad" }
+  { id: "seo", label: "SEO y Metadatos", icon: "seo", category: "Sistema y Seguridad" }
 ];
 
 export default function AdminLayout({ activeTab, setActiveTab, children }) {
@@ -78,6 +82,7 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
       case "pedidos": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>;
       case "clientes": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
       case "marketing": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
+      case "customizer": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2.69l5.66 4.2c.82.61 1.34 1.57 1.34 2.6v5.02c0 1.03-.52 1.99-1.34 2.6L12 21.31l-5.66-4.2c-.82-.61-1.34-1.57-1.34-2.6V9.49c0-1.03.52-1.99 1.34-2.6L12 2.69z"></path></svg>;
       case "cupones": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>;
       case "resenas": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>;
       case "metricas": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>;
@@ -94,7 +99,10 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
       case "dashboard": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>;
       case "tema": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>;
       case "seo": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
-      case "idiomas": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>;
+      case "faq": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
+      case "shipping": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>;
+      case "builder": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
+      case "lang": return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>;
       default: return null;
     }
   };
