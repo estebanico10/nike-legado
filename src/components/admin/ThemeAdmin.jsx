@@ -6,13 +6,31 @@ export default function ThemeAdmin() {
   const { themeSettings, setThemeSettings, defaultTheme } = useTheme();
   const { addToast } = useToast();
   
-  const [formData, setFormData] = useState(() => themeSettings || {});
+  const [formData, setFormData] = useState(() => themeSettings || defaultTheme);
+  const [activeTab, setActiveTab] = useState("dark"); // "light" or "dark"
 
-  const handleChange = (e) => {
+  const handleChangeColor = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Update theme in real-time for live preview (entire document)
-    setThemeSettings(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        [activeTab]: {
+          ...prev[activeTab],
+          [name]: value
+        }
+      };
+      setThemeSettings(updated);
+      return updated;
+    });
+  };
+
+  const handleChangeGlobal = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => {
+      const updated = { ...prev, [name]: value };
+      setThemeSettings(updated);
+      return updated;
+    });
   };
 
   const handleSave = (e) => {
@@ -30,9 +48,9 @@ export default function ThemeAdmin() {
   };
 
   const PRESET_THEMES = [
-    { name: "Nike Dark (Por defecto)", values: { volt: "#CEFF00", canvas: "#060606", ink: "#FFFFFF", surface: "#111111", displayFont: '"Oswald", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "0px", buttonStyle: "solid" } },
-    { name: "Techwear Cyber", values: { volt: "#00FFCC", canvas: "#0A0A0E", ink: "#E0E0FF", surface: "#161622", displayFont: '"Space Grotesk", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "4px", buttonStyle: "outline" } },
-    { name: "Minimal Light", values: { volt: "#FF4500", canvas: "#FAFAFA", ink: "#111111", surface: "#FFFFFF", displayFont: '"Helvetica Neue", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "100px", buttonStyle: "solid" } }
+    { name: "Nike Dark (Por defecto)", values: { light: { volt: "#CEFF00", canvas: "#FAFAFA", ink: "#111111", surface: "#FFFFFF" }, dark: { volt: "#CEFF00", canvas: "#060606", ink: "#FFFFFF", surface: "#111111" }, displayFont: '"Oswald", "Barlow Condensed", sans-serif', bodyFont: '"Inter", "Helvetica Neue", sans-serif', borderRadius: "0px", buttonStyle: "solid" } },
+    { name: "Techwear Cyber", values: { light: { volt: "#00FFCC", canvas: "#E5E5E5", ink: "#0A0A0E", surface: "#FFFFFF" }, dark: { volt: "#00FFCC", canvas: "#0A0A0E", ink: "#E0E0FF", surface: "#161622" }, displayFont: '"Space Grotesk", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "4px", buttonStyle: "outline" } },
+    { name: "Minimal Light", values: { light: { volt: "#FF4500", canvas: "#FAFAFA", ink: "#111111", surface: "#FFFFFF" }, dark: { volt: "#FF4500", canvas: "#111111", ink: "#FAFAFA", surface: "#1A1A1A" }, displayFont: '"Helvetica Neue", sans-serif', bodyFont: '"Inter", sans-serif', borderRadius: "100px", buttonStyle: "solid" } }
   ];
 
   const applyPreset = (presetValues) => {
@@ -41,12 +59,15 @@ export default function ThemeAdmin() {
     addToast("Preset aplicado", "success");
   };
 
+  // Safe fallback if activeTab data doesn't exist
+  const currentColors = formData[activeTab] || {};
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", flexWrap: "wrap", gap: "12px" }}>
         <div>
           <h2 className="admin-card-title" style={{ margin: 0 }}>Editor de Diseño Visual</h2>
-          <p style={{ color: "#757575", fontSize: "14px", marginTop: "4px" }}>Controla colores, tipografías y estilos globales de la tienda.</p>
+          <p style={{ color: "#757575", fontSize: "14px", marginTop: "4px" }}>Controla colores por separado (Claro/Oscuro) y estilos globales.</p>
         </div>
         <div style={{ display: "flex", gap: "12px" }}>
           <button onClick={handleReset} className="btn btn--secondary" style={{ borderColor: "rgba(211,0,5,0.3)", color: "#FF4500" }}>
@@ -63,45 +84,80 @@ export default function ThemeAdmin() {
         <form onSubmit={handleSave} className="admin-card" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           
           <div>
-            <h3 style={{ color: "#FFF", fontSize: "15px", borderBottom: "1px solid #333", paddingBottom: "8px", marginBottom: "16px" }}>Paleta de Colores</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #333", paddingBottom: "8px", marginBottom: "16px" }}>
+              <h3 style={{ color: "#FFF", fontSize: "15px", margin: 0 }}>Paleta de Colores</h3>
+              <div style={{ display: "flex", background: "rgba(0,0,0,0.5)", borderRadius: "8px", padding: "4px", gap: "4px" }}>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("light")}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    background: activeTab === "light" ? "var(--color-volt)" : "transparent",
+                    color: activeTab === "light" ? "#000" : "#A0A0A0",
+                    fontWeight: activeTab === "light" ? "bold" : "normal",
+                    fontSize: "12px",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  MODO CLARO
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("dark")}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    background: activeTab === "dark" ? "var(--color-volt)" : "transparent",
+                    color: activeTab === "dark" ? "#000" : "#A0A0A0",
+                    fontWeight: activeTab === "dark" ? "bold" : "normal",
+                    fontSize: "12px",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  MODO OSCURO
+                </button>
+              </div>
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div>
                 <label className="admin-label">Acento Principal (Volt)</label>
                 <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                  <input type="color" name="volt" value={formData.volt} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
-                  <input type="text" className="admin-input" name="volt" value={formData.volt} onChange={handleChange} />
+                  <input type="color" name="volt" value={currentColors.volt || "#CEFF00"} onChange={handleChangeColor} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="volt" value={currentColors.volt || "#CEFF00"} onChange={handleChangeColor} />
                 </div>
               </div>
               <div>
                 <label className="admin-label">Fondo Global (Canvas)</label>
                 <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                  <input type="color" name="canvas" value={formData.canvas} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
-                  <input type="text" className="admin-input" name="canvas" value={formData.canvas} onChange={handleChange} />
+                  <input type="color" name="canvas" value={currentColors.canvas || "#060606"} onChange={handleChangeColor} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="canvas" value={currentColors.canvas || "#060606"} onChange={handleChangeColor} />
                 </div>
               </div>
               <div>
                 <label className="admin-label">Texto Principal (Ink)</label>
                 <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                  <input type="color" name="ink" value={formData.ink} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
-                  <input type="text" className="admin-input" name="ink" value={formData.ink} onChange={handleChange} />
+                  <input type="color" name="ink" value={currentColors.ink || "#FFFFFF"} onChange={handleChangeColor} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="ink" value={currentColors.ink || "#FFFFFF"} onChange={handleChangeColor} />
                 </div>
               </div>
               <div>
                 <label className="admin-label">Fondo Secundario (Surface)</label>
                 <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                  <input type="color" name="surface" value={formData.surface} onChange={handleChange} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
-                  <input type="text" className="admin-input" name="surface" value={formData.surface} onChange={handleChange} />
+                  <input type="color" name="surface" value={currentColors.surface || "#111111"} onChange={handleChangeColor} style={{ width: "36px", height: "36px", cursor: "pointer", background: "none", border: "none" }} />
+                  <input type="text" className="admin-input" name="surface" value={currentColors.surface || "#111111"} onChange={handleChangeColor} />
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 style={{ color: "#FFF", fontSize: "15px", borderBottom: "1px solid #333", paddingBottom: "8px", marginBottom: "16px" }}>Tipografía y Estilo</h3>
+            <h3 style={{ color: "#FFF", fontSize: "15px", borderBottom: "1px solid #333", paddingBottom: "8px", marginBottom: "16px" }}>Tipografía y Estilo Global</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
                 <label className="admin-label">Tipografía para Títulos</label>
-                <select className="admin-input" name="displayFont" value={formData.displayFont} onChange={handleChange}>
+                <select className="admin-input" name="displayFont" value={formData.displayFont} onChange={handleChangeGlobal}>
                   <option value='"Oswald", "Barlow Condensed", sans-serif'>Oswald (Impactante, Estrecha)</option>
                   <option value='"Inter", "Helvetica Neue", sans-serif'>Inter (Moderna, Limpia)</option>
                   <option value='"Space Grotesk", sans-serif'>Space Grotesk (Futurista, Tech)</option>
@@ -110,7 +166,7 @@ export default function ThemeAdmin() {
               
               <div>
                 <label className="admin-label">Tipografía para Párrafos</label>
-                <select className="admin-input" name="bodyFont" value={formData.bodyFont} onChange={handleChange}>
+                <select className="admin-input" name="bodyFont" value={formData.bodyFont} onChange={handleChangeGlobal}>
                   <option value='"Inter", "Helvetica Neue", sans-serif'>Inter (Moderna, Limpia)</option>
                   <option value='"Roboto", sans-serif'>Roboto (Clásica)</option>
                   <option value='"Arial", sans-serif'>Arial (Segura)</option>
@@ -120,7 +176,7 @@ export default function ThemeAdmin() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label className="admin-label">Redondeo (Border Radius)</label>
-                  <select className="admin-input" name="borderRadius" value={formData.borderRadius} onChange={handleChange}>
+                  <select className="admin-input" name="borderRadius" value={formData.borderRadius} onChange={handleChangeGlobal}>
                     <option value="0px">Cuadrado (0px)</option>
                     <option value="4px">Sutil (4px)</option>
                     <option value="12px">Redondeado (12px)</option>
@@ -129,7 +185,7 @@ export default function ThemeAdmin() {
                 </div>
                 <div>
                   <label className="admin-label">Estilo de Botones</label>
-                  <select className="admin-input" name="buttonStyle" value={formData.buttonStyle} onChange={handleChange}>
+                  <select className="admin-input" name="buttonStyle" value={formData.buttonStyle} onChange={handleChangeGlobal}>
                     <option value="solid">Sólido</option>
                     <option value="outline">Contorno</option>
                   </select>
@@ -151,7 +207,7 @@ export default function ThemeAdmin() {
                   key={idx} 
                   onClick={() => applyPreset(preset.values)}
                   className="btn btn--secondary btn--sm"
-                  style={{ fontSize: "12px", border: `1px solid ${preset.values.volt}` }}
+                  style={{ fontSize: "12px", border: `1px solid ${preset.values.dark.volt}` }}
                 >
                   {preset.name}
                 </button>
@@ -160,13 +216,15 @@ export default function ThemeAdmin() {
           </div>
 
           <div style={{ 
-            backgroundColor: formData.canvas, 
-            color: formData.ink,
+            backgroundColor: currentColors.canvas, 
+            color: currentColors.ink,
             border: "1px solid #333", 
             borderRadius: "12px", 
             padding: "32px",
             boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
-            transition: "all 0.3s ease"
+            transition: "all 0.3s ease",
+            // Forzamos CSS variables locales para que el CSS nativo reaccione
+            "--color-volt": currentColors.volt
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
               <h2 style={{ 
@@ -176,17 +234,17 @@ export default function ThemeAdmin() {
                 textTransform: "uppercase", 
                 letterSpacing: "1px" 
               }}>
-                Nike <span style={{ color: formData.volt }}>Legado</span>
+                Nike <span style={{ color: currentColors.volt }}>Legado</span>
               </h2>
               <div style={{ display: "flex", gap: "16px", fontFamily: formData.bodyFont, fontSize: "14px" }}>
-                <span style={{ cursor: "pointer", borderBottom: `2px solid ${formData.volt}` }}>Hombre</span>
+                <span style={{ cursor: "pointer", borderBottom: `2px solid ${currentColors.volt}` }}>Hombre</span>
                 <span style={{ cursor: "pointer", opacity: 0.7 }}>Mujer</span>
                 <span style={{ cursor: "pointer", opacity: 0.7 }}>SNKRS</span>
               </div>
             </div>
 
             <div style={{ 
-              backgroundColor: formData.surface,
+              backgroundColor: currentColors.surface,
               borderRadius: formData.borderRadius,
               padding: "24px",
               marginBottom: "24px",
@@ -194,7 +252,7 @@ export default function ThemeAdmin() {
               gap: "24px",
               alignItems: "center"
             }}>
-              <div style={{ width: "120px", height: "120px", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: formData.borderRadius }}></div>
+              <div style={{ width: "120px", height: "120px", backgroundColor: "rgba(128,128,128,0.1)", borderRadius: formData.borderRadius }}></div>
               <div>
                 <h3 style={{ fontFamily: formData.displayFont, fontSize: "22px", margin: "0 0 8px 0" }}>Nike Air Max Plus</h3>
                 <p style={{ fontFamily: formData.bodyFont, opacity: 0.7, margin: "0 0 16px 0", fontSize: "14px" }}>
@@ -202,9 +260,9 @@ export default function ThemeAdmin() {
                 </p>
                 <div style={{ display: "flex", gap: "12px" }}>
                   <button style={{
-                    backgroundColor: formData.buttonStyle === "solid" ? formData.volt : "transparent",
-                    color: formData.buttonStyle === "solid" ? "#000" : formData.volt,
-                    border: `2px solid ${formData.volt}`,
+                    backgroundColor: formData.buttonStyle === "solid" ? currentColors.volt : "transparent",
+                    color: formData.buttonStyle === "solid" ? "#000" : currentColors.volt,
+                    border: `2px solid ${currentColors.volt}`,
                     borderRadius: formData.borderRadius,
                     padding: "8px 24px",
                     fontFamily: formData.displayFont,
@@ -217,8 +275,8 @@ export default function ThemeAdmin() {
                   </button>
                   <button style={{
                     backgroundColor: "transparent",
-                    color: formData.ink,
-                    border: `1px solid ${formData.ink}40`,
+                    color: currentColors.ink,
+                    border: `1px solid ${currentColors.ink}40`,
                     borderRadius: formData.borderRadius,
                     padding: "8px 24px",
                     fontFamily: formData.bodyFont,
@@ -233,7 +291,7 @@ export default function ThemeAdmin() {
 
             <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
               {[1, 2, 3].map(i => (
-                <div key={i} style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: i === 1 ? formData.volt : `${formData.ink}40` }}></div>
+                <div key={i} style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: i === 1 ? currentColors.volt : `${currentColors.ink}40` }}></div>
               ))}
             </div>
 

@@ -2,16 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #111111;
+  --color-ink: var(--color-ink-light, #111111);
   --color-ink-soft: #757575;
   --color-ink-muted: #CCCCCC;
-  --color-canvas: #FFFFFF;
+  --color-canvas: var(--color-canvas-light, #FFFFFF);
   --color-canvas-alt: #F5F5F5;
   --color-canvas-nav: rgba(255, 255, 255, 0.80);
+  --color-surface: var(--color-surface-light, #F5F5F5);
   --color-sale: #D30005;
   --color-success: #128A09;
   --color-focus: #0066CC;
-  --color-volt: #CEFF00;
+  --color-volt: var(--color-volt-light, #CEFF00);
   --color-orange: #FF6600;
   --color-indoor-blue: #043174;
 
@@ -67,12 +68,14 @@
 }
 
 [data-theme="dark"] {
-  --color-ink: #F5F5F5;
+  --color-ink: var(--color-ink-dark, #F5F5F5);
   --color-ink-soft: #A0A0A0;
   --color-ink-muted: #3A3A3A;
-  --color-canvas: #111111;
+  --color-canvas: var(--color-canvas-dark, #111111);
   --color-canvas-alt: #1A1A1A;
   --color-canvas-nav: rgba(17, 17, 17, 0.80);
+  --color-surface: var(--color-surface-dark, #1A1A1A);
+  --color-volt: var(--color-volt-dark, #CEFF00);
 }
 
 *,
