@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { useGLTF, Float } from "@react-three/drei";
+import { useGLTF, Text, Float } from "@react-three/drei";
 import { resolveAsset } from "../../utils/resolveAsset";
 
 export default function ShoeModel3D({ colors, customText }) {
