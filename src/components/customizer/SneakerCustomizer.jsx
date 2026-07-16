@@ -121,6 +121,7 @@ export default function SneakerCustomizer({
               enableZoom={true}
               zoomSpeed={1.2}
               enablePan={true} 
+              screenSpacePanning={true}
               minPolarAngle={0}
               maxPolarAngle={Math.PI}
               minDistance={1.2}

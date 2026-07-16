@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useGLTF, Float } from "@react-three/drei";
 import { resolveAsset } from "../../utils/resolveAsset";
 import { MeshoptDecoder } from "meshoptimizer";
@@ -8,7 +8,7 @@ export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "bo
   
   const modelPath = resolveAsset(modelConfig.asset);
   // Carga con decodificador meshopt
-  const { nodes, materials } = useGLTF(modelPath, true, true, (loader) => {
+  const { scene, materials } = useGLTF(modelPath, true, true, (loader) => {
     loader.setMeshoptDecoder(MeshoptDecoder);
   });
 
@@ -61,58 +61,72 @@ export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "bo
     }
   }, [colors, materials, modelConfig]);
 
-  // Lógica de Renderizado de Mallas según Configuración de Par y Visibilidad
-  const renderMeshes = (isClone = false, offset = [0, 0, 0], scaleMult = [1, 1, 1]) => {
-    return Object.keys(nodes).map(key => {
-      const node = nodes[key];
-      if (!node.isMesh) return null;
-
-      // Filtrado para modelos "nativos" que ya incluyen ambos zapatos
-      if (modelConfig.pairBehavior === "native" && modelConfig.pairConfig) {
-        const { leftRegex, rightRegex } = modelConfig.pairConfig;
-        const isLeftMesh = leftRegex ? leftRegex.test(node.name) : false;
-        const isRightMesh = rightRegex ? rightRegex.test(node.name) : false;
+  // Manejar la visibilidad de los zapatos para modelos "nativos" (ej. AF1 que trae ambos)
+  useEffect(() => {
+    if (modelConfig.pairBehavior === "native" && modelConfig.pairConfig) {
+      const { leftRegex, rightRegex } = modelConfig.pairConfig;
+      
+      scene.traverse((node) => {
+        // En AF1, usamos los nombres de los objetos para saber de qué pie son
+        const isLeft = leftRegex ? leftRegex.test(node.name) : false;
+        const isRight = rightRegex ? rightRegex.test(node.name) : false;
         
-        if (shoeVisibility === "left" && isRightMesh) return null;
-        if (shoeVisibility === "right" && isLeftMesh) return null;
-      }
+        if (isLeft || isRight) {
+           if (shoeVisibility === "left") {
+             node.visible = isLeft;
+           } else if (shoeVisibility === "right") {
+             node.visible = isRight;
+           } else {
+             node.visible = true;
+           }
+        }
+      });
+    }
+  }, [scene, shoeVisibility, modelConfig]);
 
-      return (
-        <mesh 
-          key={`${key}${isClone ? '-clone' : ''}`}
-          geometry={node.geometry} 
-          material={node.material} 
-          castShadow 
-          receiveShadow
-          position={[offset[0], offset[1], offset[2]]}
-          scale={scaleMult}
-        />
-      );
-    });
-  };
+  // Clonar la escena para el modo espejo (Air Jordan 1)
+  const mirroredScene = useMemo(() => {
+    if (modelConfig.pairBehavior === "clone") {
+      return scene.clone(true);
+    }
+    return null;
+  }, [scene, modelConfig.pairBehavior]);
 
   return (
     <group 
       ref={group} 
       position={modelConfig.position} 
-      rotation={modelConfig.rotation} 
       scale={modelConfig.scale} 
       dispose={null}
     >
       <Float speed={1.2} rotationIntensity={0.03} floatIntensity={0.04}>
-        {/* Renderizado Base */}
-        {renderMeshes(false, 
-          modelConfig.pairBehavior === "clone" && shoeVisibility === "both" ? [-modelConfig.pairConfig.offset, 0, 0] : [0,0,0],
-          [1, 1, 1]
-        )}
         
-        {/* Renderizado del Clon (Modo Espejo) para modelos singulares cuando se pide ver 'Ambos' */}
-        {modelConfig.pairBehavior === "clone" && shoeVisibility === "both" && (
-          renderMeshes(true, 
-            [modelConfig.pairConfig.offset, 0, 0], 
-            [-1, 1, 1] // Scale X = -1 para efecto espejo
-          )
+        {modelConfig.pairBehavior === "native" ? (
+          /* Renderizado Base para Nativos (Air Force 1) */
+          <group rotation={modelConfig.rotation || [0,0,0]}>
+            <primitive object={scene} />
+          </group>
+        ) : (
+          /* Renderizado Modo Espejo para modelado individual (Air Jordan 1) */
+          <>
+            <group position={shoeVisibility === "both" ? [-modelConfig.pairConfig.offset, 0, 0] : [0, 0, 0]}>
+              {(shoeVisibility === "left" || shoeVisibility === "both") && (
+                <group rotation={modelConfig.rotation || [0,0,0]}>
+                  <primitive object={scene} />
+                </group>
+              )}
+            </group>
+            
+            {(shoeVisibility === "right" || shoeVisibility === "both") && mirroredScene && (
+              <group position={shoeVisibility === "both" ? [modelConfig.pairConfig.offset, 0, 0] : [0, 0, 0]} scale={[-1, 1, 1]}>
+                <group rotation={modelConfig.rotation || [0,0,0]}>
+                  <primitive object={mirroredScene} />
+                </group>
+              </group>
+            )}
+          </>
         )}
+
       </Float>
     </group>
   );
