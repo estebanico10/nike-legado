@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import "../../admin.css";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -53,8 +53,31 @@ const TABS = [
 
 export default function AdminLayout({ activeTab, setActiveTab, children }) {
   const navigate = useNavigate();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const initialSidebarMode = localStorage.getItem("nike-admin-sidebar-mode") || "accordion";
+  
+  const [sidebarMode, setSidebarMode] = useState(initialSidebarMode);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(initialSidebarMode === "compact");
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  
+  const handleModeChange = (mode) => {
+    setSidebarMode(mode);
+    localStorage.setItem("nike-admin-sidebar-mode", mode);
+    if (mode === "compact") {
+      setIsSidebarCollapsed(true);
+    } else {
+      setIsSidebarCollapsed(false);
+    }
+  };
+  
+  // Accordion state for categories
+  const [openCategories, setOpenCategories] = useState({
+    "Análisis y Resumen": true,
+    "Gestión de Tienda": true,
+    "Marketing y Ventas": false,
+    "Contenido y Comunidad": false,
+    "Sistema y Seguridad": false
+  });
+
   const { user, role, canAccess, logout } = useAuthStore();
   
   const filteredTabs = useMemo(() => {
@@ -130,42 +153,109 @@ export default function AdminLayout({ activeTab, setActiveTab, children }) {
         </div>
 
         <nav className="admin-nav" style={{ overflowY: "auto", paddingBottom: "80px" }}>
-          {CATEGORIES.map(category => {
-            const tabsInCategory = filteredTabs.filter(t => t.category === category);
-            if (tabsInCategory.length === 0) return null;
-            
-            return (
-              <div key={category} style={{ marginBottom: "16px" }}>
-                {!isSidebarCollapsed && (
-                  <div style={{
-                    fontSize: "0.65rem",
-                    textTransform: "uppercase",
-                    color: "#666",
-                    fontWeight: 700,
-                    letterSpacing: "1px",
-                    padding: "0 20px 8px",
-                    marginTop: "8px"
-                  }}>
-                    {category}
-                  </div>
-                )}
-                {tabsInCategory.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => handleTabClick(tab.id)}
-                    className={`admin-nav-btn ${activeTab === tab.id ? "active" : ""}`}
-                    title={isSidebarCollapsed ? tab.label : ""}
-                  >
-                    {renderIcon(tab.id)}
-                    <span>{tab.label}</span>
-                  </button>
-                ))}
-              </div>
-            );
-          })}
+          {sidebarMode === "flat" ? (
+            // Flat List View
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {filteredTabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`admin-nav-btn ${activeTab === tab.id ? "active" : ""}`}
+                  title={isSidebarCollapsed ? tab.label : ""}
+                >
+                  {renderIcon(tab.id)}
+                  {!isSidebarCollapsed && <span>{tab.label}</span>}
+                </button>
+              ))}
+            </div>
+          ) : (
+            // Accordion or Compact View (grouped)
+            CATEGORIES.map(category => {
+              const tabsInCategory = filteredTabs.filter(t => t.category === category);
+              if (tabsInCategory.length === 0) return null;
+              
+              const isOpen = openCategories[category];
+              
+              return (
+                <div key={category} style={{ marginBottom: "8px" }}>
+                  {!isSidebarCollapsed && (
+                    <button 
+                      onClick={() => setOpenCategories(prev => ({ ...prev, [category]: !prev[category] }))}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        background: "none",
+                        border: "none",
+                        padding: "8px 16px",
+                        cursor: "pointer",
+                        fontSize: "0.65rem",
+                        textTransform: "uppercase",
+                        color: isOpen ? "#FFF" : "#666",
+                        fontWeight: 700,
+                        letterSpacing: "1px",
+                        transition: "color 0.2s"
+                      }}
+                    >
+                      {category}
+                      <motion.svg 
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </motion.svg>
+                    </button>
+                  )}
+                  
+                  <AnimatePresence>
+                    {(isOpen || isSidebarCollapsed) && (
+                      <motion.div
+                        initial={!isSidebarCollapsed ? { height: 0, opacity: 0 } : false}
+                        animate={!isSidebarCollapsed ? { height: "auto", opacity: 1 } : false}
+                        exit={!isSidebarCollapsed ? { height: 0, opacity: 0 } : false}
+                        style={{ overflow: "hidden", display: "flex", flexDirection: "column", gap: "4px", padding: isSidebarCollapsed ? "0" : "0 8px" }}
+                      >
+                        {tabsInCategory.map((tab) => (
+                          <button
+                            key={tab.id}
+                            onClick={() => handleTabClick(tab.id)}
+                            className={`admin-nav-btn ${activeTab === tab.id ? "active" : ""}`}
+                            title={isSidebarCollapsed ? tab.label : ""}
+                          >
+                            {renderIcon(tab.id)}
+                            {!isSidebarCollapsed && <span>{tab.label}</span>}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })
+          )}
         </nav>
 
-        <div className="admin-sidebar-footer">
+        <div className="admin-sidebar-footer" style={{ borderTop: "1px solid #222", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {!isSidebarCollapsed && (
+            <div style={{ display: "flex", padding: "0 16px", gap: "4px", marginBottom: "8px" }}>
+              <button 
+                onClick={() => handleModeChange("accordion")} 
+                title="Acordeón"
+                style={{ flex: 1, padding: "6px", backgroundColor: sidebarMode === "accordion" ? "#333" : "transparent", border: "1px solid #333", color: "#FFF", borderRadius: "4px", cursor: "pointer", fontSize: "11px" }}
+              >Categorías</button>
+              <button 
+                onClick={() => handleModeChange("flat")} 
+                title="Lista Plana"
+                style={{ flex: 1, padding: "6px", backgroundColor: sidebarMode === "flat" ? "#333" : "transparent", border: "1px solid #333", color: "#FFF", borderRadius: "4px", cursor: "pointer", fontSize: "11px" }}
+              >Lista</button>
+              <button 
+                onClick={() => handleModeChange("compact")} 
+                title="Solo Íconos"
+                style={{ flex: 1, padding: "6px", backgroundColor: sidebarMode === "compact" ? "#333" : "transparent", border: "1px solid #333", color: "#FFF", borderRadius: "4px", cursor: "pointer", fontSize: "11px" }}
+              >Íconos</button>
+            </div>
+          )}
           <Link to="/inicio" className="admin-exit-link" title={isSidebarCollapsed ? "Salir a la tienda" : ""}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
             <span>Salir a la tienda</span>
