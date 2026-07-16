@@ -2,11 +2,11 @@
 
 .admin-wrapper {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #000000;
   color: #EDEDED;
   font-family: 'Inter', var(--font-body);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Sidebar Options */
@@ -164,9 +164,7 @@
   margin-left: 260px;
   transition: margin-left var(--duration-std) var(--ease-out), width var(--duration-std) var(--ease-out);
   width: calc(100% - 260px);
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .admin-main.collapsed-sidebar {
