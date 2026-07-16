@@ -40,6 +40,8 @@ export default function CustomizerPage() {
   });
   const [showSavedModal, setShowSavedModal] = useState(false);
 
+  const [uiVisible, setUiVisible] = useState(true);
+
   const priceDetails = calculatePrice(activeColors, customText, selectedModelId);
 
   const handleColorChange = (layerId, colorObj) => {
@@ -135,149 +137,178 @@ export default function CustomizerPage() {
           />
         </div>
 
-        {/* Top Navbar overlay for 3D view */}
-        <div className="absolute top-0 left-0 w-full p-6 z-10 flex justify-between items-start pointer-events-none">
-          <div className="pointer-events-auto backdrop-blur-xl bg-black/40 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display font-bold text-[10px] px-2.5 py-1 rounded-sm uppercase tracking-wider">
-                EXCLUSIVO ONLINE
-              </span>
-            </div>
-            <h1 className="font-display text-4xl font-extrabold uppercase tracking-tight text-white m-0 leading-none">
-              NIKE BY YOU
-            </h1>
-            <h2 className="font-display text-2xl font-bold uppercase text-[var(--color-volt-text)] m-0 mt-1">
-              {selectedModel.name}
-            </h2>
-            <p className="text-neutral-400 text-xs mt-3 leading-relaxed mb-5">
-              {selectedModel.id === "legado" 
-                ? "Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma en el talón."
-                : "Personalización premium habilitada. Explora nuevos acabados y rediseña a tu estilo este ícono clásico."}
-            </p>
+        {/* Toggle UI Zen Mode Button */}
+        <button
+          onClick={() => setUiVisible(!uiVisible)}
+          title={uiVisible ? "Ocultar Controles (Modo Zen)" : "Mostrar Controles"}
+          className="absolute top-4 right-4 z-50 bg-black/60 backdrop-blur-md border border-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-white/10 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] transition-all"
+        >
+          {uiVisible ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          )}
+        </button>
 
-            {/* Model Selector */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">Modelo Base</span>
-              <div className="grid grid-cols-1 gap-2">
-                {shoeModels.map(model => (
-                  <button
-                    key={model.id}
-                    onClick={() => setSelectedModelId(model.id)}
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
-                      selectedModelId === model.id
-                        ? "bg-white/10 border-[var(--color-volt)] text-white"
-                        : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    <div className="flex flex-col items-start text-left">
-                      <span className="text-sm font-bold font-display uppercase">{model.name}</span>
-                      <span className="text-[10px] opacity-70">{model.subtitle}</span>
-                    </div>
-                    {selectedModelId === model.id && (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-volt)" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* View Powers (Left/Right/Both) */}
-            <div className="flex flex-col gap-2 mt-5">
-              <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">Superpoderes de Vista</span>
-              <div className="flex bg-white/5 border border-white/10 rounded-lg p-1">
-                {["left", "both", "right"].map(view => (
-                  <button
-                    key={view}
-                    onClick={() => setShoeVisibility(view)}
-                    className={`flex-1 py-2 text-xs font-bold uppercase transition-all rounded-md cursor-pointer ${
-                      shoeVisibility === view
-                        ? "bg-[var(--color-volt)] text-black"
-                        : "text-neutral-400 hover:text-white"
-                    }`}
-                  >
-                    {view === "left" ? "Izq" : view === "right" ? "Der" : "Ambos"}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-          </div>
-
-          <button
-            onClick={() => setShowSavedModal(true)}
-            className="pointer-events-auto backdrop-blur-md bg-black/50 border border-white/20 text-white px-5 py-3 rounded-full font-display text-xs font-semibold uppercase tracking-wider flex items-center gap-2 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] transition-all cursor-pointer"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
-            Mis Diseños ({savedDesigns.length})
-          </button>
-        </div>
-
-        {/* Bottom UI Area */}
-        <div className="absolute bottom-0 left-0 w-full p-6 z-10 flex flex-col md:flex-row justify-between items-end gap-6 pointer-events-none">
-          
-          {/* Left: Size & Price */}
-          <div className="pointer-events-auto backdrop-blur-xl bg-black/60 border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <div className="flex justify-between items-end border-b border-white/10 pb-4 mb-4">
-              <div>
-                <span className="text-neutral-500 text-xs uppercase tracking-wider block mb-1">Precio Total</span>
-                <span className="font-display text-3xl font-bold text-white">${priceDetails.totalPrice.toFixed(2)}</span>
-              </div>
-              <div className="text-right text-[10px] text-neutral-400">
-                {priceDetails.premiumColorCost > 0 && <div className="text-[var(--color-volt-text)]">+ Color Premium</div>}
-                {priceDetails.customTextCost > 0 && <div className="text-[var(--color-volt-text)]">+ Grabado Láser</div>}
-              </div>
-            </div>
-
-            <div className="mb-5">
-              <div className="flex justify-between text-xs mb-2">
-                <span className="text-neutral-400 uppercase tracking-wider">Talla (US/MX)</span>
-                <span className="text-[var(--color-volt-text)] underline cursor-pointer">Guía</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["26", "26.5", "27", "27.5", "28", "28.5"].map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`flex-1 min-w-[45px] py-2 rounded-lg text-sm font-semibold transition-all ${selectedSize === size ? "bg-[var(--color-volt)] text-black" : "bg-white/5 text-white hover:bg-white/10 border border-white/5"}`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleAddToCart}
-              className="w-full bg-[var(--color-volt)] text-black font-display font-bold uppercase text-sm py-4 rounded-xl shadow-[0_0_20px_rgba(206,255,0,0.3)] hover:shadow-[0_0_30px_rgba(206,255,0,0.5)] transition-all"
-            >
-              Añadir al Carrito
-            </motion.button>
-          </div>
-
-          {/* Center/Right: Customization Controls */}
-          <div className="pointer-events-auto flex-1 w-full max-w-2xl">
-            <SneakerCustomizer
-              mode="controls"
-              activeColors={activeColors}
-              onColorChange={handleColorChange}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              customText={customText}
-              onTextChange={setCustomText}
-            />
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={handleSaveDesign}
-                className="text-xs uppercase tracking-wider text-neutral-400 hover:text-white flex items-center gap-2 transition-colors"
+        <AnimatePresence>
+          {uiVisible && (
+            <>
+              {/* Top Navbar overlay for 3D view */}
+              <motion.div 
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute top-0 left-0 w-full p-4 md:p-6 z-10 flex flex-col md:flex-row justify-between items-start pointer-events-none gap-4"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
-                Guardar Progreso
-              </button>
-            </div>
-          </div>
-        </div>
+                <div className="pointer-events-auto backdrop-blur-xl bg-black/40 border border-white/10 rounded-2xl p-4 md:p-6 w-full max-w-sm shadow-2xl">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="bg-[var(--color-volt)] text-[var(--color-ink)] font-display font-bold text-[10px] px-2.5 py-1 rounded-sm uppercase tracking-wider">
+                      EXCLUSIVO ONLINE
+                    </span>
+                  </div>
+                  <h1 className="font-display text-2xl md:text-4xl font-extrabold uppercase tracking-tight text-white m-0 leading-none">
+                    NIKE BY YOU
+                  </h1>
+                  <h2 className="font-display text-lg md:text-2xl font-bold uppercase text-[var(--color-volt-text)] m-0 mt-1">
+                    {selectedModel.name}
+                  </h2>
+                  <p className="text-neutral-400 text-[10px] md:text-xs mt-3 leading-relaxed mb-5 hidden md:block">
+                    {selectedModel.id === "legado" 
+                      ? "Construye tu identidad callejera y andina capa por capa. Elige acabados de alta densidad y graba láser tu firma en el talón."
+                      : "Personalización premium habilitada. Explora nuevos acabados y rediseña a tu estilo este ícono clásico."}
+                  </p>
+
+                  {/* Model Selector */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">Modelo Base</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {shoeModels.map(model => (
+                        <button
+                          key={model.id}
+                          onClick={() => setSelectedModelId(model.id)}
+                          className={`flex items-center justify-between p-2 rounded-lg border transition-all cursor-pointer ${
+                            selectedModelId === model.id
+                              ? "bg-white/10 border-[var(--color-volt)] text-white"
+                              : "bg-white/5 border-white/10 text-neutral-400 hover:bg-white/10 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex flex-col items-start text-left">
+                            <span className="text-xs md:text-sm font-bold font-display uppercase">{model.name}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* View Powers (Left/Right/Both) */}
+                  <div className="flex flex-col gap-2 mt-4">
+                    <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-wider">Visualización</span>
+                    <div className="flex bg-white/5 border border-white/10 rounded-lg p-1">
+                      {["left", "both", "right"].map(view => (
+                        <button
+                          key={view}
+                          onClick={() => setShoeVisibility(view)}
+                          className={`flex-1 py-1.5 md:py-2 text-[10px] md:text-xs font-bold uppercase transition-all rounded-md cursor-pointer ${
+                            shoeVisibility === view
+                              ? "bg-[var(--color-volt)] text-black"
+                              : "text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {view === "left" ? "Izq" : view === "right" ? "Der" : "Ambos"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="pointer-events-auto self-start mt-2 md:mt-0">
+                  <button
+                    onClick={() => setShowSavedModal(true)}
+                    className="backdrop-blur-md bg-black/50 border border-white/20 text-white px-4 py-2.5 rounded-full font-display text-[10px] md:text-xs font-semibold uppercase tracking-wider flex items-center gap-2 hover:border-[var(--color-volt)] hover:text-[var(--color-volt-text)] transition-all cursor-pointer"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+                    Mis Diseños ({savedDesigns.length})
+                  </button>
+                </div>
+              </motion.div>
+
+              {/* Bottom UI Area */}
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute bottom-0 left-0 w-full p-4 md:p-6 z-10 flex flex-col lg:flex-row justify-between items-end gap-4 md:gap-6 pointer-events-none"
+              >
+                
+                {/* Left: Size & Price */}
+                <div className="pointer-events-auto backdrop-blur-xl bg-black/60 border border-white/10 rounded-3xl p-4 md:p-6 w-full lg:max-w-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] order-2 lg:order-1">
+                  <div className="flex justify-between items-end border-b border-white/10 pb-3 mb-3">
+                    <div>
+                      <span className="text-neutral-500 text-[10px] md:text-xs uppercase tracking-wider block mb-0.5">Precio Total</span>
+                      <span className="font-display text-2xl md:text-3xl font-bold text-white">${priceDetails.totalPrice.toFixed(2)}</span>
+                    </div>
+                    <div className="text-right text-[9px] md:text-[10px] text-neutral-400">
+                      {priceDetails.premiumColorCost > 0 && <div className="text-[var(--color-volt-text)]">+ Color Premium</div>}
+                      {priceDetails.customTextCost > 0 && <div className="text-[var(--color-volt-text)]">+ Grabado Láser</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="flex justify-between text-[10px] md:text-xs mb-2">
+                      <span className="text-neutral-400 uppercase tracking-wider">Talla (US/MX)</span>
+                      <span className="text-[var(--color-volt-text)] underline cursor-pointer">Guía</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 md:gap-2">
+                      {["26", "26.5", "27", "27.5", "28", "28.5"].map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`flex-1 min-w-[40px] py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-all ${selectedSize === size ? "bg-[var(--color-volt)] text-black" : "bg-white/5 text-white hover:bg-white/10 border border-white/5"}`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAddToCart}
+                    className="w-full bg-[var(--color-volt)] text-black font-display font-bold uppercase text-xs md:text-sm py-3 md:py-4 rounded-xl shadow-[0_0_20px_rgba(206,255,0,0.3)] hover:shadow-[0_0_30px_rgba(206,255,0,0.5)] transition-all"
+                  >
+                    Añadir al Carrito
+                  </motion.button>
+                </div>
+
+                {/* Center/Right: Customization Controls */}
+                <div className="pointer-events-auto flex-1 w-full max-w-full lg:max-w-2xl order-1 lg:order-2">
+                  <SneakerCustomizer
+                    mode="controls"
+                    activeColors={activeColors}
+                    onColorChange={handleColorChange}
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                    customText={customText}
+                    onTextChange={setCustomText}
+                  />
+                  <div className="mt-2 md:mt-4 flex justify-end">
+                    <button
+                      onClick={handleSaveDesign}
+                      className="text-[10px] md:text-xs uppercase tracking-wider text-neutral-400 hover:text-white flex items-center gap-1.5 transition-colors"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+                      Guardar Progreso
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
       </main>
 

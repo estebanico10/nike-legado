@@ -8,27 +8,26 @@ export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "bo
   
   const modelPath = resolveAsset(modelConfig.asset);
   // Carga con decodificador meshopt
-  const { scene, materials } = useGLTF(modelPath, true, true, (loader) => {
+  const { scene } = useGLTF(modelPath, true, true, (loader) => {
     loader.setMeshoptDecoder(MeshoptDecoder);
   });
 
   useEffect(() => {
-    if (!materials || !modelConfig.materialMap) return;
+    if (!scene || !modelConfig.materialMap) return;
 
     const applyColorToMaterial = (materialName, hexColor, isSwoosh = false) => {
-      const mat = materials[materialName];
-      if (mat && mat.color) {
-        // En modelos GLB con un solo material bakeado (ej. Air Jordan), el color funciona como un tinte global
-        // En modelos con materiales por piezas (ej. Air Force 1), cambia el color base.
-        mat.color.set(hexColor);
-        
-        // Si es el Swoosh (y tiene texturas oscuras por defecto), removemos la textura base (map) 
-        // para que el color sólido puro sea visible (pero mantenemos el normalMap de cuero)
-        if (isSwoosh && mat.map) {
-          mat.map = null;
-          mat.needsUpdate = true;
+      scene.traverse((node) => {
+        if (node.isMesh && node.material && node.material.name === materialName) {
+          if (node.material.color) {
+            node.material.color.set(hexColor);
+            
+            if (isSwoosh && node.material.map) {
+              node.material.map = null;
+              node.material.needsUpdate = true;
+            }
+          }
         }
-      }
+      });
     };
 
     if (modelConfig.supportsLayerColors) {
@@ -66,7 +65,7 @@ export default function GLBShoeModel({ modelConfig, colors, shoeVisibility = "bo
         applyColorToMaterial(modelConfig.materialMap.upper, c);
       }
     }
-  }, [colors, materials, modelConfig]);
+  }, [colors, scene, modelConfig]);
 
   // Manejar la visibilidad de los zapatos para modelos "nativos" (ej. AF1 que trae ambos)
   useEffect(() => {
