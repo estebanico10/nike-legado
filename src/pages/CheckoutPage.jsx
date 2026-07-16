@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore, useUserStore, useOrderStore } from "../store/useStore";
 import { useI18nStore } from "../store/useI18nStore";
 import { Link } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { resolveAsset } from "../utils/resolveAsset";
 
 const confettis = Array.from({ length: 50 }).map(() => ({
@@ -57,6 +57,7 @@ const ease = [0, 0, 0.2, 1];
 export default function CheckoutPage() {
   const { items: cart, clearCart, discountPercent, couponCode } = useCartStore();
   const { user, redeemCoins, addCoins } = useUserStore();
+  const { addOrder } = useOrderStore();
   const { formatPrice } = useI18nStore();
   const [isSuccess, setIsSuccess] = useState(false);
   const [useCoins, setUseCoins] = useState(false);

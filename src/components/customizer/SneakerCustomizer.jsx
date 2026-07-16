@@ -1,4 +1,4 @@
-import { useState, Suspense } from "react";
+import { Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCustomizerStore } from "../../store/useCustomizerStore";
 import { Canvas } from "@react-three/fiber";

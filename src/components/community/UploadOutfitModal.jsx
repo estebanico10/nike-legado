@@ -31,7 +31,7 @@ export default function UploadOutfitModal({ isOpen, onClose }) {
     if (!alias.trim() || !shoe.trim() || !description.trim() || !imageUrl.trim()) {
       try {
         addToast("Por favor completa los campos principales", "warning");
-      } catch (err) {
+      } catch {
         // ignore
       }
       return;
@@ -54,7 +54,7 @@ export default function UploadOutfitModal({ isOpen, onClose }) {
     // 3. Notificación de éxito
     try {
       addToast("+150 PTS Street Cred ganados por compartir tu look 🔥", "success");
-    } catch (err) {
+    } catch {
       // ignore
     }
 

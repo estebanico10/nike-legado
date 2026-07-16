@@ -31,7 +31,7 @@ const INITIAL_DROPS = [
     price: 229.99,
     stock: 25,
     releaseDate: new Date(Date.now() + 24 * 3600 * 1000).toISOString(), // Dropping tomorrow
-    image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1579338559194-a162d19bf842?auto=format&fit=crop&w=800&q=80",
     description: "Inspirada en el coloso andino con nubuck gris ceniza, acentos en naranja magmático y malla balística. Una obra maestra de coleccionista.",
   },
 ];
@@ -41,6 +41,11 @@ export default function DropsPage() {
     try {
       const stored = localStorage.getItem("site_drops");
       if (stored) {
+        if (stored.includes("1608231387042-66d1773070a5")) {
+          localStorage.removeItem("site_drops");
+          localStorage.setItem("site_drops", JSON.stringify(INITIAL_DROPS));
+          return INITIAL_DROPS;
+        }
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;

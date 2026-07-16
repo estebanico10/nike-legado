@@ -7,28 +7,19 @@ import VirtualQueueModal from "./VirtualQueueModal";
 export default function DropCard({ drop }) {
   const { addToast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(() => {
+    if (drop.releaseDate) {
+      const target = new Date(drop.releaseDate).getTime();
+      const now = Date.now();
+      return Math.max(0, Math.floor((target - now) / 1000));
+    }
+    if (typeof drop.countdown === "number") return Math.max(0, drop.countdown);
+    if (typeof drop.secondsLeft === "number") return Math.max(0, drop.secondsLeft);
+    return 0;
+  });
 
   // Calculate and update countdown every second
   useEffect(() => {
-    const calculateRemaining = () => {
-      if (drop.releaseDate) {
-        const target = new Date(drop.releaseDate).getTime();
-        const now = Date.now();
-        const diffInSeconds = Math.floor((target - now) / 1000);
-        return Math.max(0, diffInSeconds);
-      }
-      if (typeof drop.countdown === "number") {
-        return Math.max(0, drop.countdown);
-      }
-      if (typeof drop.secondsLeft === "number") {
-        return Math.max(0, drop.secondsLeft);
-      }
-      return 0;
-    };
-
-    setTimeLeft(calculateRemaining());
-
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (drop.releaseDate) {

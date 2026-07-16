@@ -1,7 +1,6 @@
 import { Environment, Float, Sparkles, ContactShadows } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
-import * as THREE from 'three';
 
 export default function DynamicEnvironment() {
   const lightRef = useRef(null);

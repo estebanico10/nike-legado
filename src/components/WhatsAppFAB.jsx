@@ -6,31 +6,21 @@ export default function WhatsAppFAB() {
 
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1, duration: 0.5 }}
-      style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 40 }}
+      style={{ display: 'flex' }}
     >
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        className="floating-action-btn"
         style={{
-          width: '56px',
-          height: '56px',
           backgroundColor: '#25D366', // WhatsApp Green
           color: '#FFF',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
-          transition: 'all 0.3s ease',
-          position: 'relative',
-          cursor: 'pointer'
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
         aria-label="Chatear por WhatsApp con Nike Legado"
       >
         <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

@@ -7,7 +7,6 @@ import OptimizedImage from "./OptimizedImage";
 
 export default function SearchOverlay({ isOpen, onClose }) {
   const [query, setQuery] = useState("");
-  const [predictedText, setPredictedText] = useState("");
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const { productos } = useProducts();
@@ -18,8 +17,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      setQuery("");
-      setPredictedText("");
+      setTimeout(() => setQuery(""), 0);
     }
     return () => {
       document.body.style.overflow = "auto";
@@ -30,18 +28,9 @@ export default function SearchOverlay({ isOpen, onClose }) {
     ? productos.filter(p => p.nombre.toLowerCase().includes(query.toLowerCase()) || p.categoria.toLowerCase().includes(query.toLowerCase()))
     : [];
 
-  useEffect(() => {
-    if (query.length > 1 && results.length > 0) {
-      const firstMatch = results[0].nombre.toLowerCase();
-      if (firstMatch.startsWith(query.toLowerCase())) {
-        setPredictedText(query + firstMatch.slice(query.length));
-      } else {
-        setPredictedText("");
-      }
-    } else {
-      setPredictedText("");
-    }
-  }, [query, results]);
+  const predictedText = (query.length > 1 && results.length > 0 && results[0].nombre.toLowerCase().startsWith(query.toLowerCase()))
+    ? query + results[0].nombre.slice(query.length)
+    : "";
 
   const handleSearch = (e) => {
     e.preventDefault();

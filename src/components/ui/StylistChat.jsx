@@ -51,7 +51,7 @@ export default function StylistChat({ onClose }) {
         productSuggestion = { name: 'Nike Dunk High "Inca Heritage"', price: "$189.99", img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=200&q=80" };
       } else if (lowerInput.includes("entrenar") || lowerInput.includes("gym") || lowerInput.includes("correr")) {
         responseText = "El rendimiento es clave. Para máxima comodidad y soporte en tu entrenamiento, esta es mi recomendación top:";
-        productSuggestion = { name: "Nike Pegasus 40", price: "$129.99", img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=200&q=80" };
+        productSuggestion = { name: "Nike Pegasus 40", price: "$129.99", img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=200&q=80" };
       } else {
         responseText = "Perfecto, un estilo versátil. Basado en las tendencias actuales de la comunidad de Quito y Guayaquil, este modelo está marcando la pauta:";
         productSuggestion = { name: 'Nike Air Max Plus "Barrio Drop"', price: "$199.99", img: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=200&q=80" };

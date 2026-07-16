@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { Link } from "react-router-dom";
-import OptimizedImage from "./OptimizedImage";
 import { resolveAsset } from "../utils/resolveAsset";
 
 export default function AIPersonalShopper() {
@@ -44,27 +43,16 @@ export default function AIPersonalShopper() {
   return (
     <>
       <motion.button
+        layout
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
+        className="floating-action-btn"
         style={{
-          position: "fixed",
-          bottom: "100px",
-          right: "var(--space-md)",
-          width: "60px",
-          height: "60px",
-          borderRadius: "50%",
           backgroundColor: "var(--color-ink)",
           color: "var(--color-canvas)",
-          border: "none",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          cursor: "pointer",
-          zIndex: 998,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
         aria-label="AI Personal Shopper"
       >
@@ -82,14 +70,14 @@ export default function AIPersonalShopper() {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             style={{
               position: "fixed",
-              bottom: "170px",
-              right: "var(--space-md)",
-              width: "350px",
-              height: "450px",
+              bottom: "calc(90px + env(safe-area-inset-bottom, 0px))",
+              right: "24px",
+              width: "min(350px, calc(100vw - 32px))",
+              height: "min(460px, calc(80vh - 110px))",
               backgroundColor: "var(--color-canvas)",
               borderRadius: "16px",
-              boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
-              zIndex: 998,
+              boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+              zIndex: 9999,
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",

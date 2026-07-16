@@ -1,6 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import gsap from "gsap";
 
 export default function CinematicLoader({ onComplete }) {
   const [progress, setProgress] = useState(0);

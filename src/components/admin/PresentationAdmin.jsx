@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "../../context/ToastContext";
 import "../../admin.css";
@@ -10,7 +10,7 @@ export default function PresentationAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addToast } = useToast();
 
-  const fetchSections = () => {
+  const fetchSections = useCallback(() => {
     setLoading(true);
     fetch("http://localhost:3001/presentationSections")
       .then(res => res.json())
@@ -23,11 +23,27 @@ export default function PresentationAdmin() {
         addToast("Error al cargar los datos", "error");
         setLoading(false);
       });
-  };
+  }, [addToast]);
 
   useEffect(() => {
-    fetchSections();
-  }, []);
+    let active = true;
+    fetch("http://localhost:3001/presentationSections")
+      .then(res => res.json())
+      .then(data => {
+        if (active) {
+          setSections(data.sort((a, b) => a.order - b.order));
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        console.error("Error al cargar la presentación:", err);
+        if (active) {
+          addToast("Error al cargar los datos", "error");
+          setLoading(false);
+        }
+      });
+    return () => { active = false; };
+  }, [addToast]);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -38,16 +54,19 @@ export default function PresentationAdmin() {
     
     const method = isNew ? "POST" : "PUT";
     
-    // Auto increment order for new items
+    let payload = editingSection;
     if (isNew) {
-      editingSection.order = sections.length > 0 ? Math.max(...sections.map(s => s.order)) + 1 : 1;
-      editingSection.visible = true;
+      payload = {
+        ...editingSection,
+        order: sections.length > 0 ? Math.max(...sections.map(s => s.order)) + 1 : 1,
+        visible: true
+      };
     }
 
     fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editingSection)
+      body: JSON.stringify(payload)
     })
       .then(res => res.json())
       .then(() => {

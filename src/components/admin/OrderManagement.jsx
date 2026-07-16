@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useOrderStore } from "../../store/useStore";
-import { motion } from "framer-motion";
 
 export default function OrderManagement() {
   const { orders, updateOrderStatus } = useOrderStore();

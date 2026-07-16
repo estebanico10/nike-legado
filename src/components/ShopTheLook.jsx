@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const IG_POSTS = [
   { id: 1, url: "https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=600&q=80", tag: "@nikelegado" },
   { id: 2, url: "https://images.unsplash.com/photo-1552346154-21d32810baa3?auto=format&fit=crop&w=600&q=80", tag: "@streetculture" },
-  { id: 3, url: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=600&q=80", tag: "@urbanstyle.ec" },
+  { id: 3, url: "https://images.unsplash.com/photo-1579338559194-a162d19bf842?auto=format&fit=crop&w=600&q=80", tag: "@urbanstyle.ec" },
   { id: 4, url: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=600&q=80", tag: "@nikelegado" }
 ];
 

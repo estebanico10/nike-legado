@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { useProducts } from "../context/ProductContext";
 import ProductCard from "./ProductCard";
 

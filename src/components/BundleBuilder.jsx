@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
 import { useProducts } from "../context/ProductContext";
 import { useCartStore } from "../store/useStore";
 import { resolveAsset } from "../utils/resolveAsset";

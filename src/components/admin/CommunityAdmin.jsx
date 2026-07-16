@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Flame, Sparkles, Trash2, Search, MapPin, Tag, User, AlertCircle } from "../community/CommunityIcons";
+import { Check, X, Flame, Sparkles, Trash2, Search, MapPin, Tag, AlertCircle } from "../community/CommunityIcons";
 import { useCommunityStore } from "../../store/useStore";
 import { resolveAsset } from "../../utils/resolveAsset";
 

@@ -1,18 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSEO } from "../../context/SEOContext";
 import { useToast } from "../../context/ToastContext";
-import { motion } from "framer-motion";
 
 export default function SEOAdmin() {
   const { seoConfig, setSeoConfig } = useSEO();
   const { addToast } = useToast();
   
-  const [formData, setFormData] = useState(seoConfig);
-
-  // Keep internal state in sync if external changes occur
-  useEffect(() => {
-    setFormData(seoConfig);
-  }, [seoConfig]);
+  const [formData, setFormData] = useState(() => seoConfig || {});
 
   const handleChange = (e) => {
     const { name, value } = e.target;

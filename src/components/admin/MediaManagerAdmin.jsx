@@ -20,7 +20,7 @@ export default function MediaManagerAdmin() {
 
   const filteredMedia = media.filter(item => filterCategory === "todos" || item.category === filterCategory);
 
-  const processFile = async (file) => {
+  const processFile = useCallback(async (file) => {
     if (!file.type.startsWith('image/')) {
       addToast("Solo se permiten archivos de imagen.", "error");
       return;
@@ -41,14 +41,14 @@ export default function MediaManagerAdmin() {
         type: file.type
       };
 
-      setMedia([newMedia, ...media]);
+      setMedia(prev => [newMedia, ...prev]);
       addToast(`Imagen optimizada y subida correctamente (${newSizeKb} KB)`, "success");
-    } catch (err) {
+    } catch {
       addToast("Error al optimizar la imagen", "error");
     } finally {
       setUploading(false);
     }
-  };
+  }, [addToast]);
 
   const onDragOver = useCallback((e) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ export default function MediaManagerAdmin() {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       processFile(e.dataTransfer.files[0]);
     }
-  }, []);
+  }, [processFile]);
 
   const handleFileInput = (e) => {
     if (e.target.files && e.target.files.length > 0) {

@@ -32,14 +32,12 @@ const CommunityPage = lazy(() => import("./pages/CommunityPage"));
 const ClubPage = lazy(() => import("./pages/ClubPage"));
 
 import ScrollProgress from "./components/ScrollProgress";
-import BackToTop from "./components/BackToTop";
+import FloatingActions from "./components/FloatingActions";
 import Footer from "./components/Footer";
-import WhatsAppFAB from "./components/WhatsAppFAB";
 import CustomCursor from "./components/CustomCursor";
 import ExitIntentPopup from "./components/ExitIntentPopup";
 import LuckyWheel from "./components/LuckyWheel";
 import CartDrawer from "./components/CartDrawer";
-import AIPersonalShopper from "./components/AIPersonalShopper";
 import { useUIStore } from "./store/useStore";
 import SmoothScroll from "./components/layout/SmoothScroll";
 
@@ -132,9 +130,7 @@ function App() {
         ) : (
           <motion.div id="main-content" tabIndex="-1" key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} style={{ outline: 'none' }}>
             <AppRoutes />
-            <BackToTop />
-            <WhatsAppFAB />
-            <AIPersonalShopper />
+            <FloatingActions />
             <ExitIntentPopup />
             <CartDrawer />
             {isLuckyWheelOpen && <LuckyWheel onClose={closeLuckyWheel} />}

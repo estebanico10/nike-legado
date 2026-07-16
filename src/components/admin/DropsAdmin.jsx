@@ -29,16 +29,42 @@ const INITIAL_DROPS = [
     price: 229.99,
     stock: 25,
     releaseDate: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
-    image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1579338559194-a162d19bf842?auto=format&fit=crop&w=800&q=80",
     description: "Inspirada en el coloso andino con nubuck gris ceniza, acentos en naranja magmático y malla balística. Una obra maestra de coleccionista.",
   },
 ];
 
 export default function DropsAdmin() {
   const { addToast } = useToast();
-  const [drops, setDrops] = useState([]);
+  const [drops, setDrops] = useState(() => {
+    try {
+      const stored = localStorage.getItem("site_drops");
+      if (stored) {
+        if (stored.includes("1608231387042-66d1773070a5")) {
+          localStorage.removeItem("site_drops");
+          localStorage.setItem("site_drops", JSON.stringify(INITIAL_DROPS));
+          return INITIAL_DROPS;
+        }
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+      localStorage.setItem("site_drops", JSON.stringify(INITIAL_DROPS));
+      return INITIAL_DROPS;
+    } catch (err) {
+      console.error("Error loading drops:", err);
+      return INITIAL_DROPS;
+    }
+  });
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(Date.now()), 10000);
+    return () => clearInterval(timer);
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -48,28 +74,6 @@ export default function DropsAdmin() {
     image: "",
     description: "",
   });
-
-  const loadDrops = () => {
-    try {
-      const stored = localStorage.getItem("site_drops");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setDrops(parsed);
-          return;
-        }
-      }
-      localStorage.setItem("site_drops", JSON.stringify(INITIAL_DROPS));
-      setDrops(INITIAL_DROPS);
-    } catch (err) {
-      console.error("Error loading drops:", err);
-      setDrops(INITIAL_DROPS);
-    }
-  };
-
-  useEffect(() => {
-    loadDrops();
-  }, []);
 
   const saveToLocalStorageAndSync = (updatedList) => {
     setDrops(updatedList);
@@ -98,11 +102,11 @@ export default function DropsAdmin() {
 
   const handleEdit = (drop) => {
     setEditingId(drop.id);
-    let dateStr = "";
+    let dateStr;
     if (drop.releaseDate) {
       try {
         dateStr = new Date(drop.releaseDate).toISOString().slice(0, 16);
-      } catch (e) {
+      } catch {
         dateStr = new Date().toISOString().slice(0, 16);
       }
     } else {
@@ -419,7 +423,7 @@ export default function DropsAdmin() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "20px" }}>
         {drops.map((drop) => {
           const targetTime = drop.releaseDate ? new Date(drop.releaseDate).getTime() : 0;
-          const isLive = targetTime <= Date.now();
+          const isLive = targetTime <= currentTime;
 
           return (
             <div

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useToast } from "../../context/ToastContext";
 
@@ -6,12 +6,7 @@ export default function ThemeAdmin() {
   const { themeSettings, setThemeSettings, defaultTheme } = useTheme();
   const { addToast } = useToast();
   
-  const [formData, setFormData] = useState(themeSettings);
-
-  // Sync state if context changes externally
-  useEffect(() => {
-    setFormData(themeSettings);
-  }, [themeSettings]);
+  const [formData, setFormData] = useState(() => themeSettings || {});
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -3,7 +3,7 @@ import { useProducts } from "../../context/ProductContext";
 import { exportToCSV } from "../../utils/exporter";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, 
-  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area
+  PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 
 export default function AnalyticsMetrics() {
@@ -21,14 +21,14 @@ export default function AnalyticsMetrics() {
     const d = new Date();
     d.setDate(d.getDate() - (6 - i));
     const dayStr = d.toLocaleDateString('es-ES', { weekday: 'short' });
-    // Distribute actual orders randomly across days, putting most on today (last item)
+    // Distribute actual orders across days, putting most on today (last item)
     const dailyOrders = i === 6 ? orders : orders.slice(0, Math.floor(orders.length / 7));
     const dailyTotal = dailyOrders.reduce((sum, o) => sum + o.total, 0);
     
     return {
       name: dayStr,
-      ventas: dailyTotal > 0 ? dailyTotal : Math.floor(Math.random() * 500) + 100, // Fallback random if no orders
-      pedidos: dailyOrders.length > 0 ? dailyOrders.length : Math.floor(Math.random() * 5) + 1
+      ventas: dailyTotal > 0 ? dailyTotal : ((i * 137 + 43) % 500 + 100), // Fallback deterministic if no orders
+      pedidos: dailyOrders.length > 0 ? dailyOrders.length : ((i * 3 + 1) % 5 + 1)
     };
   });
 

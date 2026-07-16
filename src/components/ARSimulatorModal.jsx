@@ -15,14 +15,18 @@ export default function ARSimulatorModal({ isOpen, onClose, product }) {
   
   useEffect(() => {
     if (isOpen) {
-      setLoading(true);
-      setCameraActive(false);
-      // Simulate camera loading and permissions
+      const initTimer = setTimeout(() => {
+        setLoading(true);
+        setCameraActive(false);
+      }, 0);
       const timer = setTimeout(() => {
         setLoading(false);
         setCameraActive(true);
       }, 1500);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(initTimer);
+        clearTimeout(timer);
+      };
     }
   }, [isOpen]);
 

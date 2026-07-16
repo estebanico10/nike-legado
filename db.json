@@ -27,7 +27,7 @@
       "categoria": "Lifestyle",
       "imagenes": [
         "https://images.unsplash.com/photo-1514989940723-e8e51635b782?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=1000&auto=format&fit=crop"
+        "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=1000&auto=format&fit=crop"
       ],
       "tallas": ["24", "25", "26", "27", "28", "29"],
       "colores": ["#000000", "#FFFFFF", "#0000FF"],
@@ -54,23 +54,6 @@
       "descripcion": "El caballo de batalla con alas nunca decepciona. Con una amortiguación reactiva React y dos unidades Zoom Air, los Pegasus 40 están diseñados para durar. Tienen un ajuste mejorado que te proporciona comodidad desde el primer día."
     },
     {
-      "id": "4",
-      "nombre": "Nike ZoomX Vaporfly",
-      "tipo": "zapato",
-      "precio": 5299.00,
-      "precioOferta": 4899.00,
-      "categoria": "Running",
-      "imagenes": [
-        "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=1000&auto=format&fit=crop"
-      ],
-      "tallas": ["25", "26", "27", "28"],
-      "colores": ["#00FF00", "#FF00FF"],
-      "enOferta": true,
-      "esNuevo": false,
-      "stock": 15,
-      "descripcion": "Preparados para la carrera, los ZoomX Vaporfly NEXT% 2 se han diseñado con tecnología punta que persigue los límites y supera récords. La parte superior renovada mejora la comodidad y la transpirabilidad."
-    },
-    {
       "id": "5",
       "nombre": "Nike LeBron XX",
       "tipo": "zapato",
@@ -78,7 +61,7 @@
       "precioOferta": null,
       "categoria": "Basketball",
       "imagenes": [
-        "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1000&auto=format&fit=crop"
+        "https://images.unsplash.com/photo-1552346154-21d32810baa3?q=80&w=1000&auto=format&fit=crop"
       ],
       "tallas": ["27", "28", "29", "30", "31"],
       "colores": ["#FF0000", "#000000", "#FFFF00"],
@@ -95,7 +78,7 @@
       "precioOferta": null,
       "categoria": "Basketball",
       "imagenes": [
-        "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=1000&auto=format&fit=crop"
+        "https://images.unsplash.com/photo-1579338559194-a162d19bf842?q=80&w=1000&auto=format&fit=crop"
       ],
       "tallas": ["26", "27", "28", "29", "30"],
       "colores": ["#0000FF", "#FFFFFF", "#000000"],

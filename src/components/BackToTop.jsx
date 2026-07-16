@@ -17,29 +17,18 @@ export default function BackToTop() {
     <AnimatePresence>
       {visible && (
         <motion.button
+          layout
           initial={{ opacity: 0, scale: 0.5, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.95 }}
           onClick={scrollToTop}
           aria-label="Volver arriba"
+          className="floating-action-btn"
           style={{
-            position: "fixed",
-            bottom: "var(--space-xl)",
-            right: "var(--space-xl)",
-            zIndex: 900,
-            width: "48px",
-            height: "48px",
-            borderRadius: "50%",
             backgroundColor: "var(--color-ink)",
             color: "var(--color-canvas)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            border: "none",
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
           }}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

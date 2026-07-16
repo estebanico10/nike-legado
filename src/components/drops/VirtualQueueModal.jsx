@@ -11,16 +11,22 @@ export default function VirtualQueueModal({ isOpen, onClose, drop }) {
   const [checkingProgress, setCheckingProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes (600 seconds)
   const [selectedSize, setSelectedSize] = useState("US 9");
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   const { addToCart } = useCartStore();
   const { addToast } = useToast();
 
-  // Reset or start checking sequence when modal opens
-  useEffect(() => {
-    if (!isOpen) return;
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setQueueStatus("checking");
+      setCheckingProgress(0);
+      setTimeLeft(600);
+    }
+  }
 
-    setQueueStatus("checking");
-    setCheckingProgress(0);
-    setTimeLeft(600);
+  // Start checking sequence when modal opens and in checking status
+  useEffect(() => {
+    if (!isOpen || queueStatus !== "checking") return;
 
     // Progress bar animation during 2.5s check
     const progressInterval = setInterval(() => {
@@ -43,7 +49,7 @@ export default function VirtualQueueModal({ isOpen, onClose, drop }) {
       clearInterval(progressInterval);
       clearTimeout(timer);
     };
-  }, [isOpen]);
+  }, [isOpen, queueStatus]);
 
   // 10-minute exclusive purchase countdown
   useEffect(() => {
